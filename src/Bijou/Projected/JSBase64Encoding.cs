@@ -4,8 +4,8 @@ using System.Text;
 namespace Bijou.Projected
 {
     /// <summary>
-    /// Provide Base64 encoding/decoding functionality
-    /// Functions are lowerCamelCase as projected to JS functions are lowerCamelCase
+    /// Provides Base64 encoding/decoding functionality.
+    /// Functions are lowerCamelCase as projected to JS functions are lowerCamelCase.
     /// </summary>
     public static class JSBase64Encoding
     {

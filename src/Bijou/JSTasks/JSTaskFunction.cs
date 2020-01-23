@@ -4,7 +4,7 @@ using System.Collections.Generic;
 
 namespace Bijou.JSTasks
 {
-    internal class JSTaskFunction : JSTaskAbstract
+    internal class JSTaskFunction : AbstractJSTask
     {
         private bool _isReleased;
 

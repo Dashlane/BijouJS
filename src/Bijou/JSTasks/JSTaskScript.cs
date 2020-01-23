@@ -5,7 +5,7 @@ using Bijou.Chakra.Hosting;
 
 namespace Bijou.JSTasks
 {
-    internal sealed class JSTaskScript : JSTaskAbstract
+    internal sealed class JSTaskScript : AbstractJSTask
     {
         private readonly string _scriptPath;
         private readonly string _script;

@@ -152,7 +152,7 @@
     <Compile Include="Chakra\Hosting\NativeMethods.cs" />
     <Compile Include="Executor\UWPChakraExecutorFactory.cs" />
     <Compile Include="Executor\UWPChakraHostExecutor.cs" />
-    <Compile Include="JSTasks\JSTaskAbstract.cs" />
+    <Compile Include="JSTasks\AbstractJSTask.cs" />
     <Compile Include="JSTasks\JSTaskFunction.cs" />
     <Compile Include="JSTasks\JSTaskScript.cs" />
     <Compile Include="NativeFunctions\JSAsyncFunctions.cs" />

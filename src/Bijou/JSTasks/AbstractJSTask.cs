@@ -4,7 +4,7 @@ using Bijou.Chakra.Hosting;
 
 namespace Bijou.JSTasks
 {
-    internal abstract class JSTaskAbstract
+    internal abstract class AbstractJSTask
     {
         public DateTime ScheduledTime { get; private set; }
 
@@ -24,8 +24,7 @@ namespace Bijou.JSTasks
 
         public bool HasValidId => Id != -1;
 
-
-        protected JSTaskAbstract(int delay = 0, bool shouldReschedule = false)
+        protected AbstractJSTask(int delay = 0, bool shouldReschedule = false)
         {
             ScheduledDelay = delay;
             ShouldReschedule = shouldReschedule;
