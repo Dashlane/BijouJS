@@ -27,9 +27,6 @@ namespace Bijou.Projected
         private Uri _uri;
         private string _httpMethod;
         private enReadyState _readyState = enReadyState.Unsent;
-        // logger
-        private readonly ILogger _logger = null;
-
 
         public int readyState
         {
@@ -150,16 +147,16 @@ namespace Bijou.Projected
                             break;
                     }
                 } catch (ArgumentNullException anu) {
-                    _logger.Error($"[SendAsync][{_httpMethod}] invalid null argument: {anu.Message}");
+                    Console.Error.WriteLine($"[SendAsync][{_httpMethod}] invalid null argument: {anu.Message}");
                     onerror?.Invoke();
                 } catch (InvalidOperationException ioe) {
-                    _logger.Error($"[SendAsync][{_httpMethod}] invalid operation exception: {ioe.Message}");
+                    Console.Error.WriteLine($"[SendAsync][{_httpMethod}] invalid operation exception: {ioe.Message}");
                     onerror?.Invoke();
                 } catch (HttpRequestException reqe) {
-                    _logger.Error($"[SendAsync][{_httpMethod}] Http request exception: {reqe.Message}");
+                    Console.Error.WriteLine($"[SendAsync][{_httpMethod}] Http request exception: {reqe.Message}");
                     onerror?.Invoke();
                 } catch (Exception e) {
-                    _logger.Error($"[SendAsync][{_httpMethod}] generic exception: {e.Message}");
+                    Console.Error.WriteLine($"[SendAsync][{_httpMethod}] generic exception: {e.Message}");
                     onerror?.Invoke();
                     throw;
                 }

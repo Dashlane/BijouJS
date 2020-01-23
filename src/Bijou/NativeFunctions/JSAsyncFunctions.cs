@@ -8,8 +8,6 @@ namespace Bijou.NativeFunctions
 {
     internal static class JSAsyncFunctions
     {
-        private static readonly ILogger _logger = null;
-
         /// <summary>
         ///     JS Native function for setTimeout
         /// </summary>
@@ -27,7 +25,7 @@ namespace Bijou.NativeFunctions
 
             // check arguments
             if (argumentCount < 2 || arguments.Length < 2) {
-                _logger.Error("[SetTimeoutJavaScriptNativeFunction] Invalid argumentCount, expected >= 2, received " + argumentCount);
+                Console.Error.WriteLine("[SetTimeoutJavaScriptNativeFunction] Invalid argumentCount, expected >= 2, received " + argumentCount);
                 return JavaScriptValue.Invalid;
             }
 
@@ -40,23 +38,20 @@ namespace Bijou.NativeFunctions
         static public JavaScriptValue SetIntervalJavaScriptNativeFunction(JavaScriptValue callee, bool isConstructCall, JavaScriptValue[] arguments, ushort argumentCount, IntPtr callbackData)
         {
             // Syntax
-            // setTimeout(function, milliseconds, param1, param2, ...)
+            // setInterval(function, milliseconds, param1, param2, ...)
             // Parameter Values
             // function:            Required. The function to be executed
             // milliseconds:        Required. The intervals (in milliseconds) on how often to execute the code. If the value is less than 10, the value 10 is used
             // param1, param2, ...:	Optional. Additional parameters to pass to the function
             // Return Value
             // A Number, representing the ID value of the timer that is set.Use this value with the clearInterval() method to cancel the timer
-            var ret = JavaScriptValue.Invalid;
-            // check arguments
+
             if (argumentCount < 3 || arguments.Length < 3) {
-                _logger.Error("[SetIntervalJavaScriptNativeFunction] Invalid argumentCount, expected >= 3, received " + argumentCount);
-                return ret;
+              Console.Error.WriteLine("[SetIntervalJavaScriptNativeFunction] Invalid argumentCount, expected >= 3, received " + argumentCount);
+                return JavaScriptValue.Invalid;
             }
 
-            ret = AddScheduledJavaScriptNativeFunction(arguments, callbackData, 10, true);
-
-            return ret;
+            return AddScheduledJavaScriptNativeFunction(arguments, callbackData, 10, true);
         }
 
         /// <summary>
@@ -69,18 +64,18 @@ namespace Bijou.NativeFunctions
                 UWPChakraHostExecutor executor = JSHelpers.ExecutorFromCallbackData(callbackData);
 
                 if (executor == null) {
-                    _logger.Error("[AddScheduledJavaScriptNativeFunction] Invalid executor");
+                    Console.Error.WriteLine("[AddScheduledJavaScriptNativeFunction] Invalid executor");
                     return ret;
                 }
 
-                // check arguments
                 if (arguments.Length < 2) {
-                    _logger.Error("[AddScheduledJavaScriptNativeFunction] Invalid argumentCount, expected >= 2, received " + arguments.Length);
+                    Console.Error.WriteLine("[AddScheduledJavaScriptNativeFunction] Invalid argumentCount, expected >= 2, received " + arguments.Length);
                     return ret;
                 }
 
                 // arguments[0] is JavaScript this
                 JavaScriptValue callerObject = arguments[0];
+
                 // setTimeout / setInterval signature is (callback, [after, params...])
                 JavaScriptValue callback = arguments[1];
 
@@ -88,11 +83,11 @@ namespace Bijou.NativeFunctions
                 if (arguments.Length > 2) {
                     JavaScriptValue afterValue = arguments[2];
                     if (!afterValue.IsValid) {
-                        _logger.Error("[AddScheduledJavaScriptNativeFunction] Invalid delay argument, expected Number, received Invalid");
+                        Console.Error.WriteLine("[AddScheduledJavaScriptNativeFunction] Invalid delay argument, expected Number, received Invalid");
                         return ret;
                     }
                     if (afterValue.ValueType != JavaScriptValueType.Number) {
-                        _logger.Error("[AddScheduledJavaScriptNativeFunction] Invalid delay value type, expected Number, received " + arguments[2].ValueType);
+                        Console.Error.WriteLine("[AddScheduledJavaScriptNativeFunction] Invalid delay value type, expected Number, received " + arguments[2].ValueType);
                         return ret;
                     }
                     delay = Math.Max(afterValue.ToInt32(), minDelay);
@@ -111,9 +106,9 @@ namespace Bijou.NativeFunctions
                 // return task ID     
                 ret = JavaScriptValue.FromInt32(taskId);
             } catch (InvalidOperationException ioe) {
-                _logger.Error("[AddScheduledJavaScriptNativeFunction] InvalidOperationException: " + ioe.Message);
+                Console.Error.WriteLine("[AddScheduledJavaScriptNativeFunction] InvalidOperationException: " + ioe.Message);
             } catch (Exception e) {
-                _logger.Error("[AddScheduledJavaScriptNativeFunction] Exception: " + e.Message);
+                Console.Error.WriteLine("[AddScheduledJavaScriptNativeFunction] Exception: " + e.Message);
                 throw;
             }
 
@@ -135,13 +130,13 @@ namespace Bijou.NativeFunctions
 
             // check arguments
             if (argumentCount != 2 || arguments.Length != 2) {
-                _logger.Error("[ClearScheduledJavaScriptNativeFunction] Invalid argumentCount, expected  2, received " + arguments.Length);
+                Console.Error.WriteLine("[ClearScheduledJavaScriptNativeFunction] Invalid argumentCount, expected  2, received " + arguments.Length);
                 return ret;
             }
 
             UWPChakraHostExecutor executor = JSHelpers.ExecutorFromCallbackData(callbackData);
             if (executor == null) {
-                _logger.Error("[ClearScheduledJavaScriptNativeFunction] Invalid executor");
+                Console.Error.WriteLine("[ClearScheduledJavaScriptNativeFunction] Invalid executor");
                 return ret;
             }
 
@@ -152,12 +147,12 @@ namespace Bijou.NativeFunctions
 
             // argument validation
             if (!id.IsValid) {
-                _logger.Error("[ClearScheduledJavaScriptNativeFunction] Invalid argument");
+                Console.Error.WriteLine("[ClearScheduledJavaScriptNativeFunction] Invalid argument");
                 return ret;
             }
 
             if (id.ValueType != JavaScriptValueType.Number) {
-                _logger.Error("[ClearScheduledJavaScriptNativeFunction] Invalid argument type, expected Number, received " + id.ValueType);
+                Console.Error.WriteLine("[ClearScheduledJavaScriptNativeFunction] Invalid argument type, expected Number, received " + id.ValueType);
                 return ret;
             }
 
@@ -175,10 +170,10 @@ namespace Bijou.NativeFunctions
             UWPChakraHostExecutor executor = JSHelpers.ExecutorFromCallbackData(callbackData);
 
             if (executor == null) {
-                _logger.Error("[PromiseContinuationCallback] Error parsing callbackData");
+                Console.Error.WriteLine("[PromiseContinuationCallback] Error parsing callbackData");
                 return;
             } else if (!JavaScriptContext.IsCurrentValid) {
-                _logger.Error("[PromiseContinuationCallback] Invalid Context");
+                Console.Error.WriteLine("[PromiseContinuationCallback] Invalid Context");
                 return;
             }
 
