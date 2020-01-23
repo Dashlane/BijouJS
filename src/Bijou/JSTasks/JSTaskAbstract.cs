@@ -7,16 +7,25 @@ namespace Bijou.JSTasks
     internal abstract class JSTaskAbstract
     {
         public DateTime ScheduledTime { get; private set; }
+
         public int ScheduledDelay { get; }
+
         public bool IsReadyForExecution => MillisecondsToExecution == 0;
+
         public int MillisecondsToExecution => Math.Max((int)(ScheduledTime - DateTime.UtcNow).TotalMilliseconds, 0);
+
         public bool ShouldReschedule { get; private set; }
+
         public bool IsCanceled { get; private set; }
+
         public bool IsPromise { get; set; } = false;
+
         public int Id { get; set; } = -1;
+
         public bool HasValidId => Id != -1;
 
-        public JSTaskAbstract(int delay = 0, bool shouldReschedule = false)
+
+        protected JSTaskAbstract(int delay = 0, bool shouldReschedule = false)
         {
             ScheduledDelay = delay;
             ShouldReschedule = shouldReschedule;
@@ -39,21 +48,24 @@ namespace Bijou.JSTasks
         {
             var ret = JavaScriptValue.Invalid;
 
-            // ensure there is a valid context
-            if (!JavaScriptContext.IsCurrentValid) {
+            // Ensure there is a valid context
+            if (!JavaScriptContext.IsCurrentValid) 
+            {
                 Debug.WriteLine("JSTaskAbstract.Execute invalid context");
                 return ret;
             }
 
-            // skip execution if task is canceled
-            if (!IsCanceled) {
+            // Skip execution if task is canceled
+            if (!IsCanceled) 
+            {
                 ret = ExecuteImpl();
             }
 
             // if not rescheduled, release resources
             // can't be done from class destructor as 
             // this needs to be called from JS Context thread
-            if (!ShouldReschedule) {
+            if (!ShouldReschedule) 
+            {
                 ReleaseJsResources();
             }
 

@@ -14,24 +14,12 @@ namespace Bijou.Chakra.Hosting
         /// <summary>
         /// The id.
         /// </summary>
-        private readonly IntPtr id;
-
-        /// <summary>
-        ///     Initializes a new instance of the <see cref="JavaScriptPropertyId"/> struct. 
-        /// </summary>
-        /// <param name="id">The ID.</param>
-        internal JavaScriptPropertyId(IntPtr id)
-        {
-            this.id = id;
-        }
+        private readonly IntPtr _id;
 
         /// <summary>
         ///     Gets an invalid ID.
         /// </summary>
-        public static JavaScriptPropertyId Invalid
-        {
-            get { return new JavaScriptPropertyId(IntPtr.Zero); }
-        }
+        public static JavaScriptPropertyId Invalid => new JavaScriptPropertyId(IntPtr.Zero);
 
         /// <summary>
         ///     Gets the name associated with the property ID.
@@ -45,10 +33,18 @@ namespace Bijou.Chakra.Hosting
         {
             get
             {
-                string name;
-                NativeMethods.ThrowIfError(NativeMethods.JsGetPropertyNameFromId(this, out name));
+                NativeMethods.ThrowIfError(NativeMethods.JsGetPropertyNameFromId(this, out var name));
                 return name;
             }
+        }
+
+        /// <summary>
+        ///     Initializes a new instance of the <see cref="JavaScriptPropertyId"/> struct. 
+        /// </summary>
+        /// <param name="id">The ID.</param>
+        internal JavaScriptPropertyId(IntPtr id)
+        {
+            _id = id;
         }
 
         /// <summary>
@@ -68,8 +64,7 @@ namespace Bijou.Chakra.Hosting
         /// <returns>The property ID in this runtime for the given name.</returns>
         public static JavaScriptPropertyId FromString(string name)
         {
-            JavaScriptPropertyId id;
-            NativeMethods.ThrowIfError(NativeMethods.JsGetPropertyIdFromName(name, out id));
+            NativeMethods.ThrowIfError(NativeMethods.JsGetPropertyIdFromName(name, out var id));
             return id;
         }
 
@@ -102,7 +97,7 @@ namespace Bijou.Chakra.Hosting
         /// <returns>Whether the two property IDs are the same.</returns>
         public bool Equals(JavaScriptPropertyId other)
         {
-            return id == other.id;
+            return _id == other._id;
         }
 
         /// <summary>
@@ -112,11 +107,12 @@ namespace Bijou.Chakra.Hosting
         /// <returns>Whether the two property IDs are the same.</returns>
         public override bool Equals(object obj)
         {
-            if (ReferenceEquals(null, obj)) {
+            if (obj is null) 
+            {
                 return false;
             }
 
-            return obj is JavaScriptPropertyId && Equals((JavaScriptPropertyId)obj);
+            return obj is JavaScriptPropertyId id && Equals(id);
         }
 
         /// <summary>
@@ -125,7 +121,7 @@ namespace Bijou.Chakra.Hosting
         /// <returns>The hash code of the property ID.</returns>
         public override int GetHashCode()
         {
-            return id.ToInt32();
+            return _id.ToInt32();
         }
 
         /// <summary>

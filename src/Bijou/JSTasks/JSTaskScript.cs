@@ -7,8 +7,8 @@ namespace Bijou.JSTasks
 {
     internal sealed class JSTaskScript : JSTaskAbstract
     {
-        private string _scriptPath;
-        private string _script;
+        private readonly string _scriptPath;
+        private readonly string _script;
         private JavaScriptSourceContext _currentSourceContext;
 
 #if USE_SCRIPT_SERIALIZATION && !DEBUG
@@ -16,7 +16,6 @@ namespace Bijou.JSTasks
 #endif
 
         public JSTaskScript(string scriptPath, string script, JavaScriptSourceContext currentSourceContext)
-            : base()
         {
             _scriptPath = scriptPath;
             _script = script;
@@ -25,7 +24,8 @@ namespace Bijou.JSTasks
 
         protected override JavaScriptValue ExecuteImpl()
         {
-            if (IsCanceled) {
+            if (IsCanceled) 
+            {
                 return JavaScriptValue.Invalid;
             }
 

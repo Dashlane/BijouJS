@@ -15,24 +15,12 @@ namespace Bijou.Chakra.Hosting
         /// <summary>
         /// The reference.
         /// </summary>
-        private readonly IntPtr reference;
-
-        /// <summary>
-        ///     Initializes a new instance of the <see cref="JavaScriptValue"/> struct.
-        /// </summary>
-        /// <param name="reference">The reference.</param>
-        private JavaScriptValue(IntPtr reference)
-        {
-            this.reference = reference;
-        }
+        private readonly IntPtr _reference;
 
         /// <summary>
         ///     Gets an invalid value.
         /// </summary>
-        public static JavaScriptValue Invalid
-        {
-            get { return new JavaScriptValue(IntPtr.Zero); }
-        }
+        public static JavaScriptValue Invalid { get; } = new JavaScriptValue(IntPtr.Zero);
 
         /// <summary>
         ///     Gets the value of <c>undefined</c> in the current script context.
@@ -44,8 +32,7 @@ namespace Bijou.Chakra.Hosting
         {
             get
             {
-                JavaScriptValue value;
-                NativeMethods.ThrowIfError(NativeMethods.JsGetUndefinedValue(out value));
+                NativeMethods.ThrowIfError(NativeMethods.JsGetUndefinedValue(out var value));
                 return value;
             }
         }
@@ -60,8 +47,7 @@ namespace Bijou.Chakra.Hosting
         {
             get
             {
-                JavaScriptValue value;
-                NativeMethods.ThrowIfError(NativeMethods.JsGetNullValue(out value));
+                NativeMethods.ThrowIfError(NativeMethods.JsGetNullValue(out var value));
                 return value;
             }
         }
@@ -76,8 +62,7 @@ namespace Bijou.Chakra.Hosting
         {
             get
             {
-                JavaScriptValue value;
-                NativeMethods.ThrowIfError(NativeMethods.JsGetTrueValue(out value));
+                NativeMethods.ThrowIfError(NativeMethods.JsGetTrueValue(out var value));
                 return value;
             }
         }
@@ -92,8 +77,7 @@ namespace Bijou.Chakra.Hosting
         {
             get
             {
-                JavaScriptValue value;
-                NativeMethods.ThrowIfError(NativeMethods.JsGetFalseValue(out value));
+                NativeMethods.ThrowIfError(NativeMethods.JsGetFalseValue(out var value));
                 return value;
             }
         }
@@ -108,8 +92,7 @@ namespace Bijou.Chakra.Hosting
         {
             get
             {
-                JavaScriptValue value;
-                NativeMethods.ThrowIfError(NativeMethods.JsGetGlobalObject(out value));
+                NativeMethods.ThrowIfError(NativeMethods.JsGetGlobalObject(out var value));
                 return value;
             }
         }
@@ -117,10 +100,7 @@ namespace Bijou.Chakra.Hosting
         /// <summary>
         ///     Gets a value indicating whether the value is valid.
         /// </summary>
-        public bool IsValid
-        {
-            get { return reference != IntPtr.Zero; }
-        }
+        public bool IsValid => _reference != IntPtr.Zero;
 
         /// <summary>
         ///     Gets the JavaScript type of the value.
@@ -133,8 +113,7 @@ namespace Bijou.Chakra.Hosting
         {
             get
             {
-                JavaScriptValueType type;
-                NativeMethods.ThrowIfError(NativeMethods.JsGetValueType(this, out type));
+                NativeMethods.ThrowIfError(NativeMethods.JsGetValueType(this, out var type));
                 return type;
             }
         }
@@ -150,8 +129,7 @@ namespace Bijou.Chakra.Hosting
         {
             get
             {
-                int length;
-                NativeMethods.ThrowIfError(NativeMethods.JsGetStringLength(this, out length));
+                NativeMethods.ThrowIfError(NativeMethods.JsGetStringLength(this, out var length));
                 return length;
             }
         }
@@ -166,15 +144,11 @@ namespace Bijou.Chakra.Hosting
         {
             get
             {
-                JavaScriptValue prototypeReference;
-                NativeMethods.ThrowIfError(NativeMethods.JsGetPrototype(this, out prototypeReference));
+                NativeMethods.ThrowIfError(NativeMethods.JsGetPrototype(this, out var prototypeReference));
                 return prototypeReference;
             }
 
-            set
-            {
-                NativeMethods.ThrowIfError(NativeMethods.JsSetPrototype(this, value));
-            }
+            set => NativeMethods.ThrowIfError(NativeMethods.JsSetPrototype(this, value));
         }
 
         /// <summary>
@@ -187,8 +161,7 @@ namespace Bijou.Chakra.Hosting
         {
             get
             {
-                bool allowed;
-                NativeMethods.ThrowIfError(NativeMethods.JsGetExtensionAllowed(this, out allowed));
+                NativeMethods.ThrowIfError(NativeMethods.JsGetExtensionAllowed(this, out var allowed));
                 return allowed;
             }
         }
@@ -203,8 +176,7 @@ namespace Bijou.Chakra.Hosting
         {
             get
             {
-                bool hasExternalData;
-                NativeMethods.ThrowIfError(NativeMethods.JsHasExternalData(this, out hasExternalData));
+                NativeMethods.ThrowIfError(NativeMethods.JsHasExternalData(this, out var hasExternalData));
                 return hasExternalData;
             }
         }
@@ -219,15 +191,20 @@ namespace Bijou.Chakra.Hosting
         {
             get
             {
-                IntPtr data;
-                NativeMethods.ThrowIfError(NativeMethods.JsGetExternalData(this, out data));
+                NativeMethods.ThrowIfError(NativeMethods.JsGetExternalData(this, out var data));
                 return data;
             }
 
-            set
-            {
-                NativeMethods.ThrowIfError(NativeMethods.JsSetExternalData(this, value));
-            }
+            set => NativeMethods.ThrowIfError(NativeMethods.JsSetExternalData(this, value));
+        }
+
+        /// <summary>
+        ///     Initializes a new instance of the <see cref="JavaScriptValue"/> struct.
+        /// </summary>
+        /// <param name="reference">The reference.</param>
+        private JavaScriptValue(IntPtr reference)
+        {
+            _reference = reference;
         }
 
         /// <summary>
@@ -240,8 +217,7 @@ namespace Bijou.Chakra.Hosting
         /// <returns>The converted value.</returns>
         public static JavaScriptValue FromBoolean(bool value)
         {
-            JavaScriptValue reference;
-            NativeMethods.ThrowIfError(NativeMethods.JsBoolToBoolean(value, out reference));
+            NativeMethods.ThrowIfError(NativeMethods.JsBoolToBoolean(value, out var reference));
             return reference;
         }
 
@@ -255,8 +231,7 @@ namespace Bijou.Chakra.Hosting
         /// <returns>The new <c>Number</c> value.</returns>
         public static JavaScriptValue FromDouble(double value)
         {
-            JavaScriptValue reference;
-            NativeMethods.ThrowIfError(NativeMethods.JsDoubleToNumber(value, out reference));
+            NativeMethods.ThrowIfError(NativeMethods.JsDoubleToNumber(value, out var reference));
             return reference;
         }
 
@@ -270,8 +245,7 @@ namespace Bijou.Chakra.Hosting
         /// <returns>The new <c>Number</c> value.</returns>
         public static JavaScriptValue FromInt32(int value)
         {
-            JavaScriptValue reference;
-            NativeMethods.ThrowIfError(NativeMethods.JsIntToNumber(value, out reference));
+            NativeMethods.ThrowIfError(NativeMethods.JsIntToNumber(value, out var reference));
             return reference;
         }
 
@@ -285,8 +259,7 @@ namespace Bijou.Chakra.Hosting
         /// <returns>The new <c>String</c> value.</returns>
         public static JavaScriptValue FromString(string value)
         {
-            JavaScriptValue reference;
-            NativeMethods.ThrowIfError(NativeMethods.JsPointerToString(value, new UIntPtr((uint)value.Length), out reference));
+            NativeMethods.ThrowIfError(NativeMethods.JsPointerToString(value, new UIntPtr((uint)value.Length), out var reference));
             return reference;
         }
 
@@ -299,8 +272,7 @@ namespace Bijou.Chakra.Hosting
         /// <returns>The new <c>Object</c>.</returns>
         public static JavaScriptValue CreateObject()
         {
-            JavaScriptValue reference;
-            NativeMethods.ThrowIfError(NativeMethods.JsCreateObject(out reference));
+            NativeMethods.ThrowIfError(NativeMethods.JsCreateObject(out var reference));
             return reference;
         }
 
@@ -317,8 +289,7 @@ namespace Bijou.Chakra.Hosting
         /// <returns>The new <c>Object</c>.</returns>
         public static JavaScriptValue CreateExternalObject(IntPtr data, JavaScriptObjectFinalizeCallback finalizer)
         {
-            JavaScriptValue reference;
-            NativeMethods.ThrowIfError(NativeMethods.JsCreateExternalObject(data, finalizer, out reference));
+            NativeMethods.ThrowIfError(NativeMethods.JsCreateExternalObject(data, finalizer, out var reference));
             return reference;
         }
 
@@ -332,8 +303,7 @@ namespace Bijou.Chakra.Hosting
         /// <returns>The new function object.</returns>
         public static JavaScriptValue CreateFunction(JavaScriptNativeFunction function)
         {
-            JavaScriptValue reference;
-            NativeMethods.ThrowIfError(NativeMethods.JsCreateFunction(function, IntPtr.Zero, out reference));
+            NativeMethods.ThrowIfError(NativeMethods.JsCreateFunction(function, IntPtr.Zero, out var reference));
             return reference;
         }
 
@@ -348,8 +318,7 @@ namespace Bijou.Chakra.Hosting
         /// <returns>The new function object.</returns>
         public static JavaScriptValue CreateFunction(JavaScriptNativeFunction function, IntPtr callbackData)
         {
-            JavaScriptValue reference;
-            NativeMethods.ThrowIfError(NativeMethods.JsCreateFunction(function, callbackData, out reference));
+            NativeMethods.ThrowIfError(NativeMethods.JsCreateFunction(function, callbackData, out var reference));
             return reference;
         }
 
@@ -363,8 +332,7 @@ namespace Bijou.Chakra.Hosting
         /// <returns>The new array object.</returns>
         public static JavaScriptValue CreateArray(uint length)
         {
-            JavaScriptValue reference;
-            NativeMethods.ThrowIfError(NativeMethods.JsCreateArray(length, out reference));
+            NativeMethods.ThrowIfError(NativeMethods.JsCreateArray(length, out var reference));
             return reference;
         }
 
@@ -378,8 +346,7 @@ namespace Bijou.Chakra.Hosting
         /// <returns>The new error object.</returns>
         public static JavaScriptValue CreateError(JavaScriptValue message)
         {
-            JavaScriptValue reference;
-            NativeMethods.ThrowIfError(NativeMethods.JsCreateError(message, out reference));
+            NativeMethods.ThrowIfError(NativeMethods.JsCreateError(message, out var reference));
             return reference;
         }
 
@@ -393,8 +360,7 @@ namespace Bijou.Chakra.Hosting
         /// <returns>The new error object.</returns>
         public static JavaScriptValue CreateRangeError(JavaScriptValue message)
         {
-            JavaScriptValue reference;
-            NativeMethods.ThrowIfError(NativeMethods.JsCreateRangeError(message, out reference));
+            NativeMethods.ThrowIfError(NativeMethods.JsCreateRangeError(message, out var reference));
             return reference;
         }
 
@@ -408,8 +374,7 @@ namespace Bijou.Chakra.Hosting
         /// <returns>The new error object.</returns>
         public static JavaScriptValue CreateReferenceError(JavaScriptValue message)
         {
-            JavaScriptValue reference;
-            NativeMethods.ThrowIfError(NativeMethods.JsCreateReferenceError(message, out reference));
+            NativeMethods.ThrowIfError(NativeMethods.JsCreateReferenceError(message, out var reference));
             return reference;
         }
 
@@ -423,8 +388,7 @@ namespace Bijou.Chakra.Hosting
         /// <returns>The new error object.</returns>
         public static JavaScriptValue CreateSyntaxError(JavaScriptValue message)
         {
-            JavaScriptValue reference;
-            NativeMethods.ThrowIfError(NativeMethods.JsCreateSyntaxError(message, out reference));
+            NativeMethods.ThrowIfError(NativeMethods.JsCreateSyntaxError(message, out var reference));
             return reference;
         }
 
@@ -438,8 +402,7 @@ namespace Bijou.Chakra.Hosting
         /// <returns>The new error object.</returns>
         public static JavaScriptValue CreateTypeError(JavaScriptValue message)
         {
-            JavaScriptValue reference;
-            NativeMethods.ThrowIfError(NativeMethods.JsCreateTypeError(message, out reference));
+            NativeMethods.ThrowIfError(NativeMethods.JsCreateTypeError(message, out var reference));
             return reference;
         }
 
@@ -453,8 +416,7 @@ namespace Bijou.Chakra.Hosting
         /// <returns>The new error object.</returns>
         public static JavaScriptValue CreateUriError(JavaScriptValue message)
         {
-            JavaScriptValue reference;
-            NativeMethods.ThrowIfError(NativeMethods.JsCreateURIError(message, out reference));
+            NativeMethods.ThrowIfError(NativeMethods.JsCreateURIError(message, out var reference));
             return reference;
         }
 
@@ -469,8 +431,7 @@ namespace Bijou.Chakra.Hosting
         /// <returns>The object's new reference count.</returns>
         public uint AddRef()
         {
-            uint count;
-            NativeMethods.ThrowIfError(NativeMethods.JsAddRef(this, out count));
+            NativeMethods.ThrowIfError(NativeMethods.JsAddRef(this, out var count));
             return count;
         }
 
@@ -483,8 +444,7 @@ namespace Bijou.Chakra.Hosting
         /// <returns>The object's new reference count.</returns>
         public uint Release()
         {
-            uint count;
-            NativeMethods.ThrowIfError(NativeMethods.JsRelease(this, out count));
+            NativeMethods.ThrowIfError(NativeMethods.JsRelease(this, out var count));
             return count;
         }
 
@@ -497,8 +457,7 @@ namespace Bijou.Chakra.Hosting
         /// <returns>The converted value.</returns>
         public bool ToBoolean()
         {
-            bool value;
-            NativeMethods.ThrowIfError(NativeMethods.JsBooleanToBool(this, out value));
+            NativeMethods.ThrowIfError(NativeMethods.JsBooleanToBool(this, out var value));
             return value;
         }
 
@@ -517,8 +476,7 @@ namespace Bijou.Chakra.Hosting
         /// <returns>The <c>double</c> value.</returns>
         public double ToDouble()
         {
-            double value;
-            NativeMethods.ThrowIfError(NativeMethods.JsNumberToDouble(this, out value));
+            NativeMethods.ThrowIfError(NativeMethods.JsNumberToDouble(this, out var value));
             return value;
         }
 
@@ -537,8 +495,7 @@ namespace Bijou.Chakra.Hosting
         /// <returns>The <c>int</c> value.</returns>
         public int ToInt32()
         {
-            int value;
-            NativeMethods.ThrowIfError(NativeMethods.JsNumberToInt(this, out value));
+            NativeMethods.ThrowIfError(NativeMethods.JsNumberToInt(this, out var value));
             return value;
         }
 
@@ -557,9 +514,7 @@ namespace Bijou.Chakra.Hosting
         /// <returns>The string.</returns>
         public new string ToString()
         {
-            IntPtr buffer;
-            UIntPtr length;
-            NativeMethods.ThrowIfError(NativeMethods.JsStringToPointer(this, out buffer, out length));
+            NativeMethods.ThrowIfError(NativeMethods.JsStringToPointer(this, out var buffer, out var length));
             return Marshal.PtrToStringUni(buffer, (int)length);
         }
 
@@ -572,8 +527,7 @@ namespace Bijou.Chakra.Hosting
         /// <returns>The converted value.</returns>
         public JavaScriptValue ConvertToBoolean()
         {
-            JavaScriptValue booleanReference;
-            NativeMethods.ThrowIfError(NativeMethods.JsConvertValueToBoolean(this, out booleanReference));
+            NativeMethods.ThrowIfError(NativeMethods.JsConvertValueToBoolean(this, out var booleanReference));
             return booleanReference;
         }
 
@@ -586,8 +540,7 @@ namespace Bijou.Chakra.Hosting
         /// <returns>The converted value.</returns>
         public JavaScriptValue ConvertToNumber()
         {
-            JavaScriptValue numberReference;
-            NativeMethods.ThrowIfError(NativeMethods.JsConvertValueToNumber(this, out numberReference));
+            NativeMethods.ThrowIfError(NativeMethods.JsConvertValueToNumber(this, out var numberReference));
             return numberReference;
         }
 
@@ -600,8 +553,7 @@ namespace Bijou.Chakra.Hosting
         /// <returns>The converted value.</returns>
         public JavaScriptValue ConvertToString()
         {
-            JavaScriptValue stringReference;
-            NativeMethods.ThrowIfError(NativeMethods.JsConvertValueToString(this, out stringReference));
+            NativeMethods.ThrowIfError(NativeMethods.JsConvertValueToString(this, out var stringReference));
             return stringReference;
         }
 
@@ -614,8 +566,7 @@ namespace Bijou.Chakra.Hosting
         /// <returns>The converted value.</returns>
         public JavaScriptValue ConvertToObject()
         {
-            JavaScriptValue objectReference;
-            NativeMethods.ThrowIfError(NativeMethods.JsConvertValueToObject(this, out objectReference));
+            NativeMethods.ThrowIfError(NativeMethods.JsConvertValueToObject(this, out var objectReference));
             return objectReference;
         }
 
@@ -640,8 +591,7 @@ namespace Bijou.Chakra.Hosting
         /// <returns>The property descriptor.</returns>
         public JavaScriptValue GetOwnPropertyDescriptor(JavaScriptPropertyId propertyId)
         {
-            JavaScriptValue descriptorReference;
-            NativeMethods.ThrowIfError(NativeMethods.JsGetOwnPropertyDescriptor(this, propertyId, out descriptorReference));
+            NativeMethods.ThrowIfError(NativeMethods.JsGetOwnPropertyDescriptor(this, propertyId, out var descriptorReference));
             return descriptorReference;
         }
 
@@ -654,8 +604,7 @@ namespace Bijou.Chakra.Hosting
         /// <returns>An array of property names.</returns>
         public JavaScriptValue GetOwnPropertyNames()
         {
-            JavaScriptValue propertyNamesReference;
-            NativeMethods.ThrowIfError(NativeMethods.JsGetOwnPropertyNames(this, out propertyNamesReference));
+            NativeMethods.ThrowIfError(NativeMethods.JsGetOwnPropertyNames(this, out var propertyNamesReference));
             return propertyNamesReference;
         }
 
@@ -669,8 +618,7 @@ namespace Bijou.Chakra.Hosting
         /// <returns>Whether the object (or a prototype) has the property.</returns>
         public bool HasProperty(JavaScriptPropertyId propertyId)
         {
-            bool hasProperty;
-            NativeMethods.ThrowIfError(NativeMethods.JsHasProperty(this, propertyId, out hasProperty));
+            NativeMethods.ThrowIfError(NativeMethods.JsHasProperty(this, propertyId, out var hasProperty));
             return hasProperty;
         }
 
@@ -684,8 +632,7 @@ namespace Bijou.Chakra.Hosting
         /// <returns>The value of the property.</returns>
         public JavaScriptValue GetProperty(JavaScriptPropertyId id)
         {
-            JavaScriptValue propertyReference;
-            NativeMethods.ThrowIfError(NativeMethods.JsGetProperty(this, id, out propertyReference));
+            NativeMethods.ThrowIfError(NativeMethods.JsGetProperty(this, id, out var propertyReference));
             return propertyReference;
         }
 
@@ -714,8 +661,7 @@ namespace Bijou.Chakra.Hosting
         /// <returns>Whether the property was deleted.</returns>
         public JavaScriptValue DeleteProperty(JavaScriptPropertyId propertyId, bool useStrictRules)
         {
-            JavaScriptValue returnReference;
-            NativeMethods.ThrowIfError(NativeMethods.JsDeleteProperty(this, propertyId, useStrictRules, out returnReference));
+            NativeMethods.ThrowIfError(NativeMethods.JsDeleteProperty(this, propertyId, useStrictRules, out var returnReference));
             return returnReference;
         }
 
@@ -730,8 +676,7 @@ namespace Bijou.Chakra.Hosting
         /// <returns>Whether the property was defined.</returns>
         public bool DefineProperty(JavaScriptPropertyId propertyId, JavaScriptValue propertyDescriptor)
         {
-            bool result;
-            NativeMethods.ThrowIfError(NativeMethods.JsDefineProperty(this, propertyId, propertyDescriptor, out result));
+            NativeMethods.ThrowIfError(NativeMethods.JsDefineProperty(this, propertyId, propertyDescriptor, out var result));
             return result;
         }
 
@@ -745,8 +690,7 @@ namespace Bijou.Chakra.Hosting
         /// <returns>Whether the object has an value at the specified index.</returns>
         public bool HasIndexedProperty(JavaScriptValue index)
         {
-            bool hasProperty;
-            NativeMethods.ThrowIfError(NativeMethods.JsHasIndexedProperty(this, index, out hasProperty));
+            NativeMethods.ThrowIfError(NativeMethods.JsHasIndexedProperty(this, index, out var hasProperty));
             return hasProperty;
         }
 
@@ -760,8 +704,7 @@ namespace Bijou.Chakra.Hosting
         /// <returns>The retrieved value.</returns>
         public JavaScriptValue GetIndexedProperty(JavaScriptValue index)
         {
-            JavaScriptValue propertyReference;
-            NativeMethods.ThrowIfError(NativeMethods.JsGetIndexedProperty(this, index, out propertyReference));
+            NativeMethods.ThrowIfError(NativeMethods.JsGetIndexedProperty(this, index, out var propertyReference));
             return propertyReference;
         }
 
@@ -805,8 +748,7 @@ namespace Bijou.Chakra.Hosting
         /// <returns>Whether the values are equal.</returns>
         public bool Equals(JavaScriptValue other)
         {
-            bool equals;
-            NativeMethods.ThrowIfError(NativeMethods.JsEquals(this, other, out equals));
+            NativeMethods.ThrowIfError(NativeMethods.JsEquals(this, other, out var @equals));
             return equals;
         }
 
@@ -825,8 +767,7 @@ namespace Bijou.Chakra.Hosting
         /// <returns>Whether the values are strictly equal.</returns>
         public bool StrictEquals(JavaScriptValue other)
         {
-            bool equals;
-            NativeMethods.ThrowIfError(NativeMethods.JsStrictEquals(this, other, out equals));
+            NativeMethods.ThrowIfError(NativeMethods.JsStrictEquals(this, other, out var @equals));
             return equals;
         }
 
@@ -840,13 +781,12 @@ namespace Bijou.Chakra.Hosting
         /// <returns>The <c>Value</c> returned from the function invocation, if any.</returns>
         public JavaScriptValue CallFunction(params JavaScriptValue[] arguments)
         {
-            JavaScriptValue returnReference;
-
-            if (arguments.Length > ushort.MaxValue) {
+            if (arguments.Length > ushort.MaxValue) 
+            {
                 throw new ArgumentOutOfRangeException(nameof(arguments));
             }
 
-            NativeMethods.ThrowIfError(NativeMethods.JsCallFunction(this, arguments, (ushort)arguments.Length, out returnReference));
+            NativeMethods.ThrowIfError(NativeMethods.JsCallFunction(this, arguments, (ushort)arguments.Length, out var returnReference));
             return returnReference;
         }
 
@@ -860,13 +800,12 @@ namespace Bijou.Chakra.Hosting
         /// <returns>The <c>Value</c> returned from the function invocation.</returns>
         public JavaScriptValue ConstructObject(params JavaScriptValue[] arguments)
         {
-            JavaScriptValue returnReference;
-
-            if (arguments.Length > ushort.MaxValue) {
+            if (arguments.Length > ushort.MaxValue) 
+            {
                 throw new ArgumentOutOfRangeException(nameof(arguments));
             }
 
-            NativeMethods.ThrowIfError(NativeMethods.JsConstructObject(this, arguments, (ushort)arguments.Length, out returnReference));
+            NativeMethods.ThrowIfError(NativeMethods.JsConstructObject(this, arguments, (ushort)arguments.Length, out var returnReference));
             return returnReference;
         }
     }

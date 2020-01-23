@@ -10,7 +10,12 @@ namespace Bijou.Chakra.Hosting
         /// <summary>
         /// The context.
         /// </summary>
-        private readonly IntPtr context;
+        private readonly IntPtr _context;
+
+        /// <summary>
+        ///     Gets an empty source context.
+        /// </summary>
+        public static JavaScriptSourceContext None { get; } = new JavaScriptSourceContext(new IntPtr(-1));
 
         /// <summary>
         ///     Initializes a new instance of the <see cref="JavaScriptSourceContext"/> struct.
@@ -18,15 +23,7 @@ namespace Bijou.Chakra.Hosting
         /// <param name="context">The context.</param>
         private JavaScriptSourceContext(IntPtr context)
         {
-            this.context = context;
-        }
-
-        /// <summary>
-        ///     Gets an empty source context.
-        /// </summary>
-        public static JavaScriptSourceContext None
-        {
-            get { return new JavaScriptSourceContext(new IntPtr(-1)); }
+            _context = context;
         }
 
         /// <summary>
@@ -59,7 +56,7 @@ namespace Bijou.Chakra.Hosting
         /// <returns>A new source context that reflects the subtraction of the offset from the context.</returns>
         public static JavaScriptSourceContext operator -(JavaScriptSourceContext context, int offset)
         {
-            return FromIntPtr(context.context - offset);
+            return FromIntPtr(context._context - offset);
         }
 
         /// <summary>
@@ -80,7 +77,7 @@ namespace Bijou.Chakra.Hosting
         /// <returns>A new source context that reflects the decrementing of the context.</returns>
         public static JavaScriptSourceContext operator --(JavaScriptSourceContext context)
         {
-            return FromIntPtr(context.context - 1);
+            return FromIntPtr(context._context - 1);
         }
 
         /// <summary>
@@ -101,7 +98,7 @@ namespace Bijou.Chakra.Hosting
         /// <returns>A new source context that reflects the addition of the offset to the context.</returns>
         public static JavaScriptSourceContext operator +(JavaScriptSourceContext context, int offset)
         {
-            return FromIntPtr(context.context + offset);
+            return FromIntPtr(context._context + offset);
         }
 
         /// <summary>
@@ -122,7 +119,7 @@ namespace Bijou.Chakra.Hosting
         /// <returns>A new source context that reflects the incrementing of the context.</returns>
         public static JavaScriptSourceContext operator ++(JavaScriptSourceContext context)
         {
-            return FromIntPtr(context.context + 1);
+            return FromIntPtr(context._context + 1);
         }
 
         /// <summary>
@@ -154,7 +151,7 @@ namespace Bijou.Chakra.Hosting
         /// <returns>Whether the two source contexts are the same.</returns>
         public bool Equals(JavaScriptSourceContext other)
         {
-            return context == other.context;
+            return _context == other._context;
         }
 
         /// <summary>
@@ -164,11 +161,12 @@ namespace Bijou.Chakra.Hosting
         /// <returns>Whether the two source contexts are the same.</returns>
         public override bool Equals(object obj)
         {
-            if (ReferenceEquals(null, obj)) {
+            if (obj is null) 
+            {
                 return false;
             }
 
-            return obj is JavaScriptSourceContext && Equals((JavaScriptSourceContext)obj);
+            return obj is JavaScriptSourceContext context && Equals(context);
         }
 
         /// <summary>
@@ -177,7 +175,7 @@ namespace Bijou.Chakra.Hosting
         /// <returns>The hash code of the source context.</returns>
         public override int GetHashCode()
         {
-            return context.ToInt32();
+            return _context.ToInt32();
         }
     }
 }

@@ -103,7 +103,7 @@ namespace Bijou.Projected.IO
                 // Get file
                 var readFile = await storageFolder.GetFileAsync(filePath);
                 // Read text
-                ret.Content = await Windows.Storage.FileIO.ReadTextAsync(readFile);
+                ret.Content = await FileIO.ReadTextAsync(readFile);
             } catch (FileNotFoundException ffe) {
                 // file does not exists
                 ret.HasError = true;
@@ -157,7 +157,7 @@ namespace Bijou.Projected.IO
                 var file = await storageFolder.CreateFileAsync(filePath,
                                 CreationCollisionOption.ReplaceExisting);
                 // Write text
-                await Windows.Storage.FileIO.WriteTextAsync(file, fileContent);
+                await FileIO.WriteTextAsync(file, fileContent);
                 ret = true;
             } catch (FileNotFoundException) {
                 // File does not exists

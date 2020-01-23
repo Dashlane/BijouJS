@@ -25,15 +25,12 @@ namespace Bijou.Chakra.Hosting
         /// <summary>
         /// The handle.
         /// </summary>
-        private IntPtr handle;
+        private IntPtr _handle;
 
         /// <summary>
         ///     Gets a value indicating whether the runtime is valid.
         /// </summary>
-        public bool IsValid
-        {
-            get { return handle != IntPtr.Zero; }
-        }
+        public bool IsValid => _handle != IntPtr.Zero;
 
         /// <summary>
         ///     Gets the current memory usage for a runtime.
@@ -46,8 +43,7 @@ namespace Bijou.Chakra.Hosting
         {
             get
             {
-                UIntPtr memoryUsage;
-                NativeMethods.ThrowIfError(NativeMethods.JsGetRuntimeMemoryUsage(this, out memoryUsage));
+                NativeMethods.ThrowIfError(NativeMethods.JsGetRuntimeMemoryUsage(this, out var memoryUsage));
                 return memoryUsage;
             }
         }
@@ -63,15 +59,11 @@ namespace Bijou.Chakra.Hosting
         {
             get
             {
-                UIntPtr memoryLimit;
-                NativeMethods.ThrowIfError(NativeMethods.JsGetRuntimeMemoryLimit(this, out memoryLimit));
+                NativeMethods.ThrowIfError(NativeMethods.JsGetRuntimeMemoryLimit(this, out var memoryLimit));
                 return memoryLimit;
             }
 
-            set
-            {
-                NativeMethods.ThrowIfError(NativeMethods.JsSetRuntimeMemoryLimit(this, value));
-            }
+            set => NativeMethods.ThrowIfError(NativeMethods.JsSetRuntimeMemoryLimit(this, value));
         }
 
         /// <summary>
@@ -81,30 +73,25 @@ namespace Bijou.Chakra.Hosting
         {
             get
             {
-                bool isDisabled;
-                NativeMethods.ThrowIfError(NativeMethods.JsIsRuntimeExecutionDisabled(this, out isDisabled));
+                NativeMethods.ThrowIfError(NativeMethods.JsIsRuntimeExecutionDisabled(this, out var isDisabled));
                 return isDisabled;
             }
 
-            set
-            {
+            set =>
                 NativeMethods.ThrowIfError(value
-                                        ? NativeMethods.JsDisableRuntimeExecution(this)
-                                        : NativeMethods.JsEnableRuntimeExecution(this));
-            }
+                    ? NativeMethods.JsDisableRuntimeExecution(this)
+                    : NativeMethods.JsEnableRuntimeExecution(this));
         }
 
         /// <summary>
         ///     Creates a new runtime.
         /// </summary>
         /// <param name="attributes">The attributes of the runtime to be created.</param>
-        /// <param name="version">The version of the runtime to be created.</param>
         /// <param name="threadServiceCallback">The thread service for the runtime. Can be null.</param>
         /// <returns>The runtime created.</returns>
         public static JavaScriptRuntime Create(JavaScriptRuntimeAttributes attributes, JavaScriptThreadServiceCallback threadServiceCallback)
         {
-            JavaScriptRuntime handle;
-            NativeMethods.ThrowIfError(NativeMethods.JsCreateRuntime(attributes, threadServiceCallback, out handle));
+            NativeMethods.ThrowIfError(NativeMethods.JsCreateRuntime(attributes, threadServiceCallback, out var handle));
             return handle;
         }
 
@@ -112,7 +99,6 @@ namespace Bijou.Chakra.Hosting
         ///     Creates a new runtime.
         /// </summary>
         /// <param name="attributes">The attributes of the runtime to be created.</param>
-        /// <param name="version">The version of the runtime to be created.</param>
         /// <returns>The runtime created.</returns>
         public static JavaScriptRuntime Create(JavaScriptRuntimeAttributes attributes)
         {
@@ -138,11 +124,12 @@ namespace Bijou.Chakra.Hosting
         /// </remarks>
         public void Dispose()
         {
-            if (IsValid) {
+            if (IsValid) 
+            {
                 NativeMethods.ThrowIfError(NativeMethods.JsDisposeRuntime(this));
             }
 
-            handle = IntPtr.Zero;
+            _handle = IntPtr.Zero;
         }
 
         /// <summary>
@@ -216,8 +203,7 @@ namespace Bijou.Chakra.Hosting
         /// <returns>The created script context.</returns>
         public JavaScriptContext CreateContext()
         {
-            JavaScriptContext reference;
-            NativeMethods.ThrowIfError(NativeMethods.JsCreateContext(this, out reference));
+            NativeMethods.ThrowIfError(NativeMethods.JsCreateContext(this, out var reference));
             return reference;
         }
     }

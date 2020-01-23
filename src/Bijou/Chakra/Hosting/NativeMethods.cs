@@ -9,6 +9,8 @@ namespace Bijou.Chakra.Hosting
     /// </summary>
     internal static class NativeMethods
     {
+        private const string ChakraDll = "Chakra.dll";
+
         /// <summary>
         /// Throws if a native method returns an error code.
         /// </summary>
@@ -16,103 +18,105 @@ namespace Bijou.Chakra.Hosting
         [SuppressMessage("Microsoft.Globalization", "CA1303:DoNotPassLiteralsAsLocalizedParameters")]
         internal static void ThrowIfError(JavaScriptErrorCode error)
         {
-            if (error != JavaScriptErrorCode.NoError) {
-                switch (error) {
-                    case JavaScriptErrorCode.InvalidArgument:
-                        throw new JavaScriptUsageException(error, "Invalid argument.");
+            if (error == JavaScriptErrorCode.NoError)
+            {
+                return;
+            }
 
-                    case JavaScriptErrorCode.NullArgument:
-                        throw new JavaScriptUsageException(error, "Null argument.");
+            switch (error) 
+            {
+                case JavaScriptErrorCode.InvalidArgument:
+                    throw new JavaScriptUsageException(error, "Invalid argument.");
 
-                    case JavaScriptErrorCode.NoCurrentContext:
-                        throw new JavaScriptUsageException(error, "No current context.");
+                case JavaScriptErrorCode.NullArgument:
+                    throw new JavaScriptUsageException(error, "Null argument.");
 
-                    case JavaScriptErrorCode.InExceptionState:
-                        throw new JavaScriptUsageException(error, "Runtime is in exception state.");
+                case JavaScriptErrorCode.NoCurrentContext:
+                    throw new JavaScriptUsageException(error, "No current context.");
 
-                    case JavaScriptErrorCode.NotImplemented:
-                        throw new JavaScriptUsageException(error, "Method is not implemented.");
+                case JavaScriptErrorCode.InExceptionState:
+                    throw new JavaScriptUsageException(error, "Runtime is in exception state.");
 
-                    case JavaScriptErrorCode.WrongThread:
-                        throw new JavaScriptUsageException(error, "Runtime is active on another thread.");
+                case JavaScriptErrorCode.NotImplemented:
+                    throw new JavaScriptUsageException(error, "Method is not implemented.");
 
-                    case JavaScriptErrorCode.RuntimeInUse:
-                        throw new JavaScriptUsageException(error, "Runtime is in use.");
+                case JavaScriptErrorCode.WrongThread:
+                    throw new JavaScriptUsageException(error, "Runtime is active on another thread.");
 
-                    case JavaScriptErrorCode.BadSerializedScript:
-                        throw new JavaScriptUsageException(error, "Bad serialized script.");
+                case JavaScriptErrorCode.RuntimeInUse:
+                    throw new JavaScriptUsageException(error, "Runtime is in use.");
 
-                    case JavaScriptErrorCode.InDisabledState:
-                        throw new JavaScriptUsageException(error, "Runtime is disabled.");
+                case JavaScriptErrorCode.BadSerializedScript:
+                    throw new JavaScriptUsageException(error, "Bad serialized script.");
 
-                    case JavaScriptErrorCode.CannotDisableExecution:
-                        throw new JavaScriptUsageException(error, "Cannot disable execution.");
+                case JavaScriptErrorCode.InDisabledState:
+                    throw new JavaScriptUsageException(error, "Runtime is disabled.");
 
-                    case JavaScriptErrorCode.AlreadyDebuggingContext:
-                        throw new JavaScriptUsageException(error, "Context is already in debug mode.");
+                case JavaScriptErrorCode.CannotDisableExecution:
+                    throw new JavaScriptUsageException(error, "Cannot disable execution.");
 
-                    case JavaScriptErrorCode.HeapEnumInProgress:
-                        throw new JavaScriptUsageException(error, "Heap enumeration is in progress.");
+                case JavaScriptErrorCode.AlreadyDebuggingContext:
+                    throw new JavaScriptUsageException(error, "Context is already in debug mode.");
 
-                    case JavaScriptErrorCode.ArgumentNotObject:
-                        throw new JavaScriptUsageException(error, "Argument is not an object.");
+                case JavaScriptErrorCode.HeapEnumInProgress:
+                    throw new JavaScriptUsageException(error, "Heap enumeration is in progress.");
 
-                    case JavaScriptErrorCode.InProfileCallback:
-                        throw new JavaScriptUsageException(error, "In a profile callback.");
+                case JavaScriptErrorCode.ArgumentNotObject:
+                    throw new JavaScriptUsageException(error, "Argument is not an object.");
 
-                    case JavaScriptErrorCode.InThreadServiceCallback:
-                        throw new JavaScriptUsageException(error, "In a thread service callback.");
+                case JavaScriptErrorCode.InProfileCallback:
+                    throw new JavaScriptUsageException(error, "In a profile callback.");
 
-                    case JavaScriptErrorCode.CannotSerializeDebugScript:
-                        throw new JavaScriptUsageException(error, "Cannot serialize a debug script.");
+                case JavaScriptErrorCode.InThreadServiceCallback:
+                    throw new JavaScriptUsageException(error, "In a thread service callback.");
 
-                    case JavaScriptErrorCode.AlreadyProfilingContext:
-                        throw new JavaScriptUsageException(error, "Already profiling this context.");
+                case JavaScriptErrorCode.CannotSerializeDebugScript:
+                    throw new JavaScriptUsageException(error, "Cannot serialize a debug script.");
 
-                    case JavaScriptErrorCode.IdleNotEnabled:
-                        throw new JavaScriptUsageException(error, "Idle is not enabled.");
+                case JavaScriptErrorCode.AlreadyProfilingContext:
+                    throw new JavaScriptUsageException(error, "Already profiling this context.");
 
-                    case JavaScriptErrorCode.OutOfMemory:
-                        throw new JavaScriptEngineException(error, "Out of memory.");
+                case JavaScriptErrorCode.IdleNotEnabled:
+                    throw new JavaScriptUsageException(error, "Idle is not enabled.");
 
-                    case JavaScriptErrorCode.ScriptException: {
-                        JavaScriptValue errorObject;
-                        JavaScriptErrorCode innerError = JsGetAndClearException(out errorObject);
+                case JavaScriptErrorCode.OutOfMemory:
+                    throw new JavaScriptEngineException(error, "Out of memory.");
 
-                        if (innerError != JavaScriptErrorCode.NoError) {
-                            throw new JavaScriptFatalException(innerError);
-                        }
+                case JavaScriptErrorCode.ScriptException: {
+                    var innerError = JsGetAndClearException(out var errorObject);
 
-                        throw new JavaScriptScriptException(error, errorObject, "Script threw an exception.");
+                    if (innerError != JavaScriptErrorCode.NoError) 
+                    {
+                        throw new JavaScriptFatalException(innerError);
                     }
 
-                    case JavaScriptErrorCode.ScriptCompile: {
-                        JavaScriptValue errorObject;
-                        JavaScriptErrorCode innerError = JsGetAndClearException(out errorObject);
-
-                        if (innerError != JavaScriptErrorCode.NoError) {
-                            throw new JavaScriptFatalException(innerError);
-                        }
-
-                        throw new JavaScriptScriptException(error, errorObject, "Compile error.");
-                    }
-
-                    case JavaScriptErrorCode.ScriptTerminated:
-                        throw new JavaScriptScriptException(error, JavaScriptValue.Invalid, "Script was terminated.");
-
-                    case JavaScriptErrorCode.ScriptEvalDisabled:
-                        throw new JavaScriptScriptException(error, JavaScriptValue.Invalid, "Eval of strings is disabled in this runtime.");
-
-                    case JavaScriptErrorCode.Fatal:
-                        throw new JavaScriptFatalException(error);
-
-                    default:
-                        throw new JavaScriptFatalException(error);
+                    throw new JavaScriptScriptException(error, errorObject, "Script threw an exception.");
                 }
+
+                case JavaScriptErrorCode.ScriptCompile: {
+                    var innerError = JsGetAndClearException(out var errorObject);
+
+                    if (innerError != JavaScriptErrorCode.NoError) 
+                    {
+                        throw new JavaScriptFatalException(innerError);
+                    }
+
+                    throw new JavaScriptScriptException(error, errorObject, "Compile error.");
+                }
+
+                case JavaScriptErrorCode.ScriptTerminated:
+                    throw new JavaScriptScriptException(error, JavaScriptValue.Invalid, "Script was terminated.");
+
+                case JavaScriptErrorCode.ScriptEvalDisabled:
+                    throw new JavaScriptScriptException(error, JavaScriptValue.Invalid, "Eval of strings is disabled in this runtime.");
+
+                case JavaScriptErrorCode.Fatal:
+                    throw new JavaScriptFatalException(error);
+
+                default:
+                    throw new JavaScriptFatalException(error);
             }
         }
-
-        const string ChakraDll = "Chakra.dll";
 
         [DllImport(ChakraDll, ExactSpelling = true)]
         internal static extern JavaScriptErrorCode JsCreateRuntime(JavaScriptRuntimeAttributes attributes, JavaScriptThreadServiceCallback threadService, out JavaScriptRuntime runtime);
@@ -367,7 +371,7 @@ namespace Bijou.Chakra.Hosting
         internal static extern JavaScriptErrorCode JsIsRuntimeExecutionDisabled(JavaScriptRuntime runtime, out bool isDisabled);
 
         [DllImport(ChakraDll, ExactSpelling = true)]
-        internal static extern JavaScriptErrorCode JsInspectableToObject([MarshalAs(UnmanagedType.IInspectable)] System.Object inspectable, out JavaScriptValue value);
+        internal static extern JavaScriptErrorCode JsInspectableToObject([MarshalAs(UnmanagedType.IInspectable)] Object inspectable, out JavaScriptValue value);
 
         [DllImport(ChakraDll, CharSet = CharSet.Unicode, ExactSpelling = true)]
         internal static extern JavaScriptErrorCode JsProjectWinRTNamespace(string namespaceName);

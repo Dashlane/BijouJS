@@ -1,9 +1,9 @@
 ﻿namespace Bijou.Chakra.Hosting
 {
     /// <summary>
-    ///     An error code returned from a Chakra hosting API.
+    /// An error code returned from a Chakra hosting API.
     /// </summary>
-    public enum JavaScriptErrorCode : System.Int32
+    public enum JavaScriptErrorCode
     {
         /// <summary>
         ///     Success error code.
