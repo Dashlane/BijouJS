@@ -1,8 +1,8 @@
 ﻿namespace Bijou.Executor
 {
-    public class UWPChakraExecutorFactory : IJsExecutorFactory
+    public class UWPChakraExecutorFactory
     {
-        public IJsExecutorHost CreateJsExecutorHost()
+        public UWPChakraHostExecutor CreateJsExecutorHost()
         {
             return new UWPChakraHostExecutor();
         }

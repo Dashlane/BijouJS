@@ -6,13 +6,15 @@ namespace Bijou.JSTasks
 {
     internal class JSTaskFunction : JSTaskAbstract
     {
-        public JavaScriptValue function { get; private set; }
-        public JavaScriptValue[] arguments { get; private set; }
-        private bool _isReleased = false;
+        private bool _isReleased;
 
         // These members store parameters passed as native types, to be converted to JS values at task execution time (when we know the JavaScriptContext is available)
-        private readonly string functionNativeName;
-        private readonly object[] nativeArguments;
+        private readonly string _functionNativeName;
+        private readonly object[] _nativeArguments;
+
+        public JavaScriptValue Function { get; private set; }
+
+        public JavaScriptValue[] Arguments { get; private set; }
 
         // This must be called when the JavaScriptContext is available (i.e. in the thread which owns it)
         // The first element of arguments must be a reference to the parent object ("this") of the function. Use JavaScriptValue.GlobalObject when calling a global function
@@ -29,13 +31,14 @@ namespace Bijou.JSTasks
         // This can be called from any thread
         public JSTaskFunction(string functionName, params object[] arguments)
         {
-            functionNativeName = functionName;
-            nativeArguments = arguments;
+            _functionNativeName = functionName;
+            _nativeArguments = arguments;
         }
 
         ~JSTaskFunction()
         {
-            if (!_isReleased) {
+            if (!_isReleased) 
+            {
                 Console.Error.WriteLine("~JSTaskFunction: Memory leak in JS context");
             }
         }
@@ -43,16 +46,17 @@ namespace Bijou.JSTasks
         // This must be called when the JavaScriptContext is available (i.e. in the thread which owns it)
         private void ProjectNativeParameters()
         {
-            if (string.IsNullOrEmpty(functionNativeName))
+            if (string.IsNullOrEmpty(_functionNativeName))
             {
                 return;
             }
 
-            var func = JavaScriptValue.GlobalObject.GetProperty(JavaScriptPropertyId.FromString(functionNativeName));
-
+            var func = JavaScriptValue.GlobalObject.GetProperty(JavaScriptPropertyId.FromString(_functionNativeName));
             var args = new List<JavaScriptValue> { JavaScriptValue.GlobalObject };
-            foreach (var parameter in nativeArguments) {
-                switch (parameter.GetType().Name) {
+            foreach (var parameter in _nativeArguments) 
+            {
+                switch (parameter.GetType().Name)
+                {
                     case "Int32":
                         args.Add(JavaScriptValue.FromInt32((int)parameter));
                         break;
@@ -75,26 +79,28 @@ namespace Bijou.JSTasks
 
         private void ValidateAndStoreValues(JavaScriptValue function, JavaScriptValue[] arguments)
         {
-            // Ensure there is a valid context.
-            if (!JavaScriptContext.IsCurrentValid)
+            // ensure there is a valid context
+            if (!JavaScriptContext.IsCurrentValid) 
             {
                 Console.Error.WriteLine("JSTaskFunction invalid context");
                 return;
             }
 
-            this.function = function;
-            this.arguments = arguments;
+            Function = function;
+            Arguments = arguments;
 
-            if (!this.function.IsValid)
+            if (!Function.IsValid) 
             {
                 Console.Error.WriteLine("JSTaskFunction invalid function");
                 return;
             }
 
-            // Keep reference since this is unmanaged memory.
-            this.function.AddRef();
-            foreach (var arg in this.arguments) {
-                if (arg.IsValid) {
+            // keep reference since this is unmanaged memory
+            Function.AddRef();
+            foreach (var arg in Arguments)
+            {
+                if (arg.IsValid)
+                {
                     arg.AddRef();
                 }
             }
@@ -102,14 +108,15 @@ namespace Bijou.JSTasks
 
         protected override JavaScriptValue ExecuteImpl()
         {
-            JavaScriptValue ret = JavaScriptValue.Invalid;
-
-            if (!function.IsValid) {
+            var ret = JavaScriptValue.Invalid;
+            if (!Function.IsValid) 
+            {
                 ProjectNativeParameters();
             }
 
-            if (function.IsValid) {
-                ret = function.CallFunction(arguments);
+            if (Function.IsValid) 
+            {
+                ret = Function.CallFunction(Arguments);
             }
 
             return ret;
@@ -117,21 +124,27 @@ namespace Bijou.JSTasks
 
         protected override void ReleaseJsResources()
         {
-            // Ensure there is a valid context.
-            if (!JavaScriptContext.IsCurrentValid) {
+            // ensure there is a valid context
+            if (!JavaScriptContext.IsCurrentValid) 
+            {
                 Console.Error.WriteLine("ReleaseJsResources invalid context");
                 return;
             }
 
-            if (ShouldReschedule || _isReleased) {
+            if (ShouldReschedule || _isReleased) 
+            {
                 return;
             }
 
-            if (function.IsValid) {
-                function.Release();
+            if (Function.IsValid) 
+            {
+                Function.Release();
             }
-            foreach (var arg in arguments) {
-                if (arg.IsValid) {
+
+            foreach (var arg in Arguments) 
+            {
+                if (arg.IsValid) 
+                {
                     arg.Release();
                 }
             }

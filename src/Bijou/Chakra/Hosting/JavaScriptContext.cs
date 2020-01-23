@@ -3,7 +3,7 @@
 namespace Bijou.Chakra.Hosting
 {
     /// <summary>
-    ///     A script context.
+    /// A script context.
     /// </summary>
     /// <remarks>
     ///     <para>
@@ -19,61 +19,43 @@ namespace Bijou.Chakra.Hosting
     internal struct JavaScriptContext
     {
         /// <summary>
-        ///     The reference.
+        /// The reference.
         /// </summary>
-        private readonly IntPtr reference;
+        private readonly IntPtr _reference;
 
         /// <summary>
-        ///     Initializes a new instance of the <see cref="JavaScriptContext"/> struct. 
+        /// Gets an invalid context.
         /// </summary>
-        /// <param name="reference">The reference.</param>
-        internal JavaScriptContext(IntPtr reference)
-        {
-            this.reference = reference;
-        }
+        public static JavaScriptContext Invalid => new JavaScriptContext(IntPtr.Zero);
 
         /// <summary>
-        ///     Gets an invalid context.
-        /// </summary>
-        public static JavaScriptContext Invalid
-        {
-            get { return new JavaScriptContext(IntPtr.Zero); }
-        }
-
-        /// <summary>
-        ///     Gets or sets the current script context on the thread.
+        /// Gets or sets the current script context on the thread.
         /// </summary>
         public static JavaScriptContext Current
         {
             get
             {
-                JavaScriptContext reference;
-                NativeMethods.ThrowIfError(NativeMethods.JsGetCurrentContext(out reference));
+                NativeMethods.ThrowIfError(NativeMethods.JsGetCurrentContext(out var reference));
                 return reference;
             }
 
-            set
-            {
-                NativeMethods.ThrowIfError(NativeMethods.JsSetCurrentContext(value));
-            }
+            set => NativeMethods.ThrowIfError(NativeMethods.JsSetCurrentContext(value));
         }
 
-
         /// <summary>
-        ///     Gets or sets the current script context on the thread.
+        /// Gets or sets the current script context on the thread.
         /// </summary>
         public static bool IsCurrentValid
         {
             get
             {
-                JavaScriptContext reference;
-                NativeMethods.ThrowIfError(NativeMethods.JsGetCurrentContext(out reference));
+                NativeMethods.ThrowIfError(NativeMethods.JsGetCurrentContext(out var reference));
                 return reference.IsValid;
             }
         }
 
         /// <summary>
-        ///     Gets a value indicating whether the runtime of the current context is in an exception state.
+        /// Gets a value indicating whether the runtime of the current context is in an exception state.
         /// </summary>
         /// <remarks>
         ///     <para>
@@ -95,35 +77,39 @@ namespace Bijou.Chakra.Hosting
         {
             get
             {
-                bool hasException;
-                NativeMethods.ThrowIfError(NativeMethods.JsHasException(out hasException));
+                NativeMethods.ThrowIfError(NativeMethods.JsHasException(out var hasException));
                 return hasException;
             }
         }
 
         /// <summary>
-        ///     Gets the runtime that the context belongs to.
+        /// Gets the runtime that the context belongs to.
         /// </summary>
         public JavaScriptRuntime Runtime
         {
             get
             {
-                JavaScriptRuntime handle;
-                NativeMethods.ThrowIfError(NativeMethods.JsGetRuntime(this, out handle));
+                NativeMethods.ThrowIfError(NativeMethods.JsGetRuntime(this, out var handle));
                 return handle;
             }
         }
 
         /// <summary>
-        ///     Gets a value indicating whether the context is a valid context or not.
+        /// Gets a value indicating whether the context is a valid context or not.
         /// </summary>
-        public bool IsValid
+        public bool IsValid => _reference != IntPtr.Zero;
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="JavaScriptContext"/> struct. 
+        /// </summary>
+        /// <param name="reference">The reference.</param>
+        internal JavaScriptContext(IntPtr reference)
         {
-            get { return reference != IntPtr.Zero; }
+            _reference = reference;
         }
 
         /// <summary>
-        ///     Tells the runtime to do any idle processing it need to do.
+        /// Tells the runtime to do any idle processing it need to do.
         /// </summary>
         /// <remarks>
         ///     <para>
@@ -141,60 +127,57 @@ namespace Bijou.Chakra.Hosting
         ///     </para>
         /// </remarks>
         /// <returns>
-        ///     The next system tick when there will be more idle work to do. Returns the 
-        ///     maximum number of ticks if there no upcoming idle work to do.
+        /// The next system tick when there will be more idle work to do. Returns the 
+        /// maximum number of ticks if there no upcoming idle work to do.
         /// </returns>
         public static uint Idle()
         {
-            uint ticks;
-            NativeMethods.ThrowIfError(NativeMethods.JsIdle(out ticks));
+            NativeMethods.ThrowIfError(NativeMethods.JsIdle(out var ticks));
             return ticks;
         }
 
         /// <summary>
-        ///     Parses a script and returns a <c>Function</c> representing the script.
+        /// Parses a script and returns a <c>Function</c> representing the script.
         /// </summary>
         /// <remarks>
-        ///     Requires an active script context.
+        /// Requires an active script context.
         /// </remarks>
         /// <param name="script">The script to parse.</param>
         /// <param name="sourceContext">
-        ///     A cookie identifying the script that can be used by script contexts that have debugging enabled.
+        /// A cookie identifying the script that can be used by script contexts that have debugging enabled.
         /// </param>
         /// <param name="sourceName">The location the script came from.</param>
         /// <returns>A <c>Function</c> representing the script code.</returns>
         public static JavaScriptValue ParseScript(string script, JavaScriptSourceContext sourceContext, string sourceName)
         {
-            JavaScriptValue result;
-            NativeMethods.ThrowIfError(NativeMethods.JsParseScript(script, sourceContext, sourceName, out result));
+            NativeMethods.ThrowIfError(NativeMethods.JsParseScript(script, sourceContext, sourceName, out var result));
             return result;
         }
 
         /// <summary>
-        ///     Parses a serialized script and returns a <c>Function</c> representing the script.
+        /// Parses a serialized script and returns a <c>Function</c> representing the script.
         /// </summary>
         /// <remarks>
-        ///     Requires an active script context.
+        /// Requires an active script context.
         /// </remarks>
         /// <param name="script">The script to parse.</param>
         /// <param name="buffer">The serialized script.</param>
         /// <param name="sourceContext">
-        ///     A cookie identifying the script that can be used by script contexts that have debugging enabled.
+        /// A cookie identifying the script that can be used by script contexts that have debugging enabled.
         /// </param>
         /// <param name="sourceName">The location the script came from.</param>
         /// <returns>A <c>Function</c> representing the script code.</returns>
         public static JavaScriptValue ParseScript(string script, byte[] buffer, JavaScriptSourceContext sourceContext, string sourceName)
         {
-            JavaScriptValue result;
-            NativeMethods.ThrowIfError(NativeMethods.JsParseSerializedScript(script, buffer, sourceContext, sourceName, out result));
+            NativeMethods.ThrowIfError(NativeMethods.JsParseSerializedScript(script, buffer, sourceContext, sourceName, out var result));
             return result;
         }
 
         /// <summary>
-        ///     Parses a script and returns a <c>Function</c> representing the script.
+        /// Parses a script and returns a <c>Function</c> representing the script.
         /// </summary>
         /// <remarks>
-        ///     Requires an active script context.
+        /// Requires an active script context.
         /// </remarks>
         /// <param name="script">The script to parse.</param>
         /// <returns>A <c>Function</c> representing the script code.</returns>
@@ -204,10 +187,10 @@ namespace Bijou.Chakra.Hosting
         }
 
         /// <summary>
-        ///     Parses a serialized script and returns a <c>Function</c> representing the script.
+        /// Parses a serialized script and returns a <c>Function</c> representing the script.
         /// </summary>
         /// <remarks>
-        ///     Requires an active script context.
+        /// Requires an active script context.
         /// </remarks>
         /// <param name="script">The script to parse.</param>
         /// <param name="buffer">The serialized script.</param>
@@ -218,49 +201,47 @@ namespace Bijou.Chakra.Hosting
         }
 
         /// <summary>
-        ///     Executes a script.
+        /// Executes a script.
         /// </summary>
         /// <remarks>
-        ///     Requires an active script context.
+        /// Requires an active script context.
         /// </remarks>
         /// <param name="script">The script to run.</param>
         /// <param name="sourceContext">
-        ///     A cookie identifying the script that can be used by script contexts that have debugging enabled.
+        /// A cookie identifying the script that can be used by script contexts that have debugging enabled.
         /// </param>
         /// <param name="sourceName">The location the script came from.</param>
         /// <returns>The result of the script, if any.</returns>
         public static JavaScriptValue RunScript(string script, JavaScriptSourceContext sourceContext, string sourceName)
         {
-            JavaScriptValue result;
-            NativeMethods.ThrowIfError(NativeMethods.JsRunScript(script, sourceContext, sourceName, out result));
+            NativeMethods.ThrowIfError(NativeMethods.JsRunScript(script, sourceContext, sourceName, out var result));
             return result;
         }
 
         /// <summary>
-        ///     Runs a serialized script.
+        /// Runs a serialized script.
         /// </summary>
         /// <remarks>
-        ///     Requires an active script context.
+        /// Requires an active script context.
         /// </remarks>
         /// <param name="script">The source code of the serialized script.</param>
         /// <param name="buffer">The serialized script.</param>
         /// <param name="sourceContext">
-        ///     A cookie identifying the script that can be used by script contexts that have debugging enabled.
+        /// A cookie identifying the script that can be used by script contexts that have debugging enabled.
         /// </param>
         /// <param name="sourceName">The location the script came from.</param>
         /// <returns>The result of the script, if any.</returns>
         public static JavaScriptValue RunScript(string script, byte[] buffer, JavaScriptSourceContext sourceContext, string sourceName)
         {
-            JavaScriptValue result;
-            NativeMethods.ThrowIfError(NativeMethods.JsRunSerializedScript(script, buffer, sourceContext, sourceName, out result));
+            NativeMethods.ThrowIfError(NativeMethods.JsRunSerializedScript(script, buffer, sourceContext, sourceName, out var result));
             return result;
         }
 
         /// <summary>
-        ///     Executes a script.
+        /// Executes a script.
         /// </summary>
         /// <remarks>
-        ///     Requires an active script context.
+        /// Requires an active script context.
         /// </remarks>
         /// <param name="script">The script to run.</param>
         /// <returns>The result of the script, if any.</returns>
@@ -270,10 +251,10 @@ namespace Bijou.Chakra.Hosting
         }
 
         /// <summary>
-        ///     Runs a serialized script.
+        /// Runs a serialized script.
         /// </summary>
         /// <remarks>
-        ///     Requires an active script context.
+        /// Requires an active script context.
         /// </remarks>
         /// <param name="script">The source code of the serialized script.</param>
         /// <param name="buffer">The serialized script.</param>
@@ -284,7 +265,7 @@ namespace Bijou.Chakra.Hosting
         }
 
         /// <summary>
-        ///     Serializes a parsed script to a buffer than can be reused.
+        /// Serializes a parsed script to a buffer than can be reused.
         /// </summary>
         /// <remarks>
         ///     <para>
@@ -299,7 +280,7 @@ namespace Bijou.Chakra.Hosting
         /// <param name="script">The script to serialize.</param>
         /// <param name="buffer">The buffer to put the serialized script into. Can be null.</param>
         /// <returns>
-        ///     The size of the buffer, in bytes, required to hold the serialized script.
+        /// The size of the buffer, in bytes, required to hold the serialized script.
         /// </returns>
         public static ulong SerializeScript(string script, byte[] buffer)
         {
@@ -309,8 +290,8 @@ namespace Bijou.Chakra.Hosting
         }
 
         /// <summary>
-        ///     Returns the exception that caused the runtime of the current context to be in the 
-        ///     exception state and resets the exception state for that runtime.
+        /// Returns the exception that caused the runtime of the current context to be in the 
+        /// exception state and resets the exception state for that runtime.
         /// </summary>
         /// <remarks>
         ///     <para>
@@ -327,13 +308,12 @@ namespace Bijou.Chakra.Hosting
         /// <returns>The exception for the runtime of the current context.</returns>
         public static JavaScriptValue GetAndClearException()
         {
-            JavaScriptValue reference;
-            NativeMethods.ThrowIfError(NativeMethods.JsGetAndClearException(out reference));
+            NativeMethods.ThrowIfError(NativeMethods.JsGetAndClearException(out var reference));
             return reference;
         }
 
         /// <summary>
-        ///     Sets the runtime of the current context to an exception state.
+        /// Sets the runtime of the current context to an exception state.
         /// </summary>
         /// <remarks>
         ///     <para>
@@ -345,7 +325,7 @@ namespace Bijou.Chakra.Hosting
         ///     </para>
         /// </remarks>
         /// <param name="exception">
-        ///     The JavaScript exception to set for the runtime of the current context.
+        /// The JavaScript exception to set for the runtime of the current context.
         /// </param>
         public static void SetException(JavaScriptValue exception)
         {
@@ -361,8 +341,7 @@ namespace Bijou.Chakra.Hosting
         /// <returns>The object's new reference count.</returns>
         public uint AddRef()
         {
-            uint count;
-            NativeMethods.ThrowIfError(NativeMethods.JsContextAddRef(this, out count));
+            NativeMethods.ThrowIfError(NativeMethods.JsContextAddRef(this, out var count));
             return count;
         }
 
@@ -375,50 +354,8 @@ namespace Bijou.Chakra.Hosting
         /// <returns>The object's new reference count.</returns>
         public uint Release()
         {
-            uint count;
-            NativeMethods.ThrowIfError(NativeMethods.JsContextRelease(this, out count));
+            NativeMethods.ThrowIfError(NativeMethods.JsContextRelease(this, out var count));
             return count;
-        }
-
-        /// <summary>
-        ///     A scope automatically sets a context to current and resets the original context
-        ///     when disposed.
-        /// </summary>
-        public struct Scope : IDisposable
-        {
-            /// <summary>
-            ///     The previous context.
-            /// </summary>
-            private readonly JavaScriptContext previousContext;
-
-            /// <summary>
-            ///     Whether the structure has been disposed.
-            /// </summary>
-            private bool disposed;
-
-            /// <summary>
-            ///     Initializes a new instance of the <see cref="Scope"/> struct. 
-            /// </summary>
-            /// <param name="context">The context to create the scope for.</param>
-            public Scope(JavaScriptContext context)
-            {
-                disposed = false;
-                previousContext = Current;
-                Current = context;
-            }
-
-            /// <summary>
-            ///     Disposes the scope and sets the previous context to current.
-            /// </summary>
-            public void Dispose()
-            {
-                if (disposed) {
-                    return;
-                }
-
-                Current = previousContext;
-                disposed = true;
-            }
         }
     }
 }

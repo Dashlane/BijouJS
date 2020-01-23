@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Diagnostics.CodeAnalysis;
 
 namespace Bijou.Chakra.Hosting
 {
@@ -40,7 +39,6 @@ namespace Bijou.Chakra.Hosting
         /// <summary>
         ///     Using Eval or Function constructor will throw an exception.
         /// </summary>
-        [SuppressMessage("StyleCop.CSharp.DocumentationRules", "SA1650:ElementDocumentationMustBeSpelledCorrectly", Justification = "Eval is a valid function name.")]
         DisableEval = 0x00000010,
 
         /// <summary>
