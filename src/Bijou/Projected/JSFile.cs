@@ -1,7 +1,9 @@
 ﻿namespace Bijou.Projected
 {
-    // Class projected to JS context, representing a file 
-    // Properties name are lowerCase as projection force them to lowerCase 
+    /// <summary>
+    /// Class projected to JS context, representing a file.
+    /// Properties name are lowerCase as projection force them to lowerCase.
+    /// </summary>
     public sealed class JSFile
     {
         /// <summary>

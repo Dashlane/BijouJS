@@ -7,9 +7,9 @@ namespace Bijou.NativeFunctions
     internal static class JSSendToHost
     {
         /// <summary>
-        ///     JS Native function for sendToHost
-        ///     JS function signature is sendToHost(message)
-        ///     message: string object
+        /// JS Native function for sendToHost.
+        /// JS function signature is sendToHost(message).
+        /// message: string object
         /// /// </summary>
         public static JavaScriptValue SendToHostJavaScriptNativeFunction(
             JavaScriptValue callee, 

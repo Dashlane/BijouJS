@@ -14,7 +14,7 @@ using Bijou.Projected;
 namespace Bijou.Executor
 {
     /// <summary>
-    /// Async JavaScript engine based on Chakra
+    /// Async JavaScript engine based on Chakra.
     /// </summary>
     /// <remarks>
     /// Do not use this class directly. Create an instance from UWPChakraExecutorFactory and access it though the IJsExecutorHost interface :
@@ -36,19 +36,34 @@ namespace Bijou.Executor
         private readonly JavaScriptNativeFunction _sendToHostJavaScriptNativeFunction = JSSendToHost.SendToHostJavaScriptNativeFunction;
         private readonly JavaScriptPromiseContinuationCallback _promiseContinuationDelegate = JSAsyncFunctions.PromiseContinuationCallback;
 
-        // Task list handled by JS thread, task are ordered by execution time
-        private readonly List<JSTaskAbstract> _jsSortedScheduledTasks = new List<JSTaskAbstract>();
+        /// <summary>
+        /// Task list handled by JS thread. Tasks are ordered by execution time. 
+        /// </summary>
+        private readonly List<AbstractJSTask> _sortedScheduledJSTaskList = new List<AbstractJSTask>();
 
-        // Native task dictionary handled by JS thread, used to keep reference of setTimeout/setInterval tasks
-        private readonly Dictionary<int, JSTaskAbstract> _cancellableJsTasksDictionary = new Dictionary<int, JSTaskAbstract>();
+        /// <summary>
+        /// Native task dictionary handled by JS thread, used to keep reference of setTimeout/setInterval tasks.  
+        /// </summary>
+        private readonly Dictionary<int, AbstractJSTask> _cancellableJSTaskDictionary = new Dictionary<int, AbstractJSTask>();
+
+        /// <summary>
+        /// Pseudo-random generator, used to get the next JS task randomly.
+        /// </summary>
         private readonly Random _random = new Random(Guid.NewGuid().GetHashCode());
 
-        // native task queue handled by JS thread, promises tasks have higher priority
-        private readonly Queue<JSTaskFunction> _jsPromisesQueue = new Queue<JSTaskFunction>();
+        /// <summary>
+        /// Native JS task queue handled by JS thread. Promise tasks have higher priority.
+        /// </summary>
+        private readonly Queue<JSTaskFunction> _jsPromiseQueue = new Queue<JSTaskFunction>();
 
-        // thread-safe collection, can be filled from other threads than JS
-        private readonly AsyncQueue<JSTaskAbstract> _jsTaskAsyncQueue = new AsyncQueue<JSTaskAbstract>();
-        // cancellation token source, used to cancel a wait & take operation on the blocking collection
+        /// <summary>
+        /// Thread-safe queue of JS tasks. Can be filled from other threads than the JS thread.
+        /// </summary>
+        private readonly AsyncQueue<AbstractJSTask> _jsTaskAsyncQueue = new AsyncQueue<AbstractJSTask>();
+
+        /// <summary>
+        /// Cancellation token source, used to cancel a wait & take operation on the blocking collection.
+        /// </summary>
         private readonly CancellationTokenSource _jsCancellationSrc = new CancellationTokenSource();
 
         private readonly JavaScriptSourceContext _currentSourceContext = JavaScriptSourceContext.FromIntPtr(IntPtr.Zero);
@@ -60,15 +75,14 @@ namespace Bijou.Executor
         internal IntPtr InteropPointer => GCHandle.ToIntPtr(_thisHandle);
 
         /// <summary>
-        ///     Creates an instance of UWPChakraHostExecutor
-        ///     Initialize runtime and context
-        ///     Inject native functions
-        ///     Start the JS event loop
+        /// Creates an instance of UWPChakraHostExecutor.
+        /// Initializes runtime and context, injects native functions and starts the JS event loop.
         /// </summary>
         public UWPChakraHostExecutor()
         {
             try
             {
+                // Needed for interoperability with C++.
                 _thisHandle = GCHandle.Alloc(this);
             } 
             catch (ArgumentException e)
@@ -77,8 +91,8 @@ namespace Bijou.Executor
                 throw;
             }
 
-            // JS Runtime and Context are initialized in a background worker thread
-            // So that the JS Event Loop runs n the same thread
+            // JS Runtime and Context are initialized in a background worker
+            // thread, so that the JS Event Loop runs in the same thread.
             _jsTask = AsyncPump.Run(async delegate
             {
                 InitializeJSExecutor();
@@ -90,18 +104,15 @@ namespace Bijou.Executor
         }
 
         /// <summary>
-        ///     Destroy an instance of UWPChakraHostExecutor
+        /// Destroys an instance of UWPChakraHostExecutor.
         /// </summary>
         ~UWPChakraHostExecutor()
         {
-            // dispose the instance to clean-up 
             Dispose(false);
         }
 
-
         /// <summary>
-        ///     Initialize JS runtime and context
-        ///     Injects native functions
+        /// Initializes JS runtime and context. Injects native functions.
         /// </summary>
         private void InitializeJSExecutor()
         {
@@ -138,21 +149,21 @@ namespace Bijou.Executor
         }
 
         /// <summary>
-        ///     Start the JS event loop
+        /// Starts the JS event loop.
         /// </summary>
         private async Task RunJSEventLoop()
         {
-            // JS Event loop
-            // check https://jakearchibald.com/2015/tasks-microtasks-queues-and-schedules/
-            // for a detailed description of micro-task and task queues
+            // JS Event loop.
+            // Check https://jakearchibald.com/2015/tasks-microtasks-queues-and-schedules/
+            // for a detailed description of micro-task and task queues.
             while (!_shouldStop)
             {
                 try
                 {
                     // 1 - Consume promises queues (micro-task queue)
-                    while (_jsPromisesQueue.Count > 0) 
+                    while (_jsPromiseQueue.Count > 0) 
                     {
-                        var promise = _jsPromisesQueue.Dequeue();
+                        var promise = _jsPromiseQueue.Dequeue();
                         promise.Execute();
 
                         // Usually, promises don't have an Id
@@ -165,13 +176,13 @@ namespace Bijou.Executor
 
                     // 2 - Execute scheduled tasks
                     var waitTimeout = -1;
-                    while (_jsSortedScheduledTasks.Count > 0)
+                    while (_sortedScheduledJSTaskList.Count > 0)
                     {
-                        var task = _jsSortedScheduledTasks[0];
+                        var task = _sortedScheduledJSTaskList[0];
                         var timeToNextTask = task.MillisecondsToExecution;
                         if (timeToNextTask == 0) 
                         {
-                            _jsSortedScheduledTasks.RemoveAt(0);
+                            _sortedScheduledJSTaskList.RemoveAt(0);
 
                             // Execute the scheduled task
                             task.Execute();
@@ -241,13 +252,13 @@ namespace Bijou.Executor
                         exceptionMessage += ", JS line: " + errorLine;
                     }
 
-                     Debug.WriteLine(exceptionMessage);
+                    Debug.WriteLine(exceptionMessage);
                     JsExecutionFailed?.Invoke(this, exceptionMessage);
                 } 
                 catch (JavaScriptUsageException usageException)
                 {
                     var exceptionMessage = "UWPChakraHostExecutor: JavaScriptUsageException, " + usageException.Message;
-                     Debug.WriteLine(exceptionMessage);
+                    Debug.WriteLine(exceptionMessage);
                     JsExecutionFailed?.Invoke(this, exceptionMessage);
                 } 
                 catch (Exception e)
@@ -264,7 +275,7 @@ namespace Bijou.Executor
         }
 
         /// <summary>
-        ///     Load a script from a file
+        /// Loads a script from a file.
         /// </summary>
         public static string LoadScript(string filename)
         {
@@ -285,7 +296,7 @@ namespace Bijou.Executor
         }
 
         /// <summary>
-        ///     Load a script and run it adding it to the event loop
+        /// Loads a script and runs it by adding it to the event loop.
         /// </summary>
         public void LoadAndRunScriptAsync(string scriptPath)
         {
@@ -297,28 +308,27 @@ namespace Bijou.Executor
         }
 
         /// <summary>
-        ///     Run a script adding it to the event loop
+        /// Runs a script by adding it to the event loop.
         /// </summary>
         public void RunScriptAsync(string script)
         {
-            RunScriptAsync(script, "");
+            RunScriptAsync(script, string.Empty);
         }
 
         /// <summary>
-        ///     Run a script adding it to the event loop
-        ///     
+        /// Runs a script by adding it to the event loop.
         /// </summary>
         public void RunScriptAsync(string script, string scriptPath)
         {
             AddTask(new JSTaskScript(scriptPath, script, _currentSourceContext));
         }
 
-        internal void RunScript(string script)
+        private  void RunScript(string script)
         {
-            RunScript(script, "");
+            RunScript(script, string.Empty);
         }
 
-        internal void RunScript(string script, string scriptPath)
+        private void RunScript(string script, string scriptPath)
         {
             if (!JavaScriptContext.IsCurrentValid) 
             {
@@ -336,9 +346,9 @@ namespace Bijou.Executor
         }
 
         /// <summary>
-        ///     Add a js task to the event loop
+        /// Adds a JS task to the event loop.
         /// </summary>
-        internal void AddTask(JSTaskAbstract task)
+        internal void AddTask(AbstractJSTask task)
         {
             try 
             {
@@ -371,14 +381,14 @@ namespace Bijou.Executor
 
             if (promise != null)
             {
-                _jsPromisesQueue.Enqueue(promise);
+                _jsPromiseQueue.Enqueue(promise);
             }
         }
 
         /// <summary>
-        ///     Add a js task that can be canceled 
+        /// Adds a JS task that can be canceled.
         /// </summary>
-        internal virtual int AddCancellableTask(JSTaskAbstract task)
+        internal int AddCancellableTask(AbstractJSTask task)
         {
             if (!JavaScriptContext.IsCurrentValid)
             {
@@ -387,33 +397,33 @@ namespace Bijou.Executor
 
             var taskId = GetNextCancellableTaskId();
             task.Id = taskId;
-            _cancellableJsTasksDictionary.Add(taskId, task);
+            _cancellableJSTaskDictionary.Add(taskId, task);
             AddTask(task);
 
             return taskId;
         }
 
         /// <summary>
-        ///    Cancel a task and prevents its execution in the event loop
+        /// Cancels a JS task and prevents its execution in the event loop.
         /// </summary>
-        internal virtual void CancelTask(int taskId)
+        internal void CancelTask(int taskId)
         {
             if (!JavaScriptContext.IsCurrentValid)
             {
                 return;
             }
 
-            if (!_cancellableJsTasksDictionary.ContainsKey(taskId))
+            if (!_cancellableJSTaskDictionary.ContainsKey(taskId))
             {
-                Debug.WriteLine("CancelTask: no task id found in task dictionary");
+                Debug.WriteLine($"CancelTask: no task of id {taskId} found in task dictionary");
                 return;
             }
 
-            _cancellableJsTasksDictionary[taskId].Cancel();
+            _cancellableJSTaskDictionary[taskId].Cancel();
         }
 
         /// <summary>
-        ///     Clear task from the task dictionary
+        /// Clears JS task from the task dictionary.
         /// </summary>
         private void ClearCancellableTask(int taskId)
         {
@@ -422,17 +432,17 @@ namespace Bijou.Executor
                 return;
             }
 
-            if (!_cancellableJsTasksDictionary.ContainsKey(taskId))
+            if (!_cancellableJSTaskDictionary.ContainsKey(taskId))
             {
                 Debug.WriteLine("ClearCancellableTask: no task id found in task dictionary");
                 return;
             }
 
-            _cancellableJsTasksDictionary.Remove(taskId);
+            _cancellableJSTaskDictionary.Remove(taskId);
         }
 
         /// <summary>
-        ///    Propagate message received event to any registered subject
+        /// Propagates the MessageReceived event to any registered subject.
         /// </summary>
         internal virtual void OnMessageReceived(string message)
         {
@@ -440,9 +450,9 @@ namespace Bijou.Executor
         }
 
         /// <summary>
-        ///    Schedule a task to be executed in the event loop
+        /// Schedules a task to be executed in the event loop.
         /// </summary>
-        private void ScheduleTask(JSTaskAbstract task)
+        private void ScheduleTask(AbstractJSTask task)
         {
             if (!JavaScriptContext.IsCurrentValid) 
             {
@@ -450,15 +460,19 @@ namespace Bijou.Executor
             }
 
             var i = 0;
-            while (i < _jsSortedScheduledTasks.Count &&
-                   _jsSortedScheduledTasks[i].MillisecondsToExecution <= task.MillisecondsToExecution)
+            while (i < _sortedScheduledJSTaskList.Count &&
+                   _sortedScheduledJSTaskList[i].MillisecondsToExecution <= task.MillisecondsToExecution)
             {
                 ++i;
             }
 
-            _jsSortedScheduledTasks.Insert(i, task);
+            _sortedScheduledJSTaskList.Insert(i, task);
         }
 
+        /// <summary>
+        /// Gets the next JS task.
+        /// </summary>
+        /// <returns></returns>
         private int GetNextCancellableTaskId()
         {
             // avoid collisions
@@ -467,13 +481,13 @@ namespace Bijou.Executor
             {
                 nextId = _random.Next();
             }
-            while (_cancellableJsTasksDictionary.ContainsKey(_random.Next()));
+            while (_cancellableJSTaskDictionary.ContainsKey(_random.Next()));
 
             return nextId;
         }
 
         /// <summary>
-        ///     Inject a callback into JS
+        /// Injects a callback into JS.
         /// </summary>
         private static void DefineHostCallback(JavaScriptValue parentObject, string callbackName, JavaScriptNativeFunction callback, IntPtr callbackData)
         {
@@ -484,7 +498,7 @@ namespace Bijou.Executor
         }
 
         /// <summary>
-        ///     Starts debugging in the context.
+        /// Starts debugging in the context.
         /// </summary>
         public static void StartDebugging()
         {
@@ -497,7 +511,7 @@ namespace Bijou.Executor
         }
 
         /// <summary>
-        /// Log to filesystem
+        /// Writes to console.
         /// </summary>
         private void OnConsoleMessageReady(object sender, string logMessage)
         {

@@ -1,18 +1,16 @@
-﻿// JSFileHelper
-/// <summary>
-/// JSFileHelper implements thread-safe filesystem read/write access
-/// Thread-safety is provided by a dictionary of semaphores, where
-/// each file has a dedicated semaphore. 
-/// The dictionary is thread-safe protected by a dedicated semaphore.
-/// We do not use a thread-safe container as we can't have thread-safety when adding/disposing 
-/// a file's semaphore
-/// </summary>
-
-using System.Threading.Tasks;
+﻿using System.Threading.Tasks;
 using Bijou.Projected.IO;
 
 namespace Bijou.Projected
 {
+    /// <summary>
+    /// JSFileHelper implements thread-safe filesystem read/write access.
+    /// Thread-safety is provided by a dictionary of semaphores, where each
+    /// file has a dedicated semaphore. 
+    /// The dictionary is thread-safe protected by a dedicated semaphore.
+    /// We do not use a thread-safe container as we can't have thread-safety
+    /// when adding/disposing a file's semaphore.
+    /// </summary>
     internal static class JSFileHelper
     {
         /// <summary>

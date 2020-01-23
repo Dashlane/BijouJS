@@ -4,11 +4,13 @@ using Windows.Foundation;
 
 namespace Bijou.Projected
 {
-    // Class projected to JS context, implementing file system async feature
-    // Methods name are lowerCase as projection force them to lowerCase 
-    // As Task are not WinRT component, in order to have exposed async methods
-    // we need to return IAsyncOperation. In order to return IAsyncOperation,
-    // we return a Task as an Async Operation
+    /// <summary>
+    /// Class projected to JS context, implementing file system async feature.
+    /// Methods name are lowerCase as projection force them to lowerCase
+    /// As Task are not WinRT component, in order to have exposed async methods
+    /// we need to return IAsyncOperation.In order to return IAsyncOperation,
+    /// we return a Task as an Async Operation.
+    /// </summary>
     public static class JSFileSystem
     {
         /// <summary>

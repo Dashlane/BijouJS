@@ -9,7 +9,7 @@ namespace Bijou.NativeFunctions
     internal static class JSAsyncFunctions
     {
         /// <summary>
-        ///     JS Native function for setTimeout
+        /// JS Native function for setTimeout
         /// </summary>
         public static JavaScriptValue SetTimeoutJavaScriptNativeFunction(
             JavaScriptValue callee, 
@@ -27,7 +27,6 @@ namespace Bijou.NativeFunctions
             // Return Value
             // A Number, representing the ID value of the timer that is set.Use this value with the clearInterval() method to cancel the timer
 
-
             // check arguments
             if (argumentCount >= 2 && arguments.Length >= 2)
             {
@@ -39,7 +38,7 @@ namespace Bijou.NativeFunctions
         }
 
         /// <summary>
-        ///     JS Native function for setInterval
+        /// JS Native function for setInterval
         /// </summary>
         public static JavaScriptValue SetIntervalJavaScriptNativeFunction(
             JavaScriptValue callee,
@@ -69,7 +68,7 @@ namespace Bijou.NativeFunctions
         }
 
         /// <summary>
-        ///     JS Native function for generic async operation (setTimeout / setInterval)
+        /// JS Native function for generic async operation (setTimeout / setInterval)
         /// </summary>
         private static JavaScriptValue AddScheduledJavaScriptNativeFunction(
             IReadOnlyList<JavaScriptValue> arguments,
@@ -150,7 +149,7 @@ namespace Bijou.NativeFunctions
         }
 
         /// <summary>
-        ///     JS Native function for clear async operation (clearTimeout / clearInterval)
+        /// JS Native function for clear async operation (clearTimeout / clearInterval)
         /// </summary>
         public static JavaScriptValue ClearScheduledJavaScriptNativeFunction(
             JavaScriptValue callee, 
@@ -207,7 +206,7 @@ namespace Bijou.NativeFunctions
         }
 
         /// <summary>
-        ///     JS Native function to use as a callback for ES6 promises
+        /// JS Native function to use as a callback for ES6 promises.
         /// </summary>
         public static void PromiseContinuationCallback(JavaScriptValue promise, IntPtr callbackData)
         {

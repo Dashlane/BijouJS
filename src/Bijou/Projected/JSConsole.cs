@@ -3,14 +3,19 @@ using System.Diagnostics;
 
 namespace Bijou.Projected
 {
-    // Class projected to JS context, implementing console logging feature
-    // Methods name are lowerCase as projection force them to lowerCase
+    /// <summary>
+    /// Class projected to JS context, implementing console logging feature.
+    /// Methods name are lowerCase as projection force them to lowerCase. 
+    /// </summary>
     public static class JSConsole
     {
-        // Events
-        public static event EventHandler<string> ConsoleMessageReady;
         /// <summary>
-        ///     JS Native function for console.log
+        /// Event called when JS needs to print output to the console.
+        /// </summary>
+        public static event EventHandler<string> ConsoleMessageReady;
+
+        /// <summary>
+        /// JS Native function for console.log
         /// </summary>
         public static void log(string message)
         {
@@ -19,7 +24,7 @@ namespace Bijou.Projected
         }
 
         /// <summary>
-        ///     JS Native function for console.info
+        /// JS Native function for console.info
         /// </summary>
         public static void info(string message)
         {
@@ -28,7 +33,7 @@ namespace Bijou.Projected
         }
 
         /// <summary>
-        ///     JS Native function for console.warn
+        /// JS Native function for console.warn
         /// </summary>
         public static void warn(string message)
         {
@@ -37,7 +42,7 @@ namespace Bijou.Projected
         }
 
         /// <summary>
-        ///     JS Native function for console.error
+        /// JS Native function for console.error
         /// </summary>
         public static void error(string message)
         {

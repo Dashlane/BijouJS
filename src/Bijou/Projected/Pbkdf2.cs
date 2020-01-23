@@ -4,9 +4,11 @@ using Windows.Security.Cryptography.Core;
 
 namespace Bijou.Projected
 {
-    // Class projected to JS context, implementing Pbkdf2 cryptographic hash
-    // Methods name are lowerCase as projection force them to lowerCase
-    // Inspired by: https://gist.github.com/charlesportwoodii/a571e1a3541b708df18881f086e31002
+    /// <summary>
+    /// Class projected to JS context, implementing Pbkdf2 cryptographic hash.
+    /// Methods name are lowerCase as projection force them to lowerCase.
+    /// Inspired by: https://gist.github.com/charlesportwoodii/a571e1a3541b708df18881f086e31002
+    /// </summary>
     public sealed class Pbkdf2
     {
         private static readonly Dictionary<string, string> _keyDerivationAlgorithmNames = new Dictionary<string, string> {
@@ -14,14 +16,15 @@ namespace Bijou.Projected
             { "SHA-256", KeyDerivationAlgorithmNames.Pbkdf2Sha256 }
         };
 
-        /**
-         * Generate a PBDFK hash
-         * @param string password
-         * @param string salt
-         * @param string algorithm
-         * @param uint iterationCountIn
-         * @param uint target size
-         */
+        /// <summary>
+        /// Generates a PBDFK hash.
+        /// </summary>
+        /// <param name="pwd">password</param>
+        /// <param name="salt"></param>
+        /// <param name="iterations">iterationCountIn</param>
+        /// <param name="hashMethod"></param>
+        /// <param name="hashLength"></param>
+        /// <returns></returns>
         public static byte[] hashPbkdf2([ReadOnlyArray]byte[] pwd, [ReadOnlyArray]byte[] salt, int iterations, string hashMethod, int hashLength)
         {
             var algorithm = KeyDerivationAlgorithmNames.Pbkdf2Sha256;

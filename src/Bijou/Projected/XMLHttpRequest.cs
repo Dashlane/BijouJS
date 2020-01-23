@@ -2,16 +2,25 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Net.Http;
-using System.Threading;
 using Windows.Foundation.Metadata;
 
 namespace Bijou.Projected
 {
     public delegate void XHREventHandler();
 
-    // Class projected to JS context, implementing Http request feature
-    // All public methods and members are accessible from JS context
-    // Projected methods and members names are lowerCase as projection force them to lowerCase
+    public static class RequestType
+    {
+        public const string Get = "GET";
+        public const string Delete = "DELETE";
+        public const string Post = "POST";
+        public const string Patch = "PATCH";
+    }
+
+    /// <summary>
+    /// Class projected to JS context, implementing Http request feature.
+    /// All public methods and members are accessible from JS context.
+    /// Projected methods and members names are lowerCase as projection force them to lowerCase.
+    /// </summary>
     public sealed class XMLHttpRequest
     {
         private enum enReadyState : int
@@ -26,11 +35,11 @@ namespace Bijou.Projected
         private readonly Dictionary<string, string> _headers = new Dictionary<string, string>();
         private Uri _uri;
         private string _httpMethod;
-        private enReadyState _readyState = enReadyState.Unsent;
 
+        private enReadyState _readyState = enReadyState.Unsent;
         public int readyState
         {
-            get { return (int)_readyState; }
+            get => (int)_readyState;
             private set
             {
                 _readyState = (enReadyState)value;
@@ -40,15 +49,9 @@ namespace Bijou.Projected
 
         public string response => responseText;
 
-        public string responseText
-        {
-            get; private set;
-        }
+        public string responseText { get; private set; }
 
-        public string responseType
-        {
-            get; private set;
-        }
+        public string responseType { get; private set; }
 
         public bool withCredentials { get; set; }
 
@@ -85,7 +88,7 @@ namespace Bijou.Projected
 
         public void send()
         {
-            SendAsync("");
+            SendAsync(string.Empty);
         }
 
         public void send(string data)
@@ -93,27 +96,29 @@ namespace Bijou.Projected
             SendAsync(data);
         }
 
-        const string MSAPP_HEADER = "ms-appx:///";
-        async void SendAsync(string data)
+        private const string MsAppXHeader = "ms-appx:///";
+
+        private async void SendAsync(string data)
         {
-            if (_httpMethod == "GET" && _uri.OriginalString.StartsWith(MSAPP_HEADER, StringComparison.InvariantCulture)) {
+            if (_httpMethod == RequestType.Get && _uri.OriginalString.StartsWith(MsAppXHeader, StringComparison.InvariantCulture)) {
                 responseType = "text";
-                responseText = File.ReadAllText(_uri.OriginalString.Substring(MSAPP_HEADER.Length));
+                responseText = File.ReadAllText(_uri.OriginalString.Substring(MsAppXHeader.Length));
                 readyState = (int)enReadyState.Done;
                 return;
             };
 
             using (var httpClient = new HttpClient()) {
-
                 // Content* related headers are set on the content, not on the client.
                 // Let's use them later
                 var requestContentHeaders = new Dictionary<string, string>();
 
                 foreach (var header in _headers) {
-                    if (header.Key.StartsWith("Content", StringComparison.Ordinal)) {
+                    if (header.Key.StartsWith("Content", StringComparison.Ordinal))
+                    {
                         requestContentHeaders.Add(header.Key, header.Value);
                     }
-                    else {
+                    else
+                    {
                         httpClient.DefaultRequestHeaders.TryAddWithoutValidation(header.Key, header.Value);
                     }
                 }
@@ -122,17 +127,14 @@ namespace Bijou.Projected
 
                 HttpResponseMessage responseMessage = null;
 
-                var currentCtx = SynchronizationContext.Current;
-
                 try {
                     switch (_httpMethod) {
-                        case "DELETE":
+                        case RequestType.Delete:
                             responseMessage = await httpClient.DeleteAsync(_uri);
                             break;
-                        case "PATCH":
-                        case "POST":
+                        case RequestType.Patch:
+                        case RequestType.Post:
                             using (var content = new StringContent(data)) {
-
                                 // At this point, we want to override content headers set by default
                                 // and use the ones from Carbon.
                                 foreach(var entry in requestContentHeaders) {
@@ -142,7 +144,7 @@ namespace Bijou.Projected
                                 responseMessage = await httpClient.PostAsync(_uri, content);
                             }
                             break;
-                        case "GET":
+                        case RequestType.Get:
                             responseMessage = await httpClient.GetAsync(_uri);
                             break;
                     }
@@ -161,13 +163,13 @@ namespace Bijou.Projected
                     throw;
                 }
 
-                if (responseMessage != null) {
-                    using (responseMessage) {
-                        using (var content = responseMessage.Content) {
-                            responseType = "text";
-                            responseText = await content.ReadAsStringAsync();
-                            readyState = (int)enReadyState.Done;
-                        }
+                if (responseMessage == null) return;
+                
+                using (responseMessage) {
+                    using (var content = responseMessage.Content) {
+                        responseType = "text";
+                        responseText = await content.ReadAsStringAsync();
+                        readyState = (int)enReadyState.Done;
                     }
                 }
             }

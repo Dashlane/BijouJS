@@ -1,14 +1,4 @@
-﻿// FileSystem
-/// <summary>
-/// FileSystem implements thread-safe filesystem read/write access
-/// Thread-safety is provided by a dictionary of semaphores, where
-/// each file has a dedicated semaphore. 
-/// The dictionary is thread-safe protected by a dedicated semaphore.
-/// We do not use a thread-safe container as we can't have thread-safety when adding/disposing 
-/// a file's semaphore
-/// </summary>
-
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
@@ -18,17 +8,33 @@ using Windows.Storage;
 
 namespace Bijou.Projected.IO
 {
+    /// <summary>
+    /// FileSystem implements thread-safe filesystem read/write access
+    /// Thread-safety is provided by a dictionary of semaphores, where
+    /// each file has a dedicated semaphore. 
+    /// The dictionary is thread-safe protected by a dedicated semaphore.
+    /// We do not use a thread-safe container as we can't have thread-safety when adding/disposing 
+    /// a file's semaphore
+    /// </summary>
     public static class FileSystem
     {
-        // max concurent access requests
-        private const int MAX_CONCURRENT_REQUEST = 1;
-        // semaphore to synchronize access on _fileSystemSemaphores
-        private static SemaphoreSlim _dictionarySemaphore = new SemaphoreSlim(MAX_CONCURRENT_REQUEST, MAX_CONCURRENT_REQUEST);
-        // dictionary of files semaphores
-        private static Dictionary<string, SemaphoreSlim> _fileSystemSemaphores = new Dictionary<string, SemaphoreSlim>();
+        /// <summary>
+        /// Maximum concurrent access requests.
+        /// </summary>
+        private const int ConcurrentRequestMaxCount = 1;
 
         /// <summary>
-        /// Async check if the given relative file corresponds to an existing file in local folder. 
+        /// Semaphore to synchronize access on _fileSystemSemaphores.
+        /// </summary>
+        private static readonly SemaphoreSlim DictionarySemaphore = new SemaphoreSlim(ConcurrentRequestMaxCount, ConcurrentRequestMaxCount);
+
+        /// <summary>
+        /// Dictionary of files semaphores.
+        /// </summary>
+        private static readonly Dictionary<string, SemaphoreSlim> FileSystemSemaphores = new Dictionary<string, SemaphoreSlim>();
+
+        /// <summary>
+        /// Checks asynchronously if the given relative file corresponds to an existing file in local folder.
         /// </summary>
         /// <param name="filePath">Relative path to a file</param>
         /// <returns>True if file exists, false otherwise</returns>
@@ -92,7 +98,6 @@ namespace Bijou.Projected.IO
         /// <returns></returns>
         public static async Task<File> ReadAsync(StorageFolder storageFolder, string filePath)
         {
-            // validate argument
             if (storageFolder == null) {
                 throw new ArgumentNullException(nameof(storageFolder));
             }
@@ -100,22 +105,15 @@ namespace Bijou.Projected.IO
             var ret = new File();
             try {
                 await LockFileAsync(filePath);
-                // Get file
                 var readFile = await storageFolder.GetFileAsync(filePath);
-                // Read text
                 ret.Content = await FileIO.ReadTextAsync(readFile);
             } catch (FileNotFoundException ffe) {
-                // file does not exists
                 ret.HasError = true;
                 ret.ErrorMessage = ffe.Message;
             } catch (UnauthorizedAccessException uae) {
-                // You don't have permission to access the specified file.
                 ret.HasError = true;
                 ret.ErrorMessage = uae.Message;
-            } catch (Exception) {
-                throw;
             } finally {
-                // release file's semaphore
                 await UnlockFileAsync(filePath);
             }
             return ret;
@@ -126,7 +124,7 @@ namespace Bijou.Projected.IO
         /// </summary>
         /// <param name="filePath">Relative path to a file in UWP app's local folder</param>
         /// <param name="fileContent">File text content to write</param>
-        /// <returns>True if the operation succeds, false otherwise</returns>
+        /// <returns>True if the operation succeeds, false otherwise</returns>
         public static async Task<bool> WriteAsync(string filePath, string fileContent)
         {
             return await WriteAsync(ApplicationData.Current.LocalFolder, filePath, fileContent);
@@ -138,7 +136,7 @@ namespace Bijou.Projected.IO
         /// <param name="storageFolder">StorageFolder where to look for the file</param>
         /// <param name="filePath">Relative path to a file in the given StorageFolder</param>
         /// <param name="fileContent">File text content to write</param>
-        /// <returns>True if the operation succeds, false otherwise</returns>
+        /// <returns>True if the operation succeeds, false otherwise</returns>
         public static async Task<bool> WriteAsync(StorageFolder storageFolder, string filePath, string fileContent)
         {
             bool ret = false;
@@ -179,11 +177,12 @@ namespace Bijou.Projected.IO
         /// Async method to remove a file from UWP app's local folder
         /// </summary>
         /// <param name="filePath">Relative path to a file in UWP app's local folder</param>
-        /// <returns>True if the operation succeds, false otherwise</returns>
+        /// <returns>True if the operation succeeds, false otherwise</returns>
         public static async Task<string> RemoveAsync(string filePath)
         {
             return await RemoveAsync(ApplicationData.Current.LocalFolder, filePath);
         }
+
         /// <summary>
         /// Async method to remove a file from a given StorageFolder
         /// </summary>
@@ -227,14 +226,14 @@ namespace Bijou.Projected.IO
             SemaphoreSlim semaphore;
             {
                 try {
-                    await _dictionarySemaphore.WaitAsync();
-                    if (!_fileSystemSemaphores.ContainsKey(filePath)) {
+                    await DictionarySemaphore.WaitAsync();
+                    if (!FileSystemSemaphores.ContainsKey(filePath)) {
                         // initialize a new semaphore with 1 available request and that accepts 1 concurrent request
-                        _fileSystemSemaphores[filePath] = new SemaphoreSlim(MAX_CONCURRENT_REQUEST, MAX_CONCURRENT_REQUEST);
+                        FileSystemSemaphores[filePath] = new SemaphoreSlim(ConcurrentRequestMaxCount, ConcurrentRequestMaxCount);
                     }
-                    semaphore = _fileSystemSemaphores[filePath];
+                    semaphore = FileSystemSemaphores[filePath];
                 } finally {
-                    _dictionarySemaphore.Release();
+                    DictionarySemaphore.Release();
                 }
             }
             await semaphore.WaitAsync();
@@ -249,12 +248,12 @@ namespace Bijou.Projected.IO
             // get file's semaphore from the dictionary
             SemaphoreSlim semaphore = null;
             try {
-                await _dictionarySemaphore.WaitAsync();
-                if (_fileSystemSemaphores.ContainsKey(filePath)) {
-                    semaphore = _fileSystemSemaphores[filePath];
+                await DictionarySemaphore.WaitAsync();
+                if (FileSystemSemaphores.ContainsKey(filePath)) {
+                    semaphore = FileSystemSemaphores[filePath];
                 }
             } finally {
-                _dictionarySemaphore.Release();
+                DictionarySemaphore.Release();
             }
 
             // release file's semaphore
@@ -262,13 +261,13 @@ namespace Bijou.Projected.IO
                 semaphore.Release();
                 // remove it from semaphores dictionary if not needed anymore => if CurrentCount is the max available count
                 try {
-                    await _dictionarySemaphore.WaitAsync();
-                    if (semaphore.CurrentCount == MAX_CONCURRENT_REQUEST) {
+                    await DictionarySemaphore.WaitAsync();
+                    if (semaphore.CurrentCount == ConcurrentRequestMaxCount) {
                         semaphore.Dispose();
-                        _fileSystemSemaphores.Remove(filePath);
+                        FileSystemSemaphores.Remove(filePath);
                     }
                 } finally {
-                    _dictionarySemaphore.Release();
+                    DictionarySemaphore.Release();
                 }
             }
         }
