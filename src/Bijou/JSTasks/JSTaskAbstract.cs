@@ -16,7 +16,6 @@ namespace Bijou.JSTasks
         public int Id { get; set; } = -1;
         public bool HasValidId => Id != -1;
 
-
         public JSTaskAbstract(int delay = 0, bool shouldReschedule = false)
         {
             ScheduledDelay = delay;

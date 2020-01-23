@@ -150,7 +150,6 @@
     <Compile Include="Chakra\Hosting\JavaScriptValue.cs" />
     <Compile Include="Chakra\Hosting\JavaScriptValueType.cs" />
     <Compile Include="Chakra\Hosting\NativeMethods.cs" />
-    <Compile Include="ILogger.cs" />
     <Compile Include="Executor\UwpChakraExecutorFactory.cs" />
     <Compile Include="Executor\UWPChakraHostExecutor.cs" />
     <Compile Include="IJsExecutorFactory.cs" />

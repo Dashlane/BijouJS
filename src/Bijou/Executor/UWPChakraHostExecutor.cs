@@ -79,9 +79,6 @@ namespace Bijou.Executor
         public event Action<string> MessageReady;
         public event Action<string> JsExecutionFailed;
 
-        // logger
-        private readonly ILogger _logger;
-
         // Properties
         internal IntPtr InteropPointer
         {
@@ -97,11 +94,8 @@ namespace Bijou.Executor
         ///     Inject native functions
         ///     Start the JS event loop
         /// </summary>
-        public UWPChakraHostExecutor(ILogger logger = null)
+        public UWPChakraHostExecutor()
         {
-            // initialize logger
-            _logger = logger;
-
             try {
                 _thisHandle = GCHandle.Alloc(this);
             } catch (ArgumentException e) {
@@ -166,7 +160,7 @@ namespace Bijou.Executor
                         console.log('UWPChakraHostExecutor ready');");
 
             // register to JSConsole 
-            JSConsole.ConsoleMessageReady += this.LogToFile;
+            JSConsole.ConsoleMessageReady += OnConsoleMessageReady;
         }
 
         /// <summary>
@@ -235,7 +229,7 @@ namespace Bijou.Executor
                             }
                         }
                     } catch (OperationCanceledException) {
-                        _logger.Info("UWPChakraHostExecutor: TryTake operation was canceled");
+                        Console.WriteLine("UWPChakraHostExecutor: TryTake operation was canceled");
                     }
                 } catch (JavaScriptScriptException jsse) {
                     var exceptionMessage = "UWPChakraHostExecutor: breaking js task loop, raised exception: " + jsse.Message;
@@ -251,23 +245,23 @@ namespace Bijou.Executor
                     if (!String.IsNullOrEmpty(errorLine)) {
                         exceptionMessage += ", JS line: " + errorLine;
                     }
-                    _logger.Warn(exceptionMessage);
+                    Debug.WriteLine(exceptionMessage);
                     JsExecutionFailed?.Invoke(exceptionMessage);
                     continue;
                 } catch (JavaScriptUsageException jsue) {
                     var exceptionMessage = "UWPChakraHostExecutor: JavaScriptUsageException, " + jsue.Message;
-                    _logger.Warn(exceptionMessage);
+                    Debug.WriteLine(exceptionMessage);
                     JsExecutionFailed?.Invoke(exceptionMessage);
                     continue;
                 } catch (Exception e) {
                     var exceptionMessage = "UWPChakraHostExecutor: breaking js task loop, raised exception: " + e.Message;
-                    _logger.Error(exceptionMessage);
+                    Console.Error.WriteLine(exceptionMessage);
                     JsExecutionFailed?.Invoke(exceptionMessage);
                     throw;
                 }
             }
 
-            // Unattach the current JS context (otherwise we can't dispose of the runtime)
+            // Detach the current JS context (otherwise we can't dispose of the runtime)
             NativeMethods.JsSetCurrentContext(JavaScriptContext.Invalid);
         }
 
@@ -350,11 +344,11 @@ namespace Bijou.Executor
                     _jsTaskAsyncQueue.TryEnqueue(task);
                 }
             } catch (ObjectDisposedException) {
-                _logger.Info("AddTask: _jsTaskCollection was disposed");
+                Debug.WriteLine("AddTask: _jsTaskCollection was disposed");
             } catch (InvalidOperationException) {
-                _logger.Info("AddTask: _jsTaskCollection was marked as complete");
+                Debug.WriteLine("AddTask: _jsTaskCollection was marked as complete");
             } catch (Exception e) {
-                _logger.Error("AddTask: _jsTaskCollection.Add throwed an exception, " + e.Message);
+                Console.Error.WriteLine("AddTask: _jsTaskCollection.Add threw an exception, " + e.Message);
                 throw;
             }
         }
@@ -397,7 +391,7 @@ namespace Bijou.Executor
             }
 
             if (!_cancellableJsTasksDictionary.ContainsKey(taskId)) {
-                _logger.Info("CancelTask: no task id found in task dictionary");
+                Debug.WriteLine("CancelTask: no task id found in task dictionary");
                 return;
             }
 
@@ -414,7 +408,7 @@ namespace Bijou.Executor
             }
 
             if (!_cancellableJsTasksDictionary.ContainsKey(taskId)) {
-                _logger.Info("ClearCancellableTask: no task id found in task dictionary");
+                Debug.WriteLine("ClearCancellableTask: no task id found in task dictionary");
                 return;
             }
 
@@ -483,13 +477,12 @@ namespace Bijou.Executor
         }
 
         /// <summary>
-        ///     Log to filesystem
+        /// Log to filesystem
         /// </summary>
-        private void LogToFile(object sender, string logMessage)
+        private void OnConsoleMessageReady(object sender, string logMessage)
         {
-            _logger.Info(logMessage);
+            Console.WriteLine(logMessage);
         }
-
 
         /// <summary>
         /// Dispose(bool disposing) executes in two distinct scenarios.

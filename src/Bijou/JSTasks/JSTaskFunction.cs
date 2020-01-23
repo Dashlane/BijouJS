@@ -1,6 +1,6 @@
-﻿using System;
+﻿using Bijou.Chakra.Hosting;
+using System;
 using System.Collections.Generic;
-using Bijou.Chakra.Hosting;
 
 namespace Bijou.JSTasks
 {
@@ -9,7 +9,6 @@ namespace Bijou.JSTasks
         public JavaScriptValue function { get; private set; }
         public JavaScriptValue[] arguments { get; private set; }
         private bool _isReleased = false;
-        private readonly ILogger _logger;
 
         // These members store parameters passed as native types, to be converted to JS values at task execution time (when we know the JavaScriptContext is available)
         private readonly string functionNativeName;
@@ -22,9 +21,6 @@ namespace Bijou.JSTasks
         public JSTaskFunction(JavaScriptValue function, JavaScriptValue[] arguments, int delay = 0, bool repeat = false)
             : base(delay, repeat)
         {
-            // initiliaze log manager
-            _logger = null;
-
             ValidateAndStoreValues(function, arguments);
         }
 
@@ -33,11 +29,15 @@ namespace Bijou.JSTasks
         // This can be called from any thread
         public JSTaskFunction(string functionName, params object[] arguments)
         {
-            // initiliaze log manager
-            _logger = null;
-
             functionNativeName = functionName;
             nativeArguments = arguments;
+        }
+
+        ~JSTaskFunction()
+        {
+            if (!_isReleased) {
+                Console.Error.WriteLine("~JSTaskFunction: Memory leak in JS context");
+            }
         }
 
         // This must be called when the JavaScriptContext is available (i.e. in the thread which owns it)
@@ -75,33 +75,28 @@ namespace Bijou.JSTasks
 
         private void ValidateAndStoreValues(JavaScriptValue function, JavaScriptValue[] arguments)
         {
-            // ensure there is a valid context
-            if (!JavaScriptContext.IsCurrentValid) {
-                _logger.Error("JSTaskFunction invalid context");
+            // Ensure there is a valid context.
+            if (!JavaScriptContext.IsCurrentValid)
+            {
+                Console.Error.WriteLine("JSTaskFunction invalid context");
                 return;
             }
 
             this.function = function;
             this.arguments = arguments;
 
-            if (!this.function.IsValid) {
-                _logger.Error("JSTaskFunction invalid function");
+            if (!this.function.IsValid)
+            {
+                Console.Error.WriteLine("JSTaskFunction invalid function");
                 return;
             }
 
-            // keep reference since this is unmanaged memory
+            // Keep reference since this is unmanaged memory.
             this.function.AddRef();
             foreach (var arg in this.arguments) {
                 if (arg.IsValid) {
                     arg.AddRef();
                 }
-            }
-        }
-
-        ~JSTaskFunction()
-        {
-            if (!_isReleased) {
-                _logger.Error("~JSTaskFunction: Memory leak in JS context");
             }
         }
 
@@ -122,9 +117,9 @@ namespace Bijou.JSTasks
 
         protected override void ReleaseJsResources()
         {
-            // ensure there is a valid context
+            // Ensure there is a valid context.
             if (!JavaScriptContext.IsCurrentValid) {
-                _logger.Error("ReleaseJsResources invalid context");
+                Console.Error.WriteLine("ReleaseJsResources invalid context");
                 return;
             }
 
