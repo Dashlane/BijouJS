@@ -1,0 +1,71 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="Resources">
+      <UniqueIdentifier>c5ad3091-37df-4320-8e5c-fff247c5c1fe</UniqueIdentifier>
+      <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tga;tiff;tif;png;wav;mfcribbon-ms</Extensions>
+    </Filter>
+    <Filter Include="argon2">
+      <UniqueIdentifier>{f1b1bae5-bd67-4801-a5e7-9f9eaea3660b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="argon2\black2">
+      <UniqueIdentifier>{ffef263c-e5b2-436e-8553-6e5fa942ac14}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="pch.cpp" />
+    <ClCompile Include="UWPArgon2.cpp" />
+    <ClCompile Include="argon2\argon2.c">
+      <Filter>argon2</Filter>
+    </ClCompile>
+    <ClCompile Include="argon2\core.c">
+      <Filter>argon2</Filter>
+    </ClCompile>
+    <ClCompile Include="argon2\encoding.c">
+      <Filter>argon2</Filter>
+    </ClCompile>
+    <ClCompile Include="argon2\genkat.c">
+      <Filter>argon2</Filter>
+    </ClCompile>
+    <ClCompile Include="argon2\ref.c">
+      <Filter>argon2</Filter>
+    </ClCompile>
+    <ClCompile Include="argon2\thread.c">
+      <Filter>argon2</Filter>
+    </ClCompile>
+    <ClCompile Include="argon2\blake2\blake2b.c">
+      <Filter>argon2\black2</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="pch.h" />
+    <ClInclude Include="UWPArgon2.h" />
+    <ClInclude Include="argon2\argon2.h">
+      <Filter>argon2</Filter>
+    </ClInclude>
+    <ClInclude Include="argon2\core.h">
+      <Filter>argon2</Filter>
+    </ClInclude>
+    <ClInclude Include="argon2\encoding.h">
+      <Filter>argon2</Filter>
+    </ClInclude>
+    <ClInclude Include="argon2\genkat.h">
+      <Filter>argon2</Filter>
+    </ClInclude>
+    <ClInclude Include="argon2\thread.h">
+      <Filter>argon2</Filter>
+    </ClInclude>
+    <ClInclude Include="argon2\blake2\blake2.h">
+      <Filter>argon2\black2</Filter>
+    </ClInclude>
+    <ClInclude Include="argon2\blake2\blake2-impl.h">
+      <Filter>argon2\black2</Filter>
+    </ClInclude>
+    <ClInclude Include="argon2\blake2\blamka-round-opt.h">
+      <Filter>argon2\black2</Filter>
+    </ClInclude>
+    <ClInclude Include="argon2\blake2\blamka-round-ref.h">
+      <Filter>argon2\black2</Filter>
+    </ClInclude>
+  </ItemGroup>
+</Project>
