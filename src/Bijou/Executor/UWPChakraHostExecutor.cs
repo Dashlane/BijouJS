@@ -1,26 +1,21 @@
-﻿using System;
+﻿using Bijou.Async;
+using Bijou.Chakra.Hosting;
+using Bijou.JSTasks;
+using Bijou.NativeFunctions;
+using Bijou.Projected;
+using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
 using System.Runtime.InteropServices;
 using System.Threading;
 using System.Threading.Tasks;
-using Bijou.Async;
-using Bijou.Chakra.Hosting;
-using Bijou.JSTasks;
-using Bijou.NativeFunctions;
-using Bijou.Projected;
 
 namespace Bijou.Executor
 {
     /// <summary>
     /// Async JavaScript engine based on Chakra.
     /// </summary>
-    /// <remarks>
-    /// Do not use this class directly. Create an instance from UWPChakraExecutorFactory and access it though the IJsExecutorHost interface :
-    ///     var executor = new UWPChakraExecutorFactory().CreateJsExecutorHost();
-    ///     executor.LoadAndRunScriptAsync("path\\to\\my\\script.js");
-    /// </remarks>
     public class UWPChakraHostExecutor
     {
         private bool _shouldStop;
@@ -111,6 +106,71 @@ namespace Bijou.Executor
             Dispose(false);
         }
 
+        #region Public methods
+
+        /// <summary>
+        /// Runs a script by adding it to the event loop.
+        /// </summary>
+        public void RunScriptAsync(string script)
+        {
+            if (string.IsNullOrEmpty(script)) return;
+
+            AddTask(new JSTaskScript(string.Empty, script, _currentSourceContext));
+        }
+
+        /// <summary>
+        /// Loads a script then runs it by adding it to the event loop.
+        /// </summary>
+        public void RunScriptAsync(Uri scriptUri)
+        {
+            var script = LoadScript(scriptUri);
+            if (string.IsNullOrEmpty(script)) return;
+
+            AddTask(new JSTaskScript(scriptUri.ToString(), script, _currentSourceContext));
+        }
+
+        #endregion
+
+        /// <summary>
+        /// Starts debugging in the context.
+        /// </summary>
+        private static void StartDebugging()
+        {
+            if (!JavaScriptContext.IsCurrentValid)
+            {
+                return;
+            }
+
+            NativeMethods.ThrowIfError(NativeMethods.JsStartDebugging());
+        }
+
+        /// <summary>
+        /// Loads a script from a file.
+        /// </summary>
+        private static string LoadScript(Uri scriptUri)
+        {
+            if (scriptUri == null)
+            {
+                Debug.WriteLine($"{nameof(UWPChakraHostExecutor)}: unable to open {nameof(scriptUri)} because it is null");
+                return string.Empty;
+            }
+
+            if (!scriptUri.IsFile || !File.Exists(scriptUri.AbsolutePath))
+            {
+                Debug.WriteLine($"{nameof(UWPChakraHostExecutor)}: unable to open file {scriptUri}, file does not exist");
+                return string.Empty;
+            }
+
+            var script = File.ReadAllText(scriptUri.AbsolutePath);
+
+            if (string.IsNullOrEmpty(script))
+            {
+                Debug.WriteLine($"{nameof(UWPChakraHostExecutor)}: empty content for {scriptUri}");
+            }
+
+            return script;
+        }
+
         /// <summary>
         /// Initializes JS runtime and context. Injects native functions.
         /// </summary>
@@ -135,13 +195,13 @@ namespace Bijou.Executor
             DefineHostCallback(globalObject, "sendToHost", _sendToHostJavaScriptNativeFunction, InteropPointer);
 
             // Inject XmlHttpRequest projecting the namespace
-            NativeMethods.ThrowIfError(NativeMethods.JsProjectWinRTNamespace("Frameworks.JsExecutor.UWP.Chakra.Native.Projected"));
+            NativeMethods.ThrowIfError(NativeMethods.JsProjectWinRTNamespace("Bijou.Projected"));
 
             // Add references
-            RunScript(@"const XMLHttpRequest = Frameworks.JsExecutor.UWP.Chakra.Native.Projected.XMLHttpRequest;
-                        const console = Frameworks.JsExecutor.UWP.Chakra.Native.Projected.JSConsole;
-                        const atob = Frameworks.JsExecutor.UWP.Chakra.Native.Projected.JSBase64Encoding.atob;
-                        const btoa = Frameworks.JsExecutor.UWP.Chakra.Native.Projected.JSBase64Encoding.btoa;
+            RunScript(@"const XMLHttpRequest = Bijou.Projected.XMLHttpRequest;
+                        const console = Bijou.Projected.JSConsole;
+                        const atob = Bijou.Projected.JSBase64Encoding.atob;
+                        const btoa = Bijou.Projected.JSBase64Encoding.btoa;
                         console.log('UWPChakraHostExecutor ready');");
 
             // register to JSConsole 
@@ -275,59 +335,19 @@ namespace Bijou.Executor
         }
 
         /// <summary>
-        /// Loads a script from a file.
+        /// 
         /// </summary>
-        public static string LoadScript(string filename)
-        {
-            if (!File.Exists(filename))
-            {
-                Debug.WriteLine("UWPChakraHostExecutor: unable to open file " + filename + ", file does not exist");
-                return string.Empty;
-            }
-
-            var script = File.ReadAllText(filename);
-            if (!string.IsNullOrEmpty(script))
-            {
-                return script;
-            }
-
-            Debug.WriteLine("UWPChakraHostExecutor: script file " + filename + " is empty");
-            return string.Empty;
-        }
-
-        /// <summary>
-        /// Loads a script and runs it by adding it to the event loop.
-        /// </summary>
-        public void LoadAndRunScriptAsync(string scriptPath)
-        {
-            var script = LoadScript(scriptPath);
-            if (!string.IsNullOrEmpty(script)) 
-            {
-                RunScriptAsync(script, scriptPath);
-            }
-        }
-
-        /// <summary>
-        /// Runs a script by adding it to the event loop.
-        /// </summary>
-        public void RunScriptAsync(string script)
-        {
-            RunScriptAsync(script, string.Empty);
-        }
-
-        /// <summary>
-        /// Runs a script by adding it to the event loop.
-        /// </summary>
-        public void RunScriptAsync(string script, string scriptPath)
-        {
-            AddTask(new JSTaskScript(scriptPath, script, _currentSourceContext));
-        }
-
-        private  void RunScript(string script)
+        /// <param name="script"></param>
+        private void RunScript(string script)
         {
             RunScript(script, string.Empty);
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="script"></param>
+        /// <param name="scriptPath"></param>
         private void RunScript(string script, string scriptPath)
         {
             if (!JavaScriptContext.IsCurrentValid) 
@@ -348,6 +368,7 @@ namespace Bijou.Executor
         /// <summary>
         /// Adds a JS task to the event loop.
         /// </summary>
+        /// <param name="task"></param>
         internal void AddTask(AbstractJSTask task)
         {
             try 
@@ -372,6 +393,10 @@ namespace Bijou.Executor
             }
         }
 
+        /// <summary>
+        /// Adds a JS promise to the event loop.
+        /// </summary>
+        /// <param name="promise"></param>
         private void AddPromise(JSTaskFunction promise)
         {
             if (!JavaScriptContext.IsCurrentValid) 
@@ -386,8 +411,10 @@ namespace Bijou.Executor
         }
 
         /// <summary>
-        /// Adds a JS task that can be canceled.
+        /// Adds a JS task that can be canceled to the event loop.
         /// </summary>
+        /// <param name="task"></param>
+        /// <returns></returns>
         internal int AddCancellableTask(AbstractJSTask task)
         {
             if (!JavaScriptContext.IsCurrentValid)
@@ -498,25 +525,14 @@ namespace Bijou.Executor
         }
 
         /// <summary>
-        /// Starts debugging in the context.
-        /// </summary>
-        public static void StartDebugging()
-        {
-            if (!JavaScriptContext.IsCurrentValid)
-            {
-                return;
-            }
-
-            NativeMethods.ThrowIfError(NativeMethods.JsStartDebugging());
-        }
-
-        /// <summary>
         /// Writes to console.
         /// </summary>
         private void OnConsoleMessageReady(object sender, string logMessage)
         {
             Console.WriteLine(logMessage);
         }
+
+        #region IDisposable
 
         /// <summary>
         /// Dispose(bool disposing) executes in two distinct scenarios.
@@ -578,5 +594,7 @@ namespace Bijou.Executor
 
             Debug.WriteLine("UWPChakraHostExecutor disposed");
         }
+
+        #endregion
     }
 }

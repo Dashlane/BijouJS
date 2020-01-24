@@ -21,7 +21,7 @@
   <PropertyGroup Label="Globals">
     <ProjectGuid>{4a03306d-3a01-4a89-b69d-15b23a898287}</ProjectGuid>
     <Keyword>WindowsRuntimeComponent</Keyword>
-    <RootNamespace>Frameworks.JsExecutor.UWP.Chakra.NativeCrypto</RootNamespace>
+    <RootNamespace>Bijou.NativeCrypto</RootNamespace>
     <DefaultLanguage>en-US</DefaultLanguage>
     <MinimumVisualStudioVersion>14.0</MinimumVisualStudioVersion>
     <AppContainerApplication>true</AppContainerApplication>
