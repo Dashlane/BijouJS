@@ -7,6 +7,13 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Bijou", "Bijou\Bijou.csproj
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Bijou.NativeCrypto", "Bijou.NativeCrypto\Bijou.NativeCrypto.vcxproj", "{4A03306D-3A01-4A89-B69D-15B23A898287}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Bijou.Example", "Bijou.Example\Bijou.Example.csproj", "{095E6BF2-7DF4-4BA5-A5D7-7098D56ADDF4}"
+	ProjectSection(ProjectDependencies) = postProject
+		{76F84589-ED4C-4E34-9A3C-A6604B9BFAEE} = {76F84589-ED4C-4E34-9A3C-A6604B9BFAEE}
+	EndProjectSection
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Examples", "Examples", "{6EBFE7C0-7A88-489D-9CA8-AC9586AC8340}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -57,9 +64,40 @@ Global
 		{4A03306D-3A01-4A89-B69D-15B23A898287}.Release|x64.Build.0 = Release|x64
 		{4A03306D-3A01-4A89-B69D-15B23A898287}.Release|x86.ActiveCfg = Release|Win32
 		{4A03306D-3A01-4A89-B69D-15B23A898287}.Release|x86.Build.0 = Release|Win32
+		{095E6BF2-7DF4-4BA5-A5D7-7098D56ADDF4}.Debug|Any CPU.ActiveCfg = Debug|x86
+		{095E6BF2-7DF4-4BA5-A5D7-7098D56ADDF4}.Debug|Any CPU.Build.0 = Debug|x86
+		{095E6BF2-7DF4-4BA5-A5D7-7098D56ADDF4}.Debug|Any CPU.Deploy.0 = Debug|x86
+		{095E6BF2-7DF4-4BA5-A5D7-7098D56ADDF4}.Debug|ARM.ActiveCfg = Debug|ARM
+		{095E6BF2-7DF4-4BA5-A5D7-7098D56ADDF4}.Debug|ARM.Build.0 = Debug|ARM
+		{095E6BF2-7DF4-4BA5-A5D7-7098D56ADDF4}.Debug|ARM.Deploy.0 = Debug|ARM
+		{095E6BF2-7DF4-4BA5-A5D7-7098D56ADDF4}.Debug|ARM64.ActiveCfg = Debug|ARM64
+		{095E6BF2-7DF4-4BA5-A5D7-7098D56ADDF4}.Debug|ARM64.Build.0 = Debug|ARM64
+		{095E6BF2-7DF4-4BA5-A5D7-7098D56ADDF4}.Debug|ARM64.Deploy.0 = Debug|ARM64
+		{095E6BF2-7DF4-4BA5-A5D7-7098D56ADDF4}.Debug|x64.ActiveCfg = Debug|x64
+		{095E6BF2-7DF4-4BA5-A5D7-7098D56ADDF4}.Debug|x64.Build.0 = Debug|x64
+		{095E6BF2-7DF4-4BA5-A5D7-7098D56ADDF4}.Debug|x64.Deploy.0 = Debug|x64
+		{095E6BF2-7DF4-4BA5-A5D7-7098D56ADDF4}.Debug|x86.ActiveCfg = Debug|x86
+		{095E6BF2-7DF4-4BA5-A5D7-7098D56ADDF4}.Debug|x86.Build.0 = Debug|x86
+		{095E6BF2-7DF4-4BA5-A5D7-7098D56ADDF4}.Debug|x86.Deploy.0 = Debug|x86
+		{095E6BF2-7DF4-4BA5-A5D7-7098D56ADDF4}.Release|Any CPU.ActiveCfg = Release|x86
+		{095E6BF2-7DF4-4BA5-A5D7-7098D56ADDF4}.Release|ARM.ActiveCfg = Release|ARM
+		{095E6BF2-7DF4-4BA5-A5D7-7098D56ADDF4}.Release|ARM.Build.0 = Release|ARM
+		{095E6BF2-7DF4-4BA5-A5D7-7098D56ADDF4}.Release|ARM.Deploy.0 = Release|ARM
+		{095E6BF2-7DF4-4BA5-A5D7-7098D56ADDF4}.Release|ARM64.ActiveCfg = Release|ARM64
+		{095E6BF2-7DF4-4BA5-A5D7-7098D56ADDF4}.Release|ARM64.Build.0 = Release|ARM64
+		{095E6BF2-7DF4-4BA5-A5D7-7098D56ADDF4}.Release|ARM64.Deploy.0 = Release|ARM64
+		{095E6BF2-7DF4-4BA5-A5D7-7098D56ADDF4}.Release|x64.ActiveCfg = Release|x64
+		{095E6BF2-7DF4-4BA5-A5D7-7098D56ADDF4}.Release|x64.Build.0 = Release|x64
+		{095E6BF2-7DF4-4BA5-A5D7-7098D56ADDF4}.Release|x64.Deploy.0 = Release|x64
+		{095E6BF2-7DF4-4BA5-A5D7-7098D56ADDF4}.Release|x86.ActiveCfg = Release|x86
+		{095E6BF2-7DF4-4BA5-A5D7-7098D56ADDF4}.Release|x86.Build.0 = Release|x86
+		{095E6BF2-7DF4-4BA5-A5D7-7098D56ADDF4}.Release|x86.Deploy.0 = Release|x86
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{095E6BF2-7DF4-4BA5-A5D7-7098D56ADDF4} = {6EBFE7C0-7A88-489D-9CA8-AC9586AC8340}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {7E96C60F-14AF-4198-8FEE-5E10F8669CA1}
