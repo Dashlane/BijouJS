@@ -3,12 +3,12 @@
   <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
-    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProjectGuid>{76F84589-ED4C-4E34-9A3C-A6604B9BFAEE}</ProjectGuid>
-    <OutputType>Library</OutputType>
+    <Platform Condition=" '$(Platform)' == '' ">x86</Platform>
+    <ProjectGuid>{095E6BF2-7DF4-4BA5-A5D7-7098D56ADDF4}</ProjectGuid>
+    <OutputType>AppContainerExe</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>Bijou</RootNamespace>
-    <AssemblyName>Bijou</AssemblyName>
+    <RootNamespace>Bijou.Example</RootNamespace>
+    <AssemblyName>Bijou.Example</AssemblyName>
     <DefaultLanguage>en-US</DefaultLanguage>
     <TargetPlatformIdentifier>UAP</TargetPlatformIdentifier>
     <TargetPlatformVersion Condition=" '$(TargetPlatformVersion)' == '' ">10.0.18362.0</TargetPlatformVersion>
@@ -16,175 +16,148 @@
     <MinimumVisualStudioVersion>14</MinimumVisualStudioVersion>
     <FileAlignment>512</FileAlignment>
     <ProjectTypeGuids>{A5A43C5B-DE2A-4C0C-9213-0A381AF9435A};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
-  </PropertyGroup>
-  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
-    <PlatformTarget>x86</PlatformTarget>
-    <DebugSymbols>true</DebugSymbols>
-    <DebugType>full</DebugType>
-    <Optimize>false</Optimize>
-    <OutputPath>bin\Debug\</OutputPath>
-    <DefineConstants>DEBUG;TRACE;NETFX_CORE;WINDOWS_UWP</DefineConstants>
-    <ErrorReport>prompt</ErrorReport>
-    <WarningLevel>4</WarningLevel>
-  </PropertyGroup>
-  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
-    <PlatformTarget>AnyCPU</PlatformTarget>
-    <DebugType>pdbonly</DebugType>
-    <Optimize>true</Optimize>
-    <OutputPath>bin\Release\</OutputPath>
-    <DefineConstants>TRACE;NETFX_CORE;WINDOWS_UWP</DefineConstants>
-    <ErrorReport>prompt</ErrorReport>
-    <WarningLevel>4</WarningLevel>
+    <WindowsXamlEnableOverview>true</WindowsXamlEnableOverview>
+    <AppxPackageSigningEnabled>false</AppxPackageSigningEnabled>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug|x86'">
-    <PlatformTarget>x86</PlatformTarget>
     <DebugSymbols>true</DebugSymbols>
     <OutputPath>bin\x86\Debug\</OutputPath>
     <DefineConstants>DEBUG;TRACE;NETFX_CORE;WINDOWS_UWP</DefineConstants>
     <NoWarn>;2008</NoWarn>
     <DebugType>full</DebugType>
+    <PlatformTarget>x86</PlatformTarget>
     <UseVSHostingProcess>false</UseVSHostingProcess>
     <ErrorReport>prompt</ErrorReport>
+    <Prefer32Bit>true</Prefer32Bit>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Release|x86'">
-    <PlatformTarget>x86</PlatformTarget>
     <OutputPath>bin\x86\Release\</OutputPath>
     <DefineConstants>TRACE;NETFX_CORE;WINDOWS_UWP</DefineConstants>
     <Optimize>true</Optimize>
     <NoWarn>;2008</NoWarn>
     <DebugType>pdbonly</DebugType>
+    <PlatformTarget>x86</PlatformTarget>
     <UseVSHostingProcess>false</UseVSHostingProcess>
     <ErrorReport>prompt</ErrorReport>
+    <Prefer32Bit>true</Prefer32Bit>
+    <UseDotNetNativeToolchain>true</UseDotNetNativeToolchain>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug|ARM'">
-    <PlatformTarget>ARM</PlatformTarget>
     <DebugSymbols>true</DebugSymbols>
     <OutputPath>bin\ARM\Debug\</OutputPath>
     <DefineConstants>DEBUG;TRACE;NETFX_CORE;WINDOWS_UWP</DefineConstants>
     <NoWarn>;2008</NoWarn>
     <DebugType>full</DebugType>
+    <PlatformTarget>ARM</PlatformTarget>
     <UseVSHostingProcess>false</UseVSHostingProcess>
     <ErrorReport>prompt</ErrorReport>
+    <Prefer32Bit>true</Prefer32Bit>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Release|ARM'">
-    <PlatformTarget>ARM</PlatformTarget>
     <OutputPath>bin\ARM\Release\</OutputPath>
     <DefineConstants>TRACE;NETFX_CORE;WINDOWS_UWP</DefineConstants>
     <Optimize>true</Optimize>
     <NoWarn>;2008</NoWarn>
     <DebugType>pdbonly</DebugType>
+    <PlatformTarget>ARM</PlatformTarget>
     <UseVSHostingProcess>false</UseVSHostingProcess>
     <ErrorReport>prompt</ErrorReport>
+    <Prefer32Bit>true</Prefer32Bit>
+    <UseDotNetNativeToolchain>true</UseDotNetNativeToolchain>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug|ARM64'">
-    <PlatformTarget>ARM64</PlatformTarget>
     <DebugSymbols>true</DebugSymbols>
     <OutputPath>bin\ARM64\Debug\</OutputPath>
     <DefineConstants>DEBUG;TRACE;NETFX_CORE;WINDOWS_UWP</DefineConstants>
     <NoWarn>;2008</NoWarn>
     <DebugType>full</DebugType>
+    <PlatformTarget>ARM64</PlatformTarget>
     <UseVSHostingProcess>false</UseVSHostingProcess>
     <ErrorReport>prompt</ErrorReport>
+    <Prefer32Bit>true</Prefer32Bit>
+    <UseDotNetNativeToolchain>true</UseDotNetNativeToolchain>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Release|ARM64'">
-    <PlatformTarget>ARM64</PlatformTarget>
     <OutputPath>bin\ARM64\Release\</OutputPath>
     <DefineConstants>TRACE;NETFX_CORE;WINDOWS_UWP</DefineConstants>
     <Optimize>true</Optimize>
     <NoWarn>;2008</NoWarn>
     <DebugType>pdbonly</DebugType>
+    <PlatformTarget>ARM64</PlatformTarget>
     <UseVSHostingProcess>false</UseVSHostingProcess>
     <ErrorReport>prompt</ErrorReport>
+    <Prefer32Bit>true</Prefer32Bit>
+    <UseDotNetNativeToolchain>true</UseDotNetNativeToolchain>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug|x64'">
-    <PlatformTarget>x64</PlatformTarget>
     <DebugSymbols>true</DebugSymbols>
     <OutputPath>bin\x64\Debug\</OutputPath>
     <DefineConstants>DEBUG;TRACE;NETFX_CORE;WINDOWS_UWP</DefineConstants>
     <NoWarn>;2008</NoWarn>
     <DebugType>full</DebugType>
+    <PlatformTarget>x64</PlatformTarget>
     <UseVSHostingProcess>false</UseVSHostingProcess>
     <ErrorReport>prompt</ErrorReport>
+    <Prefer32Bit>true</Prefer32Bit>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Release|x64'">
-    <PlatformTarget>x64</PlatformTarget>
     <OutputPath>bin\x64\Release\</OutputPath>
     <DefineConstants>TRACE;NETFX_CORE;WINDOWS_UWP</DefineConstants>
     <Optimize>true</Optimize>
     <NoWarn>;2008</NoWarn>
     <DebugType>pdbonly</DebugType>
+    <PlatformTarget>x64</PlatformTarget>
     <UseVSHostingProcess>false</UseVSHostingProcess>
     <ErrorReport>prompt</ErrorReport>
+    <Prefer32Bit>true</Prefer32Bit>
+    <UseDotNetNativeToolchain>true</UseDotNetNativeToolchain>
   </PropertyGroup>
   <PropertyGroup>
     <RestoreProjectStyle>PackageReference</RestoreProjectStyle>
   </PropertyGroup>
   <ItemGroup>
-    <Compile Include="Async\AsyncPump.cs" />
-    <Compile Include="Async\AsyncQueue.cs" />
-    <Compile Include="Chakra\Hosting\JavaScriptBackgroundWorkItemCallback.cs" />
-    <Compile Include="Chakra\Hosting\JavaScriptBeforeCollectCallback.cs" />
-    <Compile Include="Chakra\Hosting\JavaScriptContext.cs" />
-    <Compile Include="Chakra\Hosting\JavaScriptEngineException.cs" />
-    <Compile Include="Chakra\Hosting\JavaScriptErrorCode.cs" />
-    <Compile Include="Chakra\Hosting\JavaScriptException.cs" />
-    <Compile Include="Chakra\Hosting\JavaScriptFatalException.cs" />
-    <Compile Include="Chakra\Hosting\JavaScriptMemoryAllocationCallback.cs" />
-    <Compile Include="Chakra\Hosting\JavaScriptMemoryEventType.cs" />
-    <Compile Include="Chakra\Hosting\JavaScriptNativeFunction.cs" />
-    <Compile Include="Chakra\Hosting\JavaScriptObjectBeforeCollectCallback.cs" />
-    <Compile Include="Chakra\Hosting\JavaScriptObjectFinalizeCallback.cs" />
-    <Compile Include="Chakra\Hosting\JavaScriptProjectionEnqueueCallback.cs" />
-    <Compile Include="Chakra\Hosting\JavaScriptPromiseContinuationCallback.cs" />
-    <Compile Include="Chakra\Hosting\JavaScriptPropertyId.cs" />
-    <Compile Include="Chakra\Hosting\JavaScriptPropertyIdType.cs" />
-    <Compile Include="Chakra\Hosting\JavaScriptRuntime.cs" />
-    <Compile Include="Chakra\Hosting\JavaScriptRuntimeAttributes.cs" />
-    <Compile Include="Chakra\Hosting\JavaScriptScriptException.cs" />
-    <Compile Include="Chakra\Hosting\JavaScriptSerializedScriptLoadSourceCallback.cs" />
-    <Compile Include="Chakra\Hosting\JavaScriptSerializedScriptUnloadCallback.cs" />
-    <Compile Include="Chakra\Hosting\JavaScriptSourceContext.cs" />
-    <Compile Include="Chakra\Hosting\JavaScriptThreadServiceCallback.cs" />
-    <Compile Include="Chakra\Hosting\JavaScriptTypedArrayType.cs" />
-    <Compile Include="Chakra\Hosting\JavaScriptUsageException.cs" />
-    <Compile Include="Chakra\Hosting\JavaScriptValue.cs" />
-    <Compile Include="Chakra\Hosting\JavaScriptValueType.cs" />
-    <Compile Include="Chakra\Hosting\NativeMethods.cs" />
-    <Compile Include="Executor\UWPChakraHostExecutor.cs" />
-    <Compile Include="JSTasks\AbstractJSTask.cs" />
-    <Compile Include="JSTasks\JSTaskFunction.cs" />
-    <Compile Include="JSTasks\JSTaskScript.cs" />
-    <Compile Include="NativeFunctions\JSAsyncFunctions.cs" />
-    <Compile Include="NativeFunctions\JSHelpers.cs" />
-    <Compile Include="NativeFunctions\JSSendToHost.cs" />
-    <Compile Include="Projected\Argon2.cs" />
-    <Compile Include="Projected\IO\File.cs" />
-    <Compile Include="Projected\IO\FileSystem.cs" />
-    <Compile Include="Projected\JSBase64Encoding.cs" />
-    <Compile Include="Projected\JSConsole.cs" />
-    <Compile Include="Projected\JSFile.cs" />
-    <Compile Include="Projected\JSFileHelper.cs" />
-    <Compile Include="Projected\JSFileSystem.cs" />
-    <Compile Include="Projected\Pbkdf2.cs" />
-    <Compile Include="Projected\XMLHttpRequest.cs" />
+    <Compile Include="App.xaml.cs">
+      <DependentUpon>App.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="MainPage.xaml.cs">
+      <DependentUpon>MainPage.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <EmbeddedResource Include="Properties\Bijou.rd.xml" />
   </ItemGroup>
   <ItemGroup>
-    <PackageReference Include="FluentResults">
-      <Version>1.4.0</Version>
-    </PackageReference>
+    <AppxManifest Include="Package.appxmanifest">
+      <SubType>Designer</SubType>
+    </AppxManifest>
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Properties\Default.rd.xml" />
+    <Content Include="Assets\LockScreenLogo.scale-200.png" />
+    <Content Include="Assets\SplashScreen.scale-200.png" />
+    <Content Include="Assets\Square150x150Logo.scale-200.png" />
+    <Content Include="Assets\Square44x44Logo.scale-200.png" />
+    <Content Include="Assets\Square44x44Logo.targetsize-24_altform-unplated.png" />
+    <Content Include="Assets\StoreLogo.png" />
+    <Content Include="Assets\Wide310x150Logo.scale-200.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <ApplicationDefinition Include="App.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </ApplicationDefinition>
+    <Page Include="MainPage.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+  </ItemGroup>
+  <ItemGroup>
     <PackageReference Include="Microsoft.NETCore.UniversalWindowsPlatform">
       <Version>6.2.9</Version>
     </PackageReference>
   </ItemGroup>
   <ItemGroup>
-    <None Include="Chakra\Hosting\ReadMe.md" />
-  </ItemGroup>
-  <ItemGroup>
-    <ProjectReference Include="..\Bijou.NativeCrypto\Bijou.NativeCrypto.vcxproj">
-      <Project>{4a03306d-3a01-4a89-b69d-15b23a898287}</Project>
-      <Name>Bijou.NativeCrypto</Name>
+    <ProjectReference Include="..\Bijou\Bijou.csproj">
+      <Project>{76F84589-ED4C-4E34-9A3C-A6604B9BFAEE}</Project>
+      <Name>Bijou</Name>
     </ProjectReference>
   </ItemGroup>
   <PropertyGroup Condition=" '$(VisualStudioVersion)' == '' or '$(VisualStudioVersion)' &lt; '14.0' ">
