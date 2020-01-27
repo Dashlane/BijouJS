@@ -1,6 +1,6 @@
 ﻿using System;
-using System.Diagnostics;
-using Bijou.Chakra.Hosting;
+using Bijou.Chakra;
+using Bijou.Types;
 
 namespace Bijou.NativeFunctions
 {
@@ -18,39 +18,35 @@ namespace Bijou.NativeFunctions
             ushort argumentCount, 
             IntPtr callbackData)
         {
-            var ret = JavaScriptValue.Invalid;
             var executor = JSHelpers.ExecutorFromCallbackData(callbackData);
             if (executor == null) 
             {
-                return ret;
+                return JavaScriptValue.Invalid;
             }
 
             // function signature is sendToHost(message:string)
             // expected 2 arguments, as first argument is this
             if (arguments.Length != 2) 
             {
-                Debug.WriteLine("[SendToHostJavaScriptNativeFunction] Invalid arguments, received " + arguments.Length + " arguments, expected 2");
-                return ret;
+                return JavaScriptValue.Invalid;
             }
 
             // arguments[0] is JavaScript "this"
             // we skip it
-            var jsMessage = arguments[1];
+            var jsMessage = arguments[1].ToObject();
             if (!jsMessage.IsValid) 
             {
-                Debug.WriteLine("[SendToHostJavaScriptNativeFunction] Invalid argument");
-                return ret;
+                return JavaScriptValue.Invalid;
             }
 
-            if (jsMessage.ValueType != JavaScriptValueType.String) 
+            if (!(jsMessage is JavaScriptString text)) 
             {
-                Debug.WriteLine("[SendToHostJavaScriptNativeFunction] Invalid argument type, received " + jsMessage.ValueType + ", expected String");
-                return ret;
+                return JavaScriptValue.Invalid;
             }
 
-            executor.OnMessageReceived(jsMessage.ToString());
+            executor.OnMessageReceived(text.AsString().Value);
 
-            return ret;
+            return JavaScriptValue.Invalid;
         }
     }
 }

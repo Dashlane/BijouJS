@@ -1,7 +1,10 @@
 ﻿// enable script serialization, serialized script should be added as a reference to the caller as long as the script is needed
 //#define USE_SCRIPT_SERIALIZATION
 
-using Bijou.Chakra.Hosting;
+using System;
+using Bijou.Chakra;
+using Bijou.Types;
+using FluentResults;
 
 namespace Bijou.JSTasks
 {
@@ -15,18 +18,21 @@ namespace Bijou.JSTasks
         private byte[] _serializedScript =  null;
 #endif
 
-        public JSTaskScript(string scriptPath, string script, JavaScriptSourceContext currentSourceContext)
+        public JSTaskScript(
+            string scriptPath, 
+            string script, 
+            JavaScriptSourceContext currentSourceContext)
         {
             _scriptPath = scriptPath;
             _script = script;
             _currentSourceContext = currentSourceContext;
         }
 
-        protected override JavaScriptValue ExecuteImpl()
+        protected override Result<JavaScriptObject> ExecuteImpl()
         {
             if (IsCanceled) 
             {
-                return JavaScriptValue.Invalid;
+                return Results.Ok(JavaScriptObject.Invalid);
             }
 
 #if USE_SCRIPT_SERIALIZATION && !DEBUG

@@ -1,8 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
-using Bijou.Chakra.Hosting;
-using Bijou.Executor;
+using Bijou.Chakra;
 using Bijou.JSTasks;
+using Bijou.Types;
+using FluentResults;
 
 namespace Bijou.NativeFunctions
 {
@@ -11,220 +12,213 @@ namespace Bijou.NativeFunctions
         /// <summary>
         /// JS Native function for setTimeout
         /// </summary>
-        public static JavaScriptValue SetTimeoutJavaScriptNativeFunction(
-            JavaScriptValue callee, 
-            bool isConstructCall, 
-            JavaScriptValue[] arguments, 
-            ushort argumentCount, 
-            IntPtr callbackData)
+        /// <remarks>
+        /// Syntax of
+        ///     setTimeout(function, milliseconds, param1, param2, ...)
+        /// Parameter Values
+        ///     function:            Required. The function to be executed
+        ///     milliseconds:        Optional. The number of milliseconds to wait before executing the code. If omitted, the value 0 is used
+        ///     param1, param2, ...:	Optional. Additional parameters to pass to the function
+        /// Return Value
+        ///     A Number, representing the ID value of the timer that is set.Use this value with the clearInterval() method to cancel the timer
+        /// </remarks>
+        public static JavaScriptNativeFunction SetTimeoutJavaScriptNativeFunction(PushTask pushHandler)
         {
-            // Syntax
-            // setTimeout(function, milliseconds, param1, param2, ...)
-            // Parameter Values
-            // function:            Required. The function to be executed
-            // milliseconds:        Optional. The number of milliseconds to wait before executing the code. If omitted, the value 0 is used
-            // param1, param2, ...:	Optional. Additional parameters to pass to the function
-            // Return Value
-            // A Number, representing the ID value of the timer that is set.Use this value with the clearInterval() method to cancel the timer
-
-            // check arguments
-            if (argumentCount >= 2 && arguments.Length >= 2)
+            return (callee, isConstructCall, arguments, argumentCount, callbackData) =>
             {
-                return AddScheduledJavaScriptNativeFunction(arguments, callbackData, 0);
-            }
+                if (argumentCount >= 2 && arguments.Length >= 2)
+                {
+                    var result = AddScheduledJavaScriptNativeFunction(pushHandler, arguments, callbackData, 0).Value;
 
-            Console.Error.WriteLine("[SetTimeoutJavaScriptNativeFunction] Invalid argumentCount, expected >= 2, received " + argumentCount);
-            return JavaScriptValue.Invalid;
+                    return result.UnderlyingValue;
+                }
+
+                Console.Error.WriteLine(
+                    "[SetTimeoutJavaScriptNativeFunction] Invalid argumentCount, expected >= 2, received " +
+                    argumentCount);
+                return JavaScriptValue.Invalid;
+            };
         }
 
         /// <summary>
         /// JS Native function for setInterval
         /// </summary>
-        public static JavaScriptValue SetIntervalJavaScriptNativeFunction(
-            JavaScriptValue callee,
-            bool isConstructCall, 
-            JavaScriptValue[] arguments, 
-            ushort argumentCount, 
-            IntPtr callbackData)
+        /// <remarks>
+        /// Syntax of
+        ///     setInterval(function, milliseconds, param1, param2, ...)
+        /// Parameter Values
+        ///     function:            Required. The function to be executed
+        ///     milliseconds:        Required. The intervals (in milliseconds) on how often to execute the code. If the value is less than 10, the value 10 is used
+        ///     param1, param2, ...:	Optional. Additional parameters to pass to the function
+        /// Return Value
+        ///     A Number, representing the ID value of the timer that is set.Use this value with the clearInterval() method to cancel the timer
+        /// </remarks>
+        public static JavaScriptNativeFunction SetIntervalJavaScriptNativeFunction(PushTask pushHandler)
         {
-            // Syntax
-            // setInterval(function, milliseconds, param1, param2, ...)
-            // Parameter Values
-            // function:            Required. The function to be executed
-            // milliseconds:        Required. The intervals (in milliseconds) on how often to execute the code. If the value is less than 10, the value 10 is used
-            // param1, param2, ...:	Optional. Additional parameters to pass to the function
-            // Return Value
-            // A Number, representing the ID value of the timer that is set.Use this value with the clearInterval() method to cancel the timer
-            var ret = JavaScriptValue.Invalid;
-
-            // check arguments
-            if (argumentCount < 3 || arguments.Length < 3)
+            return (callee, isConstructCall, arguments, argumentCount, callbackData) =>
             {
-                Console.Error.WriteLine("[SetIntervalJavaScriptNativeFunction] Invalid argumentCount, expected >= 3, received " + argumentCount);
-                return ret;
-            }
-
-            return AddScheduledJavaScriptNativeFunction(arguments, callbackData, 10, true);
-        }
-
-        /// <summary>
-        /// JS Native function for generic async operation (setTimeout / setInterval)
-        /// </summary>
-        private static JavaScriptValue AddScheduledJavaScriptNativeFunction(
-            IReadOnlyList<JavaScriptValue> arguments,
-            IntPtr callbackData, 
-            int minDelay, 
-            bool repeat = false)
-        {
-            var ret = JavaScriptValue.Invalid;
-            try
-            {
-                var executor = JSHelpers.ExecutorFromCallbackData(callbackData);
-
-                if (executor == null) 
+                var ret = JavaScriptValue.Invalid;
+                if (argumentCount < 3 || arguments.Length < 3)
                 {
-                    Console.Error.WriteLine("[AddScheduledJavaScriptNativeFunction] Invalid executor");
+                    Console.Error.WriteLine(
+                        "[SetIntervalJavaScriptNativeFunction] Invalid argumentCount, expected >= 3, received " +
+                        argumentCount);
                     return ret;
                 }
 
-                // check arguments
-                if (arguments.Count < 2)
-                {
-                    Console.Error.WriteLine("[AddScheduledJavaScriptNativeFunction] Invalid argumentCount, expected >= 2, received " + arguments.Count);
-                    return ret;
-                }
-
-                // arguments[0] is JavaScript this
-                var callerObject = arguments[0];
-
-                // setTimeout / setInterval signature is (callback, [after, params...])
-                var callback = arguments[1];
-
-                var delay = minDelay;
-                if (arguments.Count > 2) 
-                {
-                    var afterValue = arguments[2];
-                    if (!afterValue.IsValid) 
-                    {
-                        Console.Error.WriteLine("[AddScheduledJavaScriptNativeFunction] Invalid delay argument, expected Number, received Invalid");
-                        return ret;
-                    }
-
-                    if (afterValue.ValueType != JavaScriptValueType.Number) 
-                    {
-                        Console.Error.WriteLine("[AddScheduledJavaScriptNativeFunction] Invalid delay value type, expected Number, received " + arguments[2].ValueType);
-                        return ret;
-                    }
-                    delay = Math.Max(afterValue.ToInt32(), minDelay);
-                }
-
-                var taskArguments = new List<JavaScriptValue> { callerObject };
-                if (arguments.Count > 3) 
-                {
-                    for (var i = 3 ; i < arguments.Count ; ++i) 
-                    {
-                        taskArguments.Add(arguments[i]);
-                    }
-                }
-
-                var task = new JSTaskFunction(callback, taskArguments.ToArray(), delay, repeat);
-
-                // add task to scheduled tasks
-                var taskId = executor.AddCancellableTask(task);
-
-                // return task ID     
-                ret = JavaScriptValue.FromInt32(taskId);
-            }
-            catch (InvalidOperationException ioe) 
-            {
-                Console.Error.WriteLine("[AddScheduledJavaScriptNativeFunction] InvalidOperationException: " + ioe.Message);
-            }
-            catch (Exception e)
-            {
-                Console.Error.WriteLine("[AddScheduledJavaScriptNativeFunction] Exception: " + e.Message);
-                throw;
-            }
-
-            return ret;
+                return AddScheduledJavaScriptNativeFunction(pushHandler, arguments, callbackData, 10, true).Value.UnderlyingValue;
+            };
         }
 
         /// <summary>
         /// JS Native function for clear async operation (clearTimeout / clearInterval)
         /// </summary>
-        public static JavaScriptValue ClearScheduledJavaScriptNativeFunction(
-            JavaScriptValue callee, 
-            bool isConstructCall, 
-            JavaScriptValue[] arguments, 
-            ushort argumentCount, 
-            IntPtr callbackData)
+        /// <remarks>
+        /// Syntax of
+        ///     clearTimeout/clearInterval(id)
+        /// Parameter Values
+        ///     var:  Required. The ID of the timer returned by the setTimeout/setInterval() method
+        /// Return Value
+        ///     No return value
+        /// </remarks>
+        public static JavaScriptNativeFunction ClearScheduledJavaScriptNativeFunction(CancelTask cancelHandler)
         {
-            // Syntax
-            // clearTimeout/clearInterval(var)
-            // Parameter Values
-            // var:  Required. The ID of the timer returned by the setTimeout/setInterval() method
-            // Return Value
-            // No return value
-            var ret = JavaScriptValue.Invalid;
-
-            // check arguments
-            if (argumentCount != 2 || arguments.Length != 2) 
+            return (callee, isConstructCall, arguments, argumentCount, callbackData) =>
             {
-                Console.Error.WriteLine("[ClearScheduledJavaScriptNativeFunction] Invalid argumentCount, expected  2, received " + arguments.Length);
+                var ret = JavaScriptValue.Invalid;
+                if (argumentCount != 2 || arguments.Length != 2)
+                {
+                    Console.Error.WriteLine(
+                        "[ClearScheduledJavaScriptNativeFunction] Invalid argumentCount, expected  2, received " +
+                        arguments.Length);
+                    return ret;
+                }
+
+                var executor = JSHelpers.ExecutorFromCallbackData(callbackData);
+                if (executor == null)
+                {
+                    Console.Error.WriteLine("[ClearScheduledJavaScriptNativeFunction] Invalid executor");
+                    return ret;
+                }
+
+                // clearTimeout / clearInterval signature is (id)
+                var arg = arguments[1].ToObject();
+                if (!arg.IsValid)
+                {
+                    Console.Error.WriteLine("[ClearScheduledJavaScriptNativeFunction] Invalid argument");
+                    return ret;
+                }
+
+                if (!(arg is JavaScriptNumber id))
+                {
+                    Console.Error.WriteLine(
+                        "[ClearScheduledJavaScriptNativeFunction] Invalid argument type, expected Number, received " +
+                        arg.GetType());
+                    return ret;
+                }
+
+                var taskId = id.AsInt32();
+                cancelHandler(taskId.Value);
+
                 return ret;
-            }
-
-            var executor = JSHelpers.ExecutorFromCallbackData(callbackData);
-            if (executor == null) 
-            {
-                Console.Error.WriteLine("[ClearScheduledJavaScriptNativeFunction] Invalid executor");
-                return ret;
-            }
-
-            // arguments[0] is JavaScript this
-            var callerObject = arguments[0];
-
-            // clearTimeout / clearInterval signature is (id)
-            var id = arguments[1];
-
-            // argument validation
-            if (!id.IsValid) 
-            {
-                Console.Error.WriteLine("[ClearScheduledJavaScriptNativeFunction] Invalid argument");
-                return ret;
-            }
-
-            if (id.ValueType != JavaScriptValueType.Number) 
-            {
-                Console.Error.WriteLine("[ClearScheduledJavaScriptNativeFunction] Invalid argument type, expected Number, received " + id.ValueType);
-                return ret;
-            }
-
-            var taskId = id.ToInt32();
-            executor.CancelTask(taskId);
-
-            return ret;
+            };
         }
 
         /// <summary>
         /// JS Native function to use as a callback for ES6 promises.
         /// </summary>
-        public static void PromiseContinuationCallback(JavaScriptValue promise, IntPtr callbackData)
+        public static JavaScriptPromiseContinuationCallback PromiseContinuationCallback(PushTask pushHandler)
         {
-            var executor = JSHelpers.ExecutorFromCallbackData(callbackData);
-            if (executor == null) 
+            return (promise, callbackData) =>
             {
-                Console.Error.WriteLine("[PromiseContinuationCallback] Error parsing callbackData");
-                return;
-            }
+                var executor = JSHelpers.ExecutorFromCallbackData(callbackData);
+                if (executor == null)
+                {
+                    Console.Error.WriteLine("[PromiseContinuationCallback] Error parsing callbackData");
+                    return;
+                }
 
-            if (!JavaScriptContext.IsCurrentValid) {
-                Console.Error.WriteLine("[PromiseContinuationCallback] Invalid Context");
-                return;
-            }
+                if (!JavaScriptContext.IsCurrentValid)
+                {
+                    Console.Error.WriteLine("[PromiseContinuationCallback] Invalid Context");
+                    return;
+                }
 
-            var globalObject = JavaScriptValue.GlobalObject;
-            var task = new JSTaskFunction(promise, new[] {globalObject}) {IsPromise = true};
-            executor.AddTask(task);
+                var globalObject = JavaScriptPrototype.GlobalObject;
+                var task = new JSTaskFunction(new JavaScriptFunction(promise),
+                    new JavaScriptObject[] {globalObject.Value}) {IsPromise = true};
+                pushHandler(task);
+            };
+        }
+
+        /// <summary>
+        /// JS Native function for generic async operation (setTimeout / setInterval)
+        /// </summary>
+        private static Result<JavaScriptNumber> AddScheduledJavaScriptNativeFunction(
+            PushTask pushHandler,
+            IReadOnlyList<JavaScriptValue> arguments,
+            IntPtr callbackData,
+            int minDelay,
+            bool repeat = false)
+        {
+            try
+            {
+                var executor = JSHelpers.ExecutorFromCallbackData(callbackData);
+                if (executor == null)
+                {
+                    return Results.Fail("[AddScheduledJavaScriptNativeFunction] Invalid executor");
+                }
+
+                // check arguments
+                if (arguments.Count < 2)
+                {
+                    return Results.Fail("[AddScheduledJavaScriptNativeFunction] Invalid argumentCount, expected >= 2, received " + arguments.Count);
+                }
+
+                // arguments[0] is JavaScript this
+                var callerObject = arguments[0].ToObject();
+
+                // setTimeout / setInterval signature is (callback, [after, params...])
+                var callback = new JavaScriptFunction(arguments[1]);
+
+                var delay = minDelay;
+                if (arguments.Count > 2)
+                {
+                    var afterValue = arguments[2].ToObject();
+                    if (!afterValue.IsValid)
+                    {
+                        return Results.Fail("[AddScheduledJavaScriptNativeFunction] Invalid delay argument, expected Number, received Invalid");
+                    }
+
+                    if (!(afterValue is JavaScriptNumber val))
+                    {
+                        return Results.Fail("[AddScheduledJavaScriptNativeFunction] Invalid delay value type, expected Number, received " + arguments[2]);
+                    }
+                    delay = Math.Max((int)val, minDelay);
+                }
+
+                var taskArguments = new List<JavaScriptObject> { callerObject };
+                if (arguments.Count > 3)
+                {
+                    for (var i = 3; i < arguments.Count; ++i)
+                    {
+                        taskArguments.Add(arguments[i].ToObject());
+                    }
+                }
+
+                var task = new JSTaskFunction(callback, taskArguments.ToArray(), delay, repeat);
+                var taskId = pushHandler(task);
+  
+                return JavaScriptNumber.FromInt32(taskId);
+            }
+            catch (InvalidOperationException ioe)
+            {
+                return Results.Fail("[AddScheduledJavaScriptNativeFunction] InvalidOperationException: " + ioe.Message);
+            }
+            catch (Exception e)
+            {
+                return Results.Fail("[AddScheduledJavaScriptNativeFunction] Exception: " + e.Message);
+            }
         }
     }
 }

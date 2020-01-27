@@ -122,35 +122,57 @@
   <ItemGroup>
     <Compile Include="Async\AsyncPump.cs" />
     <Compile Include="Async\AsyncQueue.cs" />
-    <Compile Include="Chakra\Hosting\JavaScriptBackgroundWorkItemCallback.cs" />
-    <Compile Include="Chakra\Hosting\JavaScriptBeforeCollectCallback.cs" />
-    <Compile Include="Chakra\Hosting\JavaScriptContext.cs" />
-    <Compile Include="Chakra\Hosting\JavaScriptEngineException.cs" />
-    <Compile Include="Chakra\Hosting\JavaScriptErrorCode.cs" />
-    <Compile Include="Chakra\Hosting\JavaScriptException.cs" />
-    <Compile Include="Chakra\Hosting\JavaScriptFatalException.cs" />
-    <Compile Include="Chakra\Hosting\JavaScriptMemoryAllocationCallback.cs" />
-    <Compile Include="Chakra\Hosting\JavaScriptMemoryEventType.cs" />
-    <Compile Include="Chakra\Hosting\JavaScriptNativeFunction.cs" />
-    <Compile Include="Chakra\Hosting\JavaScriptObjectBeforeCollectCallback.cs" />
-    <Compile Include="Chakra\Hosting\JavaScriptObjectFinalizeCallback.cs" />
-    <Compile Include="Chakra\Hosting\JavaScriptProjectionEnqueueCallback.cs" />
-    <Compile Include="Chakra\Hosting\JavaScriptPromiseContinuationCallback.cs" />
-    <Compile Include="Chakra\Hosting\JavaScriptPropertyId.cs" />
-    <Compile Include="Chakra\Hosting\JavaScriptPropertyIdType.cs" />
-    <Compile Include="Chakra\Hosting\JavaScriptRuntime.cs" />
-    <Compile Include="Chakra\Hosting\JavaScriptRuntimeAttributes.cs" />
-    <Compile Include="Chakra\Hosting\JavaScriptScriptException.cs" />
-    <Compile Include="Chakra\Hosting\JavaScriptSerializedScriptLoadSourceCallback.cs" />
-    <Compile Include="Chakra\Hosting\JavaScriptSerializedScriptUnloadCallback.cs" />
-    <Compile Include="Chakra\Hosting\JavaScriptSourceContext.cs" />
-    <Compile Include="Chakra\Hosting\JavaScriptThreadServiceCallback.cs" />
-    <Compile Include="Chakra\Hosting\JavaScriptTypedArrayType.cs" />
-    <Compile Include="Chakra\Hosting\JavaScriptUsageException.cs" />
-    <Compile Include="Chakra\Hosting\JavaScriptValue.cs" />
-    <Compile Include="Chakra\Hosting\JavaScriptValueType.cs" />
-    <Compile Include="Chakra\Hosting\NativeMethods.cs" />
-    <Compile Include="Executor\UWPChakraHostExecutor.cs" />
+    <Compile Include="Errors\JavaScriptUsageError.cs" />
+    <Compile Include="Chakra\JavaScriptBackgroundWorkItemCallback.cs" />
+    <Compile Include="Chakra\JavaScriptBeforeCollectCallback.cs" />
+    <Compile Include="Chakra\JavaScriptContext.cs" />
+    <Compile Include="Errors\JavaScriptEngineError.cs" />
+    <Compile Include="Chakra\JavaScriptErrorCode.cs" />
+    <Compile Include="Chakra\JavaScriptErrorCodeExtensions.cs" />
+    <Compile Include="Errors\JavaScriptError.cs" />
+    <Compile Include="Errors\JavaScriptFatalError.cs" />
+    <Compile Include="Chakra\JavaScriptMemoryAllocationCallback.cs" />
+    <Compile Include="Chakra\JavaScriptMemoryEventType.cs" />
+    <Compile Include="Chakra\JavaScriptNativeFunction.cs" />
+    <Compile Include="Chakra\JavaScriptObjectBeforeCollectCallback.cs" />
+    <Compile Include="Chakra\JavaScriptObjectFinalizeCallback.cs" />
+    <Compile Include="Chakra\JavaScriptProjectionEnqueueCallback.cs" />
+    <Compile Include="Chakra\JavaScriptPromiseContinuationCallback.cs" />
+    <Compile Include="Chakra\JavaScriptPropertyId.cs" />
+    <Compile Include="Chakra\JavaScriptPropertyIdType.cs" />
+    <Compile Include="Chakra\JavaScriptRuntime.cs" />
+    <Compile Include="Chakra\JavaScriptRuntimeAttributes.cs" />
+    <Compile Include="Errors\JavaScriptScriptError.cs" />
+    <Compile Include="Chakra\JavaScriptSerializedScriptLoadSourceCallback.cs" />
+    <Compile Include="Chakra\JavaScriptSerializedScriptUnloadCallback.cs" />
+    <Compile Include="Chakra\JavaScriptSourceContext.cs" />
+    <Compile Include="Chakra\JavaScriptThreadServiceCallback.cs" />
+    <Compile Include="Chakra\JavaScriptTypedArrayType.cs" />
+    <Compile Include="Chakra\JavaScriptValue.cs" />
+    <Compile Include="Chakra\JavaScriptValueExtensions.cs" />
+    <Compile Include="Chakra\JavaScriptValueType.cs" />
+    <Compile Include="Chakra\NativeMethodsImpl.cs" />
+    <Compile Include="Chakra\NativeMethods.cs" />
+    <Compile Include="EventLoop.cs" />
+    <Compile Include="EventLoopTask.cs" />
+    <Compile Include="JSTasks\TaskDelegate.cs" />
+    <Compile Include="Types\JavaScriptArray.cs" />
+    <Compile Include="Types\JavaScriptBoolean.cs" />
+    <Compile Include="Types\JavaScriptError.cs" />
+    <Compile Include="Types\JavaScriptFunction.cs" />
+    <Compile Include="Types\JavaScriptNull.cs" />
+    <Compile Include="Types\JavaScriptNumber.cs" />
+    <Compile Include="Types\JavaScriptObject.cs" />
+    <Compile Include="Types\JavaScriptObjectExtensions.cs" />
+    <Compile Include="Types\JavaScriptPrototype.cs" />
+    <Compile Include="Types\JavaScriptRangeError.cs" />
+    <Compile Include="Types\JavaScriptReferenceError.cs" />
+    <Compile Include="Types\JavaScriptString.cs" />
+    <Compile Include="Types\JavaScriptSyntaxError.cs" />
+    <Compile Include="Types\JavaScriptTypeError.cs" />
+    <Compile Include="Types\JavaScriptUndefined.cs" />
+    <Compile Include="Types\JavaScriptUriError.cs" />
+    <Compile Include="UWPChakraHostExecutor.cs" />
     <Compile Include="JSTasks\AbstractJSTask.cs" />
     <Compile Include="JSTasks\JSTaskFunction.cs" />
     <Compile Include="JSTasks\JSTaskScript.cs" />
@@ -179,7 +201,7 @@
     </PackageReference>
   </ItemGroup>
   <ItemGroup>
-    <None Include="Chakra\Hosting\ReadMe.md" />
+    <None Include="Chakra\ReadMe.md" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Bijou.NativeCrypto\Bijou.NativeCrypto.vcxproj">
@@ -187,6 +209,7 @@
       <Name>Bijou.NativeCrypto</Name>
     </ProjectReference>
   </ItemGroup>
+  <ItemGroup />
   <PropertyGroup Condition=" '$(VisualStudioVersion)' == '' or '$(VisualStudioVersion)' &lt; '14.0' ">
     <VisualStudioVersion>14.0</VisualStudioVersion>
   </PropertyGroup>
