@@ -1,6 +1,9 @@
-﻿using Bijou.Chakra.Hosting;
-using System;
+﻿using System;
 using System.Collections.Generic;
+using System.Linq;
+using Bijou.Chakra;
+using Bijou.Types;
+using FluentResults;
 
 namespace Bijou.JSTasks
 {
@@ -12,15 +15,19 @@ namespace Bijou.JSTasks
         private readonly string _functionNativeName;
         private readonly object[] _nativeArguments;
 
-        public JavaScriptValue Function { get; private set; }
+        public JavaScriptFunction Function { get; private set; }
 
-        public JavaScriptValue[] Arguments { get; private set; }
+        public JavaScriptObject[] Arguments { get; private set; }
 
         // This must be called when the JavaScriptContext is available (i.e. in the thread which owns it)
         // The first element of arguments must be a reference to the parent object ("this") of the function. Use JavaScriptValue.GlobalObject when calling a global function
         // Note: If function is JavaScriptValue.Invalid, an error is logged at construction and Execute() returns JavaScriptValue.Invalid,
         //       but if any element of arguments is JavaScriptValue.Invalid, no error is logged and Execute() raises JavaScriptUsageException.
-        public JSTaskFunction(JavaScriptValue function, JavaScriptValue[] arguments, int delay = 0, bool repeat = false)
+        public JSTaskFunction(
+            JavaScriptFunction function, 
+            JavaScriptObject[] arguments,
+            int delay = 0, 
+            bool repeat = false)
             : base(delay, repeat)
         {
             ValidateAndStoreValues(function, arguments);
@@ -44,46 +51,72 @@ namespace Bijou.JSTasks
         }
 
         // This must be called when the JavaScriptContext is available (i.e. in the thread which owns it)
-        private void ProjectNativeParameters()
+        private Result ProjectNativeParameters()
         {
             if (string.IsNullOrEmpty(_functionNativeName))
             {
-                return;
+                return Results.Fail("No native function name provided");
             }
 
-            var func = JavaScriptValue.GlobalObject.GetProperty(JavaScriptPropertyId.FromString(_functionNativeName));
-            var args = new List<JavaScriptValue> { JavaScriptValue.GlobalObject };
-            foreach (var parameter in _nativeArguments) 
+            var result = JavaScriptPrototype.GlobalObject;
+            if (result.IsFailed)
             {
+                return Results.Fail("Failed to get Global Object");
+            }
+
+            var propertyId = JavaScriptPropertyId.FromString(_functionNativeName);
+            if (propertyId.IsFailed)
+            {
+                return Results.Fail($"Failed to find property called {_functionNativeName}");
+            }
+
+            var globalObject = result.Value;
+            var function = globalObject.GetProperty<JavaScriptFunction>(_functionNativeName);
+            if (function.IsFailed)
+            {
+                return Results.Fail($"Failed to find method {_functionNativeName} on Global Object");
+            }
+
+            var func = function.Value;
+            var args = new List<JavaScriptObject> { globalObject };
+            foreach (var parameter in _nativeArguments)
+            {
+                var argument = Results.Fail($"Not supported type: {parameter.GetType().Name}");
                 switch (parameter.GetType().Name)
                 {
                     case "Int32":
-                        args.Add(JavaScriptValue.FromInt32((int)parameter));
+                        argument = JavaScriptNumber.FromInt32((int)parameter);
                         break;
+
                     case "Double":
-                        args.Add(JavaScriptValue.FromDouble((double)parameter));
+                        argument = JavaScriptNumber.FromDouble((double)parameter);
                         break;
+
                     case "Boolean":
-                        args.Add(JavaScriptValue.FromBoolean((bool)parameter));
+                        argument = JavaScriptBoolean.FromBoolean((bool)parameter);
                         break;
+
                     case "String":
-                        args.Add(JavaScriptValue.FromString((string)parameter));
+                        argument = JavaScriptString.FromString((string)parameter);
                         break;
-                    default:
-                        throw new Exception("Not supported type: " + parameter.GetType().Name);
                 }
+
+                if (argument.IsFailed)
+                {
+                    return Results.Fail(argument.Errors.First());
+                }
+
+                args.Add(argument.ToResult<JavaScriptObject>().Value);
             }
 
-            ValidateAndStoreValues(func, args.ToArray());
+            return ValidateAndStoreValues(func, args.ToArray());
         }
 
-        private void ValidateAndStoreValues(JavaScriptValue function, JavaScriptValue[] arguments)
+        private Result ValidateAndStoreValues(JavaScriptFunction function, JavaScriptObject[] arguments)
         {
-            // ensure there is a valid context
             if (!JavaScriptContext.IsCurrentValid) 
             {
-                Console.Error.WriteLine("JSTaskFunction invalid context");
-                return;
+                return Results.Fail("JSTaskFunction invalid context");
             }
 
             Function = function;
@@ -91,8 +124,7 @@ namespace Bijou.JSTasks
 
             if (!Function.IsValid) 
             {
-                Console.Error.WriteLine("JSTaskFunction invalid function");
-                return;
+                return Results.Fail("JSTaskFunction invalid function");
             }
 
             // keep reference since this is unmanaged memory
@@ -104,27 +136,31 @@ namespace Bijou.JSTasks
                     arg.AddRef();
                 }
             }
+
+            return Results.Ok();
         }
 
-        protected override JavaScriptValue ExecuteImpl()
+        protected override Result<JavaScriptObject> ExecuteImpl()
         {
-            var ret = JavaScriptValue.Invalid;
-            if (!Function.IsValid) 
+            Result<JavaScriptObject> result;
+            if (!Function.IsValid)
             {
-                ProjectNativeParameters();
+                result = ProjectNativeParameters();
+                if (result.IsFailed)
+                {
+                    result = Results.Fail(result.Errors.First());
+                }
+            }
+            else
+            {
+                result = Function.CallFunction<JavaScriptObject>(Arguments);
             }
 
-            if (Function.IsValid) 
-            {
-                ret = Function.CallFunction(Arguments);
-            }
-
-            return ret;
+            return result;
         }
 
         protected override void ReleaseJsResources()
         {
-            // ensure there is a valid context
             if (!JavaScriptContext.IsCurrentValid) 
             {
                 Console.Error.WriteLine("ReleaseJsResources invalid context");

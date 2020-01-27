@@ -1,6 +1,7 @@
 ﻿using System;
-using System.Diagnostics;
-using Bijou.Chakra.Hosting;
+using Bijou.Chakra;
+using Bijou.Types;
+using FluentResults;
 
 namespace Bijou.JSTasks
 {
@@ -20,9 +21,7 @@ namespace Bijou.JSTasks
 
         public bool IsPromise { get; set; } = false;
 
-        public int Id { get; set; } = -1;
-
-        public bool HasValidId => Id != -1;
+        public Guid Id { get; }
 
         protected AbstractJSTask(int delay = 0, bool shouldReschedule = false)
         {
@@ -30,6 +29,7 @@ namespace Bijou.JSTasks
             ShouldReschedule = shouldReschedule;
             ResetScheduledTime();
             IsCanceled = false;
+            Id = Guid.NewGuid();
         }
 
         public void ResetScheduledTime()
@@ -43,19 +43,16 @@ namespace Bijou.JSTasks
             IsCanceled = true;
         }
 
-        public JavaScriptValue Execute()
+        public Result<JavaScriptObject> Execute()
         {
-            var ret = JavaScriptValue.Invalid;
-
-            // Ensure there is a valid context
-            if (!JavaScriptContext.IsCurrentValid) 
+            if (!JavaScriptContext.IsCurrentValid)
             {
-                Debug.WriteLine("JSTaskAbstract.Execute invalid context");
-                return ret;
+                return Results.Fail("AbstractJSTask.Execute invalid context");
             }
 
             // Skip execution if task is canceled
-            if (!IsCanceled) 
+            var ret = Results.Ok(JavaScriptObject.Invalid);
+            if (!IsCanceled)
             {
                 ret = ExecuteImpl();
             }
@@ -75,7 +72,7 @@ namespace Bijou.JSTasks
         /// Execute task implementation
         /// </summary>
         /// <returns></returns>
-        protected abstract JavaScriptValue ExecuteImpl();
+        protected abstract Result<JavaScriptObject> ExecuteImpl();
 
         /// <summary>
         /// Release allocated JS resources
