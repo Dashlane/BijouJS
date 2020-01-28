@@ -263,7 +263,7 @@ namespace Bijou
                 Debug.WriteLine($"{nameof(UWPChakraHostExecutor)}: file {scriptUri} is empty");
             }
 
-            return string.Empty;
+            return script;
         }
 
         /// <summary>
