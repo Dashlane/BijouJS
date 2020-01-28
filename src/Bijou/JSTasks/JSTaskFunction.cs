@@ -142,21 +142,16 @@ namespace Bijou.JSTasks
 
         protected override Result<JavaScriptObject> ExecuteImpl()
         {
-            Result<JavaScriptObject> result;
             if (!Function.IsValid)
             {
-                result = ProjectNativeParameters();
+                var result = ProjectNativeParameters();
                 if (result.IsFailed)
                 {
-                    result = Results.Fail(result.Errors.First());
+                    return Results.Fail(result.Errors.First());
                 }
             }
-            else
-            {
-                result = Function.CallFunction<JavaScriptObject>(Arguments);
-            }
 
-            return result;
+            return Function.CallFunction<JavaScriptObject>(Arguments); ;
         }
 
         protected override void ReleaseJsResources()
