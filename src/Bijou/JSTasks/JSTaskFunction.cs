@@ -81,23 +81,35 @@ namespace Bijou.JSTasks
             var args = new List<JavaScriptObject> { globalObject };
             foreach (var parameter in _nativeArguments)
             {
-                var argument = Results.Fail($"Not supported type: {parameter.GetType().Name}");
+                var argument = Results.Fail<JavaScriptObject>($"Not supported type: {parameter.GetType().Name}");
                 switch (parameter.GetType().Name)
                 {
                     case "Int32":
-                        argument = JavaScriptNumber.FromInt32((int)parameter);
+                        argument = JavaScriptNumber.FromInt32((int)parameter).ToResult<JavaScriptObject>((value) =>
+                        {
+                            return value;
+                        });
                         break;
 
                     case "Double":
-                        argument = JavaScriptNumber.FromDouble((double)parameter);
+                        argument = JavaScriptNumber.FromDouble((double)parameter).ToResult<JavaScriptObject>((value) =>
+                        {
+                            return value;
+                        });
                         break;
 
                     case "Boolean":
-                        argument = JavaScriptBoolean.FromBoolean((bool)parameter);
+                        argument = JavaScriptBoolean.FromBoolean((bool)parameter).ToResult<JavaScriptObject>((value) =>
+                        {
+                            return value;
+                        });
                         break;
 
                     case "String":
-                        argument = JavaScriptString.FromString((string)parameter);
+                        argument = JavaScriptString.FromString((string)parameter).ToResult<JavaScriptObject>((value) =>
+                        {
+                            return value;
+                        });
                         break;
                 }
 
@@ -106,7 +118,7 @@ namespace Bijou.JSTasks
                     return Results.Fail(argument.Errors.First());
                 }
 
-                args.Add(argument.ToResult<JavaScriptObject>().Value);
+                args.Add(argument.Value);
             }
 
             return ValidateAndStoreValues(func, args.ToArray());
