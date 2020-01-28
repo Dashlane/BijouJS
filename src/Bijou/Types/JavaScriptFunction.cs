@@ -6,6 +6,8 @@ namespace Bijou.Types
 {
     public sealed class JavaScriptFunction : JavaScriptPrototype
     {
+        public static JavaScriptFunction InvalidFunction = new JavaScriptFunction(JavaScriptValue.Invalid);
+
         internal JavaScriptFunction(JavaScriptValue value) : base(value)
         {
         }

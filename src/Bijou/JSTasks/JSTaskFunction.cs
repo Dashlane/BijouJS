@@ -15,7 +15,7 @@ namespace Bijou.JSTasks
         private readonly string _functionNativeName;
         private readonly object[] _nativeArguments;
 
-        public JavaScriptFunction Function { get; private set; }
+        public JavaScriptFunction Function { get; private set; } = JavaScriptFunction.InvalidFunction;
 
         public JavaScriptObject[] Arguments { get; private set; }
 
@@ -81,23 +81,35 @@ namespace Bijou.JSTasks
             var args = new List<JavaScriptObject> { globalObject };
             foreach (var parameter in _nativeArguments)
             {
-                var argument = Results.Fail($"Not supported type: {parameter.GetType().Name}");
+                var argument = Results.Fail<JavaScriptObject>($"Not supported type: {parameter.GetType().Name}");
                 switch (parameter.GetType().Name)
                 {
                     case "Int32":
-                        argument = JavaScriptNumber.FromInt32((int)parameter);
+                        argument = JavaScriptNumber.FromInt32((int)parameter).ToResult<JavaScriptObject>((value) =>
+                        {
+                            return value;
+                        });
                         break;
 
                     case "Double":
-                        argument = JavaScriptNumber.FromDouble((double)parameter);
+                        argument = JavaScriptNumber.FromDouble((double)parameter).ToResult<JavaScriptObject>((value) =>
+                        {
+                            return value;
+                        });
                         break;
 
                     case "Boolean":
-                        argument = JavaScriptBoolean.FromBoolean((bool)parameter);
+                        argument = JavaScriptBoolean.FromBoolean((bool)parameter).ToResult<JavaScriptObject>((value) =>
+                        {
+                            return value;
+                        });
                         break;
 
                     case "String":
-                        argument = JavaScriptString.FromString((string)parameter);
+                        argument = JavaScriptString.FromString((string)parameter).ToResult<JavaScriptObject>((value) =>
+                        {
+                            return value;
+                        });
                         break;
                 }
 
@@ -106,7 +118,7 @@ namespace Bijou.JSTasks
                     return Results.Fail(argument.Errors.First());
                 }
 
-                args.Add(argument.ToResult<JavaScriptObject>().Value);
+                args.Add(argument.Value);
             }
 
             return ValidateAndStoreValues(func, args.ToArray());
@@ -142,21 +154,16 @@ namespace Bijou.JSTasks
 
         protected override Result<JavaScriptObject> ExecuteImpl()
         {
-            Result<JavaScriptObject> result;
             if (!Function.IsValid)
             {
-                result = ProjectNativeParameters();
+                var result = ProjectNativeParameters();
                 if (result.IsFailed)
                 {
-                    result = Results.Fail(result.Errors.First());
+                    return Results.Fail(result.Errors.First());
                 }
             }
-            else
-            {
-                result = Function.CallFunction<JavaScriptObject>(Arguments);
-            }
 
-            return result;
+            return Function.CallFunction<JavaScriptObject>(Arguments); ;
         }
 
         protected override void ReleaseJsResources()

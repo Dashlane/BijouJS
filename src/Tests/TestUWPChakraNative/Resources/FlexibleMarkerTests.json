@@ -1,0 +1,144 @@
+{
+    "tests": [
+        {
+            "description": "Argon2i encryption, latin characters.",
+            "payload": "$1$argon2i$16$2$65536$1$aes256$gcm$16$",
+            "key": "QmtQd2M6SShUUGw5aEBwWw==",
+            "salt": "G139H+ewpV4mND1fJZ9ZVg==",
+            "iv": "7/vk8mMpeGYmmdbHWMcgBQ==",
+            "plaintextContent": "Lorem ipsum dolor sit amet, scaevola definitionem vim ad, his ei audiam maiorum! Vel ei prima maluisset, et suas iisque feugiat ius. Vim persecuti adversarium ne, virtute pertinax abhorreant eos ad? Ius at dolorem sententiae. Omnes accusamus in eum, quod error definiebas et mel. Vim possit legendos an, purto inimicus disputando te vix.\nCu dico putant quo, sit efficiantur suscipiantur cu. Ex tamquam ceteros duo, in quo natum laoreet similique? Purto soleat principes pri et. Cu eos phaedrum necessitatibus conclusionemque, per dolores epicurei ea!",
+            "encryptedContent": "JDEkYXJnb24yaSQxNiQyJDY1NTM2JDEkYWVzMjU2JGdjbSQxNiQbXf0f57ClXiY0PV8ln1lW7/vk8mMpeGYmmdbHWMcgBUTWeZKZV1FtTuIAef1EXD4eHmDw0CZiOyTNWucvgPyx1LMLj5guP9Tm5jt9hyVEKLdBUSvcWyClHCrOKBunIOrKrPPB6Y65YLTsoNLL50YZMYLT7RaosQoeJ1ukKxHQjrh039au0Q5PeamwK2E9RBlpn4mF7eIIdK6RfCXa17g2gBXA1kNxrGeIUuRjlNGSIPCZ9d1AP7QmlIX1rLcRcuDVIkb8HbLMMPawrxzY4Rx1iPvUnDRJs8CpQT45PsdfId742G3EGpXMdL/D9qa/8Vsj8Z+h5Eap7JeozWUDsr9ZLS4coPQbvbXWoeSnS2LvZNxVDr2uH2Bk3mYZ9CDvh7WUu7XpoCHGYLa3+OlKPUgS4xUSlJeXbSmp+8qUL242DL+5foaM1JVSxCx6GUOCqDrcQSFZZrA2Sdm+T3h0foSAypKDVPJ6ya6fkJDV4ZO+0+dusc2dWOCMRa9oJ8RbGSWZdBIK+/0nRySvEuhPaApCuKruLSF3wgxwLlTVWOGjIy5LUmppo7OjUxVVBNnUtmYebzgCHXmpuTjhp66KoNVyJdHdR0r8vmnBa964J6Q0NqT6/+hOuKtyEufJMPSoTvtYYP2MfWPALC9ObbBTvneAVrM/zEBIlxO+qPBS1KzxDQyIc0oo6sMrTeW0Y0g5ua7ll9HacxiT8FwYsk1/4eb7uP0eBp00QH+O65qt7/bcX+9046Fxz5wiRZ7AiJRHfIrgiWiYY+k5j0ezsQr8GIaDQ0WNbrHw",
+            "derivedKey": "c3wPW7Y7oSMCc08eOS0InSR6PKBkown2MQh3BAkYySA="
+        },
+        {
+            "description": "Argon2i encryption, special UTF8 characters / XML.",
+            "payload": "$1$argon2i$16$2$65536$1$aes256$gcm$16$",
+            "key": "c3lZbV92Ny44ZiovJ0Rdeg==",
+            "salt": "N8Fx4XXVytyU9QP3OzLpKg==",
+            "iv": "fbz1oFcc6x6cD5P43/6l9Q==",
+            "plaintextContent": "<h2>Μερ την συνεπώς ένα όλη βιβλίου σπιτιού</h2>\n\n<p>Λογοτεχνία συνειδήσει αντίστροφα πώς δεν προσωπικών. Φόρεμαν οπτικές αφορούν πώς επώνυμη αρχαίας όλα στα πει διαφορά. Τη μυηθεί ευθύνη μη σάντας. Ραγίσει τι μαγικής θα θα εκ άνθρωπο. Έως παστόν μυηθεί την είδους έλειπε. Όσο του όχι στα υπόστρωμα σύγχρονου διάσπαρτα ανατάσεις.</p>",
+            "encryptedContent": "JDEkYXJnb24yaSQxNiQyJDY1NTM2JDEkYWVzMjU2JGdjbSQxNiQ3wXHhddXK3JT1A/c7Mukqfbz1oFcc6x6cD5P43/6l9bxx1+QjRMWVNuHg9SCietNUaZsSjg8CG7zkwT8u0c0FTOFKJ+GgfHKN5MF4TMVhKG06zah5EJtZdHLvzf6akN4QIMRYaolM0BKC6O2ioHe4fkXah6SjH0zRudlOK8fFK2yp6lo95YXNC+na5kklm9ikGD/PJcDXsuIOravpHAXoThL7ySLOH5ewYLVv0Z1wSelt8wEvmEBcoglT+50YwyXvILMTO2Lezu8AkYclZb8wRje0ZOWJTCo/XHJzaDDRoWP96YCT6WCCHCwt4OdMX/5HT5SyQljTJMvPFO66v0aTXnjJBp/ofiuKgDu7eNvrcvlMxO04VWWaULa6OZPqsld+cApDTr+1R0I4UA+yqwD229M7oyQiOt2I1Cm/fbwwAUc0DqQRMJW+EWD9q3dBTiNZeMAwqAxw+aIaNSwUoIPhV/ArFfHybg1hglPGDuGHHtGoH8iZtm0GoFLB4dGdxsFt1DdjxR01SbkLrbMwpdkiSDMwJbd++B3oDsIMkFpQoF6aFNuxRNqSqaHz9Bt1Z0ruzFAwq2I0cODZM4u45LAFgxNYXdF9Kzpafk+A+WrloTP0kYAJkN/WCQMljayGvbe0qCl0TZtF5yVDUaP7hyGg4YII+Q7NuF4zi70Kx1EzqZH3mDa3HdYPwr1dUDZOWEbsudEhFjgP2CSteBxujL+EOCj350hJjOfrfjoFtJsDnEoARxETbD7NQnl5HGGjKv0zelRIdBAbzu2VINmBdLZb2LCi4NrCvqBXzZCNJXkJIIO840NkJ75XCaeSFALA+DimG2baS1yFC/EMXWLpfjB0pxzl",
+            "derivedKey": "P0MHrJ6+85kGIQetPjVfGdM1fr7d53oWQa5hMu6W97Q="
+        },
+        {
+            "description": "Argon2d encryption, latin characters.",
+            "payload": "$1$argon2d$16$3$65536$2$aes256$cbchmac$16$",
+            "key": "QmtQd2M6SShUUGw5aEBwWw==",
+            "salt": "G139H+ewpV4mND1fJZ9ZVg==",
+            "iv": "7/vk8mMpeGYmmdbHWMcgBQ==",
+            "plaintextContent": "Lorem ipsum dolor sit amet, scaevola definitionem vim ad, his ei audiam maiorum! Vel ei prima maluisset, et suas iisque feugiat ius. Vim persecuti adversarium ne, virtute pertinax abhorreant eos ad? Ius at dolorem sententiae. Omnes accusamus in eum, quod error definiebas et mel. Vim possit legendos an, purto inimicus disputando te vix.\nCu dico putant quo, sit efficiantur suscipiantur cu. Ex tamquam ceteros duo, in quo natum laoreet similique? Purto soleat principes pri et. Cu eos phaedrum necessitatibus conclusionemque, per dolores epicurei ea!",
+            "encryptedContent": "JDEkYXJnb24yZCQxNiQzJDY1NTM2JDIkYWVzMjU2JGNiY2htYWMkMTYkG139H+ewpV4mND1fJZ9ZVu/75PJjKXhmJpnWx1jHIAWABM6oawIbqD7Y/gzUSAKoihICcrsSysY7FUCWWw4jm7NDCABaYtT4ZZMdPXODH49VxmGoV+DRVS4D//4TMZPPNl0rWXUg25e5hGDsg8rg+auDydISLZSas1Tw8D46ySr9TgnPSm/Ttqt+SLD1wuvRCUjo/2ITA+YA0o7QthOkKiIHKTA/SyYSkk1zxQl0LfzlHGqTGOaclB3GXobK++WT79+MK67b41eK4lv5tv5mzOkUOHjDSvJymXML+zBUAF4Gd/JUSk+OShjFFdi+nFHU+yjYJMBKrGS/NUHdB8xSB7VU4dFOTioJG9NkTolLkT9BW/x8x+7MhHt0Pj3IYMukz2qqJKO3jSBV5xSqs6rdU09w9eMBCrcwVN9tUiDanwK74ucYyzEg/TYiJQ2h4Fhzz79Rs08n+FFUZNx8wED3li46/xBAZ9InLicWG/7+9x82EGd73HW7I5BgTFSIcf4bFM70uPaqhAW5UaIp0zW2GVz0k0H3AnLBYzRKIwsyZZtCk87KlYVId8qgreZXACNkN9pXqrxjPzRJGC3kpuoZtGlFpfHNT19vr1PJTU7yIw1Xhxni4RqZ3/1HsLuHr5DPTXn54AjFCGoINHlXUB/+AslkKckzLxb35X/k63xWmtPAFcFj33Eo1vpx80RkN+ms+q7kW8U2SgqqysMZ+LqOrYHgZPlqI2OFBG7Sj0EjP+sNB0ornHGD+kthvohxyGZXhuANBlFLPlQ9BmVw3vK23VyURvDMZAedIcjqiMeTVOX2kPtH5fsFQb5T3OYKPRl2",
+            "derivedKey": "rkpb1rhJDK3BtDoAnhKFbGp5B5Dahr/pzpCdMBnDuUY="
+        },
+        {
+            "description": "Argon2d encryption, special UTF8 characters / XML.",
+            "payload": "$1$argon2d$16$3$65536$2$aes256$cbchmac$16$",
+            "key": "c3lZbV92Ny44ZiovJ0Rdeg==",
+            "salt": "N8Fx4XXVytyU9QP3OzLpKg==",
+            "iv": "fbz1oFcc6x6cD5P43/6l9Q==",
+            "plaintextContent": "<h2>Μερ την συνεπώς ένα όλη βιβλίου σπιτιού</h2>\n\n<p>Λογοτεχνία συνειδήσει αντίστροφα πώς δεν προσωπικών. Φόρεμαν οπτικές αφορούν πώς επώνυμη αρχαίας όλα στα πει διαφορά. Τη μυηθεί ευθύνη μη σάντας. Ραγίσει τι μαγικής θα θα εκ άνθρωπο. Έως παστόν μυηθεί την είδους έλειπε. Όσο του όχι στα υπόστρωμα σύγχρονου διάσπαρτα ανατάσεις.</p>",
+            "encryptedContent": "JDEkYXJnb24yZCQxNiQzJDY1NTM2JDIkYWVzMjU2JGNiY2htYWMkMTYkN8Fx4XXVytyU9QP3OzLpKn289aBXHOsenA+T+N/+pfWXzNA9TLBBOP9JCbJ5OM2s76vgHoOPPUm/gHuAYhFzBFvvaft12iHP1YoOt87oNjDXOdRIKDtlKbMVrgn9ahqvaGW7PXy74zr3MQHzdoGucb+JatY8YQaBsfyPw4rlC0m42wOvwet3XDK62HWY/pSub8kQissM+elvR2QnYP4EEazJDLXw2qaCNa37ifspLQJ4gtuja3LOSExnsj4+TuaR6N3Mh48MiVKK1FTRaZDIlmoCMbObxYyl+RvL2qMl0lBwPeARLHsY1O+9uzC9+BobdpzbaGrDnHKvZiIAaM0KJ2b35ZIi4XkZ0hZjQHHzoDD7zUjeO/U1I60JDRiHN5dynnp17mUIEjpKi+9m1P/E3KF6QBioAN8BpdMiL47JUzVtyhhVPoZ1bP/EyX18tGsxqEsSaVWpre8hiS6QjT5g55PwU2zqdiA9PW2GJTuga5hRy/zrf3X43Mth72vJg5sFoz2YLMzOT5NKJ48dCSHYitqZ80aB6PoOFbAjM6yYA9nC/SbREudXXFErkAYO5dfHzh64pDLCCBoc22ZW0lzAFQfTNRe0iidgli/rdUKphxwL9h76fYMII6aG9vo6tjVM1d9OTHjTQkYH79xPumgDHuxe98+/32FKxmgHor3vJm4cfNLHO+XgUv14itGcYLuECcTh+019KfdLYK5kzIhrtdcyCkNw12Z49/dRWB4aAo+D+R6dOQ8+8QrY7IdZ2gseuAeRshVnjvvd6aVW1xQ7Ji5s+BI0jRrUxxJrJpE8a/l8+yRZA8EywdiX9RZeykyelQPUHGU3i2qdsfNgL+AN4ioF9N7NHbmP6bz51Wk3euesLgK42Kt5kT5MMTn0mHYq",
+            "derivedKey": "Fk/IG9MopHElAwuDy/jx6//IXzr2K9fG2YfWvBj2G1c="
+        },
+        {
+            "description": "PBKDF2 50000x encryption, latin characters.",
+            "payload": "$1$pbkdf2$16$50000$sha256$aes256$gcm$16$",
+            "key": "QmtQd2M6SShUUGw5aEBwWw==",
+            "salt": "G139H+ewpV4mND1fJZ9ZVg==",
+            "iv": "7/vk8mMpeGYmmdbHWMcgBQ==",
+            "plaintextContent": "Lorem ipsum dolor sit amet, scaevola definitionem vim ad, his ei audiam maiorum! Vel ei prima maluisset, et suas iisque feugiat ius. Vim persecuti adversarium ne, virtute pertinax abhorreant eos ad? Ius at dolorem sententiae. Omnes accusamus in eum, quod error definiebas et mel. Vim possit legendos an, purto inimicus disputando te vix.\nCu dico putant quo, sit efficiantur suscipiantur cu. Ex tamquam ceteros duo, in quo natum laoreet similique? Purto soleat principes pri et. Cu eos phaedrum necessitatibus conclusionemque, per dolores epicurei ea!",
+            "encryptedContent": "JDEkcGJrZGYyJDE2JDUwMDAwJHNoYTI1NiRhZXMyNTYkZ2NtJDE2JBtd/R/nsKVeJjQ9XyWfWVbv++TyYyl4ZiaZ1sdYxyAF7wySYDpW6YGeDX/1wxifTBC/ifKTwaq8XKuuEmv/KCCMWYrhr/WWZiE88dDDBy11Dk1Qz9R+r8DR3qVRW8MgAWVnefy76iTu5XujKa8GsqvlIgBX+5dSh9TizdXBSr4B/wS/4to3dmAA8HzeBg2s5j0UfdWgR1jMhLAoj1xOEmODCQwWDNwxJTyKZrMayzpHDo+nroKSVtk3Y5hAtpV0IA1gJBb2D8JXzTvjCx0jAp8GFRJJMqujajWJrs4hvwkkqQMq2rZcdXeSmnC7evU2wzRDKjwpb2013y6qYfL4DQHgbuAoEgm2387zAvmcPiCIS/JFJB8wS1IiIpyPVvavCGCXETXda//S9iHmE+eLWV8Cj9MmsE7Ui90TedXhuJdbXlrta/xQx6J8H4wNBRysI3rgN0gdOlrbxTsZpeuWAAP9ExiOWOEX7h8uT4ITM5oNsRYmtBSoBhypgHAyLOAtiUw77sVZGH73bXVKuuB30QOoYy56jakoT63cJ0y14rUIqqNAyDR7i1yQW8kx12ulERyHylzhcvapl7fMIInaVsT1MU169UT8NJoa7lxKPWbh0IoFLSFl3n2NMqAgrlJ/5jrwE5d9ew294vIzcKiSp7VnYoBlIdEQ0FGuaSm4uYJeuCpISk1wC8Jx8qHx39FMJmJehqcKdGHAosX+C5NcgNXjKVpcvPvs6LPyAkq5pwxb+qT24N+sWh/Fqdce8aWDdL5XEnToEYiR9XVUw9rAhVcRH/QKn0k=",
+            "derivedKey": "j2yHoGjgVo8qQe/1qzsqjUShfTH0MEFj2KwAovNYIE0="
+        },
+        {
+            "description": "PBKDF2 50000x encryption, special UTF8 characters / XML.",
+            "payload": "$1$pbkdf2$16$50000$sha256$aes256$gcm$16$",
+            "key": "c3lZbV92Ny44ZiovJ0Rdeg==",
+            "salt": "N8Fx4XXVytyU9QP3OzLpKg==",
+            "iv": "fbz1oFcc6x6cD5P43/6l9Q==",
+            "plaintextContent": "<h2>Μερ την συνεπώς ένα όλη βιβλίου σπιτιού</h2>\n\n<p>Λογοτεχνία συνειδήσει αντίστροφα πώς δεν προσωπικών. Φόρεμαν οπτικές αφορούν πώς επώνυμη αρχαίας όλα στα πει διαφορά. Τη μυηθεί ευθύνη μη σάντας. Ραγίσει τι μαγικής θα θα εκ άνθρωπο. Έως παστόν μυηθεί την είδους έλειπε. Όσο του όχι στα υπόστρωμα σύγχρονου διάσπαρτα ανατάσεις.</p>",
+            "encryptedContent": "JDEkcGJrZGYyJDE2JDUwMDAwJHNoYTI1NiRhZXMyNTYkZ2NtJDE2JDfBceF11crclPUD9zsy6Sp9vPWgVxzrHpwPk/jf/qX16L7p1xXOSKlywakkd9JAZnAksGlHM6Z9z01KLZr0CIcAPM1ZaVFiaGMaJJ7xrFNWxcuYH71Q/hr3/155g6XEGMWvw00/M582htLlssLfsrPrSisjJdjIDkRnwY10k3D6X8+XOIiim9OgZ0W31wA9OuF/vhrnRuCVs10mjGEjpyD6MWmrz/65DY5poB9RorxlcgOUE4WhYFail/WrdDiVcl0jQLVNMyy2RKDzQcPBy5t20vszpj+O/GCqbPqqjId7f34pmSxHLKJmJnryfmObqGHQ/VlEzUYeyOV96RRgUPjkzXg+j/9Nca2hpRWRG8H4eND4byfl0NEQhKIlW2SzApSs2HNmlNpniWqpe6P+kFrMNb4nh1e/V1NJSwQxgNp/bGozKVU3w5BLdV7EvXxkuwGjIlGVMiKwLjcviA3gutd167zBUI3frdln+aIpR8s1YdXP1kOiOQaI+TJs/bn7h1m7R2WszNsNFFJscuynBoPTq0gqV2c1b90gKxZM/5hoFfzUu7Hx9KNF7OC00rvwGDhUjFJp8VvHhvOcyMRxs0HjnhA3V0bMIM2UpHUPYBBlIj2gQ0eavwj9CMwu7KqxMMxpZ7BTAyjnbFEGyroH48gkBbddY6qutKzP+cLartXpQp/gqRVB7/QFd8yOOG/IwkQiq/uwaLLLMRtOAWRnzVAmLYZvNtQwv37ukKAdHy8DpR0eZtVmx0Zt3oufqS1qYb5OvxmAIkUCaNB+51faSPzT3s4dp4Db1rZfofmbemckFcexNWHuCqVwOHXN6bllJXiXFS4vE8mPj7Sb++fTbgAI2+4=",
+            "derivedKey": "mh0V2yKB8o0L7+aF1jkjLxne58oi7hh9UH9YNnl2fTU="
+        },
+        {
+            "description": "PBKDF2 200000x encryption, latin characters.",
+            "payload": "$1$pbkdf2$16$200000$sha256$aes256$cbchmac$16$",
+            "key": "QmtQd2M6SShUUGw5aEBwWw==",
+            "salt": "G139H+ewpV4mND1fJZ9ZVg==",
+            "iv": "7/vk8mMpeGYmmdbHWMcgBQ==",
+            "plaintextContent": "Lorem ipsum dolor sit amet, scaevola definitionem vim ad, his ei audiam maiorum! Vel ei prima maluisset, et suas iisque feugiat ius. Vim persecuti adversarium ne, virtute pertinax abhorreant eos ad? Ius at dolorem sententiae. Omnes accusamus in eum, quod error definiebas et mel. Vim possit legendos an, purto inimicus disputando te vix.\nCu dico putant quo, sit efficiantur suscipiantur cu. Ex tamquam ceteros duo, in quo natum laoreet similique? Purto soleat principes pri et. Cu eos phaedrum necessitatibus conclusionemque, per dolores epicurei ea!",
+            "encryptedContent": "JDEkcGJrZGYyJDE2JDIwMDAwMCRzaGEyNTYkYWVzMjU2JGNiY2htYWMkMTYkG139H+ewpV4mND1fJZ9ZVu/75PJjKXhmJpnWx1jHIAWnWePAemOjBEOEUL55uMWE2ttRT3kdUxg03g4N2kxJhTzJcvbT3FfgCb2f2pl5HCaJRe4pOQ+58JALO1Gy8PH31s4Tnhx5FkxyTP+XZ321GZYQxwDAJAGkQoblhD2yahTpNOH3PZ5HHSjHTroN7HvRc6z5q0wyxQOARnnPo2AZMa6pjECxKWcvmGfCeydHGNqEYT5x/PqFunzRQg/3vKF6KHIwOxHKtB9/i8g+VclbAugfirveBi0ZjZr9E7Kn9D7hPLK7XWeFlftctn0yuNDrQHuWaUM1zdBaX/3H86EJhvfi4albmu494ysPMv0AULSTyBQ45azplHrhJivJBa+bWZKBuoe4q3k4MMuKyMTUQNJPs9fwD3pim//GzigCu8rHlOdtX55UP47OhkDuzBN1sQzYPT0Aa53P1jYctY/shO/yHWC7YLI30mtA8ydyzCPt5og3F9h/QduZ1PWVrKAxyXifEbSYIcX0BffAtJSre/62F9CqM9nVyKESnU8eyfqUZy5yhRZmMmbgrSUNem+YaZLlBla2BObcETGJY7MX+SZIY7sJxngwBldJ/mH5nc9UzDDRhVCY669sp8cZifZysQx/dBe2voNevnnnTQNS7sC3Ln5uicGVb/TDm02FD4u63+27PSDYk9JQzdRz4T6uyp4aZbJUnPVRN6u+tfqRpvL510tIdpwa+7KKVNVWRiC1BwyZNCPUvyAV94HWhy4rQvWJDK4szE1QpZrPXrv+ZMsP5mYO8s79KurMR8yjdku5LusYpOWwjQnIQIDTvIGM",
+            "derivedKey": "ErYw/f6YHPAEtSkcbtOrVKI1kFcZkdb/x5gOBbEdT60="
+        },
+        {
+            "description": "PBKDF2 200000x encryption, special UTF8 characters / XML.",
+            "payload": "$1$pbkdf2$16$200000$sha256$aes256$cbchmac$16$",
+            "key": "c3lZbV92Ny44ZiovJ0Rdeg==",
+            "salt": "N8Fx4XXVytyU9QP3OzLpKg==",
+            "iv": "fbz1oFcc6x6cD5P43/6l9Q==",
+            "plaintextContent": "<h2>Μερ την συνεπώς ένα όλη βιβλίου σπιτιού</h2>\n\n<p>Λογοτεχνία συνειδήσει αντίστροφα πώς δεν προσωπικών. Φόρεμαν οπτικές αφορούν πώς επώνυμη αρχαίας όλα στα πει διαφορά. Τη μυηθεί ευθύνη μη σάντας. Ραγίσει τι μαγικής θα θα εκ άνθρωπο. Έως παστόν μυηθεί την είδους έλειπε. Όσο του όχι στα υπόστρωμα σύγχρονου διάσπαρτα ανατάσεις.</p>",
+            "encryptedContent": "JDEkcGJrZGYyJDE2JDIwMDAwMCRzaGEyNTYkYWVzMjU2JGNiY2htYWMkMTYkN8Fx4XXVytyU9QP3OzLpKn289aBXHOsenA+T+N/+pfXu6H8L8KxtKlKLNJbZq2ohu9p3PG3gLn+Dtpz823aphDgdcTc0WIOCAxbfVvjCDv4VFkToxuBq5DDwOAo9mnnb71A6vdRhfFqbl1eNA7pRMK7NfTHCQCLtO+OwJLRI7lsy60vDgvvmHt+4jOZVh91YvhQ7/CnplkZnOSi0uLodBGbmjai8uI3u8Oo6B37cLf2Ox2yuUAZWuPTj5AjEoez2Vg+Il7YIw28bmKPLTEiLXqqaqnBJmfpVJIXHyPUW/8ftm1Gw2yVB0qNkqvNjcjQu8Uo/45gbDSUI0Dn68gerk6Zei9wi3iykflGPTDW49d3gjbghiwoxljrlRxGJut2yC7xspbjyBpcQb0UetGI5wjxjhswzV+03Q/mXyYKmOJhYcpEgteX7yUHT1tu7Xc29klVEWkGBSHSl5aJEZsHq/iYTfwsHkXt9u28/qr5URfuEoSQDVLRa1LUJw7lSQjBkeeA0SCR0RsXq3kJ77mb1SqlHlbTOLdVy3jm7udrfR0yj8ZZwN1RVqnnwCHtD2Dnd9K5kPhWZLCNX7C+pF/y0ND/DRzUWiJGOwcQNCozIYqNK2WMRSa58KL2i6DmgPduBJcLfdhgbu5yCGuakvS4Bn2En96KcIQarav4gTuhoewTBudY/sXijtFODtIhltH84u6vP29N7FbEF8KEdP1FfbmmuLyZ+5tuMGYkjcT+hRw1UKvtxecRYlqvD+NXFiKRZjQQToFHkhiwwEaDJ7gci0t7ZFOMYtqEWBoTnK/k4wSrpLJ+x9Fdxb5lMbVzLWPPAcJUDYuA6pOPbwRBo1A4OQxrF4fT3t6i2RizqC7UcMIBYP67empslICuH95P3sKIA",
+            "derivedKey": "NyXGbNBTKaJcGaSvesJUeb/ua/ttRaa0DyuT0LpidyU="
+        },
+        {
+            "description": "Old PBKDF2 10204x / SHA1 encryption, latin characters.",
+            "payload": "$1$pbkdf2$32$10204$sha1$aes256$cbchmac$16$",
+            "key": "XzlhOmZXTFFfZ2t3J3tsUw==",
+            "salt": "4ETIu9rdZYyYUggsTKDJY9UZaOl+jAcv0OoQyImVxWc=",
+            "iv": "7/vk8mMpeGYmmdbHWMcgBQ==",
+            "plaintextContent": "Lorem ipsum dolor sit amet, scaevola definitionem vim ad, his ei audiam maiorum! Vel ei prima maluisset, et suas iisque feugiat ius. Vim persecuti adversarium ne, virtute pertinax abhorreant eos ad? Ius at dolorem sententiae. Omnes accusamus in eum, quod error definiebas et mel. Vim possit legendos an, purto inimicus disputando te vix.\nCu dico putant quo, sit efficiantur suscipiantur cu. Ex tamquam ceteros duo, in quo natum laoreet similique? Purto soleat principes pri et. Cu eos phaedrum necessitatibus conclusionemque, per dolores epicurei ea!",
+            "encryptedContent": "JDEkcGJrZGYyJDMyJDEwMjA0JHNoYTEkYWVzMjU2JGNiY2htYWMkMTYk4ETIu9rdZYyYUggsTKDJY9UZaOl+jAcv0OoQyImVxWfv++TyYyl4ZiaZ1sdYxyAFlpk/KN4xn9JCeXszuxvdxx9712mot325idt+CTkrvxjJaJx8BGazSdwTrqH9rfX/hbHw7fOudMFnGWnja7WgjosqlCT54d9elbNsMd1DpTfFyuzUXTGunatiU+uv3sDeQuiXEniOlitFVeLQeajbENLdyBR5JCxjtEqCDD+obXgIXtPtQ051zNFBt1fdbqcWAUnXY3vFoD83L1DrnRAgJx0R6+TfHtyRUjc3exZCk3nK4ouwaB+vXkkepN5eXRo5IqZnLvTxEOIDcpFMlppyvLK7oDaW9Rv9ZPQDXmn4K6qkE76qrUNP9BIOnLTzyZ9BPk4+CXzSCp3Ipr201TJgpEfO+hTDODUOmFg7qd+SsfvlsRwNqhgrVFChm5GbVpX6wNrDbYXL5l8k2M7oGzQsm+yadg3GnSZULYanTphOxvxw3gXgaaSjOj+VH61OHph16eP6sD9XE4OTwIooCCdUqsMPHscANyP9EmmJXo4b3rA34GZAirLl1pOX7s0RuL8pvtiV7feF2xSdbFYXTBn319+46BlkeywvwFgtiU4Xqz26ilUA8H5hGfhm7s6rUmTJlWMVuKcNBRkqvrfFN4y+GTFaW6vNKmMSoLxhR4wVv7uLlv9Cx2flvDuHGw7KQor7tc8aC6JNUlMPXSXyWamzpyA6yGzhFWF+yq0WzIZsPpVme0bkYEzAd1EsEgssuLv9Eq8bGO+95qedLTzVt2HC7R35vw5Ev1mI7FP6fpz3q4BdvW6sftLHQJpAnTPbp3uC5hzdOtaVSXMueTc7EIMhtQ==",
+            "derivedKey": "XQVny6GAbTDtrf1xD9RowjxXZ2rOnjo4xMrt6/8tLAg="
+        },
+        {
+            "description": "Old PBKDF2 10204x / SHA1 encryption, special UTF8 characters / XML.",
+            "payload": "$1$pbkdf2$32$10204$sha1$aes256$cbchmac$16$",
+            "key": "c2Y3c3k9JVdWUSg6LDd8bQ==",
+            "salt": "q7HwLZgvzptpS1p3imqn2BQCJaVgQJwLWWXNxmowKIM=",
+            "iv": "fbz1oFcc6x6cD5P43/6l9Q==",
+            "plaintextContent": "<h2>Μερ την συνεπώς ένα όλη βιβλίου σπιτιού</h2>\n\n<p>Λογοτεχνία συνειδήσει αντίστροφα πώς δεν προσωπικών. Φόρεμαν οπτικές αφορούν πώς επώνυμη αρχαίας όλα στα πει διαφορά. Τη μυηθεί ευθύνη μη σάντας. Ραγίσει τι μαγικής θα θα εκ άνθρωπο. Έως παστόν μυηθεί την είδους έλειπε. Όσο του όχι στα υπόστρωμα σύγχρονου διάσπαρτα ανατάσεις.</p>",
+            "encryptedContent": "JDEkcGJrZGYyJDMyJDEwMjA0JHNoYTEkYWVzMjU2JGNiY2htYWMkMTYkq7HwLZgvzptpS1p3imqn2BQCJaVgQJwLWWXNxmowKIN9vPWgVxzrHpwPk/jf/qX1F2cy0TeN3DMuJFJ4dyOkPXDmn0Lqe5C0w/DPs8t7gMEHDSlpzW+2SP2YXb54xxzsLYbHKepEYuUahDRhpQai4x0mjUlhtOw3VZv4Hl5b5ElM1jbj7jNY7Wf5pwsz0Z3SsBRWvEKLexh2vg1ytY3J67qD+ouyM59BJZSgWeJh9Vwz3nuIhWn8CPQeWRwpOSFeaLvt9qG0BGjRgDcDwA9ZuQzgjN+qILJLieKLpJDSOyopDIxPtlom8K1gp4esji3u6vSGnWm1W0LgyqDKMJgq1nlSyn3DAxC3kOJz9SbAvMP48z8BaK8Ot1Xy+X8i59xhf+9fLVobV3FfRvTJHu3LkgVXPtly7R5YEgZjcEPxw3vJCLLNcoa2ciNaW+meHry5q5EFbRsPCnHSAOxMr53EuCeu9wQnVqJ6WSNwZI0HMUKLfhvaN3FKvjhI9jY0vB2HGj+I/H+yOei0r1itJ8TuunufgI6DgTLcB70pdY68xp6MYhV48n1WSkzrcAxBOJyjpLUid5bZ+e47+wKLGQXgHFgDz8VOlac2UQhr74Urcy39PYzEulFbAcVZBbyXohAPVCFotfmp/NmC0o7r2aV9b1R/wEtREp9pMrDLjzvhd6dGj5miOpGlgWnDS5umzGGjkHcUgxLGe5e+Fycv7JBpFM/Fwvyb6pgjDCO10f41OgX/xW1iCFTut5aNI4OqecTJaZMuK4KeAdmzslxy0O8jNVVoyIHZb20IAeVDJ1F/HbhG8NYk0OxvdhJfusMlrT+12bz+88iFm4kA3JA0gGtEOV9iT2pK1SAGwIqcOnG4p5NuXft8oqFC541GhGOsMA7sUt5keDu6IsD+Pit/saMQbw==",
+            "derivedKey": "mTJ8vuWaf9Sku8vx0KdiT/XvMFCso1rjCT9cQmmSCQI="
+        },
+        {
+            "description": "Argon2d encryption, special characters key, latin characters.",
+            "payload": "$1$argon2d$16$3$32768$2$aes256$cbchmac$16$",
+            "key": "4oKsw6nDqiJcQH7DgsODw4TDgMOBw4XDhsOHw4jDicOKw4vDjMONw47Dj8OQw5HDksOTw5TDlcOWw5jDmcOaw5siQC9cw5zDncOew5/DoMOhw6LDo8Okw6XDpsOnw6jDqcOqw6vDrMOtw67Dr8Oww7HDssOzw7TDtcO2w7jDucO6w7vDvMO9w77Dv+KCrEF6ZXJ0eTEy",
+            "salt": "KjqaOv8eZxAm6sIqWOg6tQ==",
+            "iv": "rOlYhPrxFP2GRbE/uZwkCQ==",
+            "plaintextContent": "Lorem ipsum dolor sit amet, scaevola definitionem vim ad, his ei audiam maiorum! Vel ei prima maluisset, et suas iisque feugiat ius. Vim persecuti adversarium ne, virtute pertinax abhorreant eos ad? Ius at dolorem sententiae. Omnes accusamus in eum, quod error definiebas et mel. Vim possit legendos an, purto inimicus disputando te vix.\nCu dico putant quo, sit efficiantur suscipiantur cu. Ex tamquam ceteros duo, in quo natum laoreet similique? Purto soleat principes pri et. Cu eos phaedrum necessitatibus conclusionemque, per dolores epicurei ea!",
+            "encryptedContent": "JDEkYXJnb24yZCQxNiQzJDMyNzY4JDIkYWVzMjU2JGNiY2htYWMkMTYkKjqaOv8eZxAm6sIqWOg6tazpWIT68RT9hkWxP7mcJAkpsOD4JX3vLkoJVrNIPxk/hkyVLt2XEzPne/eCPZcf3u8uWpQNgmnC12BABNjNYiyvpkFDTt7b0PfrjVCvkTV7kfHCxBQBVye5iuMcaEABbsEP9FczZYU1UzkxGB5VZK1n/Q0oyv2e3TTmnDtJSfp90cd4DvTl7ni6y9wW+xQz3Zry1XtkugoJBTxTao8Uel4e4pwjESm++J626D0MPaNrqYr5C2GamB12dJE1x5lPVkGd25rM9fdt7E50TKE9MXBT610ZXbWS65syHS1wqXKGoRF/OWe83vQ3Xsb5Mje1+18oRjWKZjpLiIBhymd2guQeMbbcxA3Y+VIhQB09yxRSHI+5a7gvMnNTAA2TcvD+tm0gh0bsfVEABs+yI6ewtlx3rE7luAyK1yF2kMllW+Hz9MbNE+WZ3eyqA+CZUTp+GUEJsNDZfRYDYCmMMIN05O+8TpnzKOrSBTxHYvAwo9/QwjaFaJNCNNE8H9JxJRUlfZGsP0eEuqzYTy0cNDEfT086zOMyiCpyrtd8rkZO0GfUgqsWt8S5l6LPdpIZvjZKPPTGHTIwmPNHUmdKwywZB61UwESgIxQrYL9qVPBbyYUO3VU/TjIh+7uPhhNhhpWOFLuXQtu0cRd3VhD/2j1jS+pXr6qhAofEItTjMFVPNJuaOrgyoRtOS9thqAshmUAh4v7UTiFeoHus4NLuRd6pmaVBnqPpIUrGAv5DS8AIHMHKfIU97qW/6cIgGe19/RDg3YIf7K7AM5n+bnTZ0yrURsMK/yPbrfgR3bBsKEaqY92q",
+            "derivedKey": "DpkUZQhUNjLYb8icnTKdLaNgLLOO/2lxc9EtiaIjQck="
+        },
+        {
+            "description": "Argon2d encryption, special characters key, special UTF8 characters / XML.",
+            "payload": "$1$argon2d$16$3$32768$2$aes256$cbchmac$16$",
+            "key": "4oKsw6nDqiJcQH7DgsODw4TDgMOBw4XDhsOHw4jDicOKw4vDjMONw47Dj8OQw5HDksOTw5TDlcOWw5jDmcOaw5siQC9cw5zDncOew5/DoMOhw6LDo8Okw6XDpsOnw6jDqcOqw6vDrMOtw67Dr8Oww7HDssOzw7TDtcO2w7jDucO6w7vDvMO9w77Dv+KCrEF6ZXJ0eTEy",
+            "salt": "KjqaOv8eZxAm6sIqWOg6tQ==",
+            "iv": "SPHYJ7ORSKLYHydHOh9IFw==",
+            "plaintextContent": "<h2>Μερ την συνεπώς ένα όλη βιβλίου σπιτιού</h2>\n\n<p>Λογοτεχνία συνειδήσει αντίστροφα πώς δεν προσωπικών. Φόρεμαν οπτικές αφορούν πώς επώνυμη αρχαίας όλα στα πει διαφορά. Τη μυηθεί ευθύνη μη σάντας. Ραγίσει τι μαγικής θα θα εκ άνθρωπο. Έως παστόν μυηθεί την είδους έλειπε. Όσο του όχι στα υπόστρωμα σύγχρονου διάσπαρτα ανατάσεις.</p>",
+            "encryptedContent": "JDEkYXJnb24yZCQxNiQzJDMyNzY4JDIkYWVzMjU2JGNiY2htYWMkMTYkKjqaOv8eZxAm6sIqWOg6tUjx2CezkUii2B8nRzofSBc9FCuEwF+0xVeyvyPtNQL5HRstbP/NrTp6NAx1vQXXZ5GWyjHVsBhqxAiDfoAZP6VH+lAnP+QRTNqpMktojVqMF0duKXThBs30Ta2I6ef0nYh1xxY4Xy28RGHUM3T+1PKWBeLa7JozSu+XfIjXrautSlRS4MA2Nis/SV57lRsiPtE93Xy6Zrf8CqdF+B2SqSM70URoYm9O9oidzViT3T8iICUoTnAqI7fruS8tnYmH7SIcp9bdp1rRZyVvgV/UAdw8WLC2HX5OC0H28Ckg+jgwUkcD/ATeAp/npV5EDBeuJ78Lv2UOKIRWQV9DT++QvSAmxEvXKADIzm3rt8UCMw4y2he7LErohibah9MBDtjQchrakTDNHs01/DFq/pt3sTd3PEswP6cR2rl3yba0Kj7lmM+lJTgneWJVRFm869flHEUXfPk8u5EeOJzPl6Fwl4i9+azRD4OR19v/ct/iveEC7G0w5+u7rTOWkjcpq7NGumznGdKxKLFcmgT6Qb0zjHxZNfuDlFF9HqOIIEQtmKSOY26d0N6TJO5TyNuxtOE2aZYLqxGF5awScuUKk4AR5zeQBVI0zjbzOisWs0NvnMWbiNW+Qyu0NCvebk/t9bvmf4zn2dL/GrvEpUEpx+67O23FzRjdCWVDleU3/8kotMgg2Gi0h4Q8InH/HxjaktCMpYgHOR29wErKU4D4f9xPXS/oLZnejFebpdEaNRkujKXUcDxa1kFdPtqw2hDe4dFKK0oKxXtH8XWXPayaGZ4NspedeoFsK3wjfEzzA2ckJGRzBRdZ7qlFV/4bSqz2J6XKA5kPrqdNW6OdH8J8mszTDEqhRTbhGkBZDVyYxqXfCFIl",
+            "derivedKey": "DpkUZQhUNjLYb8icnTKdLaNgLLOO/2lxc9EtiaIjQck="
+        },
+        {
+            "description": "PBKDF2 200000x encryption, special characters key, latin characters.",
+            "payload": "$1$pbkdf2$16$200000$sha256$aes256$cbchmac$16$",
+            "key": "4oKsw6nDqiJcQH7DgsODw4TDgMOBw4XDhsOHw4jDicOKw4vDjMONw47Dj8OQw5HDksOTw5TDlcOWw5jDmcOaw5siQC9cw5zDncOew5/DoMOhw6LDo8Okw6XDpsOnw6jDqcOqw6vDrMOtw67Dr8Oww7HDssOzw7TDtcO2w7jDucO6w7vDvMO9w77Dv+KCrEF6ZXJ0eTEy",
+            "salt": "xEjEAXRMLyjr1526duHHWA==",
+            "iv": "QK4V+Abk9RUHr3+sjA6cJg==",
+            "plaintextContent": "Lorem ipsum dolor sit amet, scaevola definitionem vim ad, his ei audiam maiorum! Vel ei prima maluisset, et suas iisque feugiat ius. Vim persecuti adversarium ne, virtute pertinax abhorreant eos ad? Ius at dolorem sententiae. Omnes accusamus in eum, quod error definiebas et mel. Vim possit legendos an, purto inimicus disputando te vix.\nCu dico putant quo, sit efficiantur suscipiantur cu. Ex tamquam ceteros duo, in quo natum laoreet similique? Purto soleat principes pri et. Cu eos phaedrum necessitatibus conclusionemque, per dolores epicurei ea!",
+            "encryptedContent": "JDEkcGJrZGYyJDE2JDIwMDAwMCRzaGEyNTYkYWVzMjU2JGNiY2htYWMkMTYkxEjEAXRMLyjr1526duHHWECuFfgG5PUVB69/rIwOnCbQQbH4aZHOFEO9nS31LDoFLKJI+6APwCAENjjiWhlRtj93/R4Css/yYvxSeiA/uSuTqa7Qyierdh70Wlhf5Xka+SZ3hjjCR2aE9Ag+O3dY8ZO+8KIercNm1mWAOtv0SsHb8YAevedAhnjoGUL5C9NkfP/B9w6jJ0LesLUNIxvuGdHro1YJ5Ve9BCmtl9sG0UDFqUdv6zIRkVvuVTG7Qttn+Nwv7mGCz2bJ7QmV5w7ubvQ4OdMM8a0hBHGcGqsmUXCGHqcD4UxbALuRjj7FxhH+k470HE/xOi2f/9wwSS1pePXBRbKiXHXaFxMmGfu77mEb5JANvTH96/J+vThR84mePrPZSp7Feg/moHTe4uWgO7QDG2onMpacSN4JN5CdXAYMWzORwILLa7MSS/TTUtrPw/01PwrQHyPJsFTzuy9yDu/TIDPgcsrUgoWIDmfzLm7w2aj7GpPI3EBynubkpwp+dmiGjc5wJYlpMBqPEVmV5CEMEdh/Akg70u/LUagg6l5TiKOjUJBHI8djzloGMrgUWUcy30PAUSb3AIvo3KYrdR6i8hGnOqKRSNiYQYtucsBwCh1tkYafjYD/T7ekX12lq0sIcFXMrg69fVbwisEZhaaAIipZ3IzuOtdl9+BZ26TjlJSxl4+U46rnBGmN9K6vz11nMPPEMA0gJSv6tLLYwXfBKsoTwzXStG8KavCqBvg9UY0cE6GyBMrthq1fvLOuj7vHRkJwGDmXivwedn4wgcNboei0Ye0LqBsOWLfF7WSvNbJCb0TNzjmc1rcrtjJZ",
+            "derivedKey": "yuKRC+R168P7eqAyFneO2oikSi0ksToJTOWYBnxSN2k="
+        },
+        {
+            "description": "PBKDF2 200000x encryption, special characters key, special UTF8 characters / XML.",
+            "payload": "$1$pbkdf2$16$200000$sha256$aes256$cbchmac$16$",
+            "key": "4oKsw6nDqiJcQH7DgsODw4TDgMOBw4XDhsOHw4jDicOKw4vDjMONw47Dj8OQw5HDksOTw5TDlcOWw5jDmcOaw5siQC9cw5zDncOew5/DoMOhw6LDo8Okw6XDpsOnw6jDqcOqw6vDrMOtw67Dr8Oww7HDssOzw7TDtcO2w7jDucO6w7vDvMO9w77Dv+KCrEF6ZXJ0eTEy",
+            "salt": "xEjEAXRMLyjr1526duHHWA==",
+            "iv": "SBDT/6FwoPIPsHpl6r+V4A==",
+            "plaintextContent": "<h2>Μερ την συνεπώς ένα όλη βιβλίου σπιτιού</h2>\n\n<p>Λογοτεχνία συνειδήσει αντίστροφα πώς δεν προσωπικών. Φόρεμαν οπτικές αφορούν πώς επώνυμη αρχαίας όλα στα πει διαφορά. Τη μυηθεί ευθύνη μη σάντας. Ραγίσει τι μαγικής θα θα εκ άνθρωπο. Έως παστόν μυηθεί την είδους έλειπε. Όσο του όχι στα υπόστρωμα σύγχρονου διάσπαρτα ανατάσεις.</p>",
+            "encryptedContent": "JDEkcGJrZGYyJDE2JDIwMDAwMCRzaGEyNTYkYWVzMjU2JGNiY2htYWMkMTYkxEjEAXRMLyjr1526duHHWEgQ0/+hcKDyD7B6Zeq/leAGDSjZ8aJuXrI7z1pWiOqUTz9ckrgVFdaFQs2dyyl+ahkdYXL9bpnr3iF+0i0VmR+xzhU5bekquN6efCeHR572ULMX4OtIAzdxpaZ7IMSP2jnDp8shk3zDtjxQhkHixgx7Soe+05hbiKjVnhA4befr+XA/3bqiBdhMIY5CiyVzV3mb3qncQic0JQr9lca0sWEOiCyw2jY7+CWlIt9vvaIDZzxXk3iWcWIXdZRdZSx/ZiHLT2q8SN4+PamnR3Py93HQL6P7BCwo4oYdlhP2Sq1n8296kYdrBQqAIZ3ob87hi8Jc9wH0TMXm8wINnHWCd8wuTYoY008X/UF2Y3wPS5qQf1N8k/mPFh2pBU2k0jRXcu7Q36JHPdwJn/Ojq4seVMaElEMaObmVp7j7Nqh94Wk6WDvpXLKaTGn7qdJgL/RDVWoyek3L7s4McaxfFUdlocqHPkEzG7ViCHWFde/7Q1nV2SO1VZRaids6usrK8VIYSvFg33u8MBCUpjUarI5nbXh+eEC2+UXkO02zfuwZFGNO9XJW74Wg8oA9s5+xLojiKguxVsWPSvs141NKNj1iFOPteTBby0zz/HyHaPDVpa9BGqxoOi39dvJhOHQuCuZ+/eqqg9kCUnWOAcgzwq/Mug3eoCQqJVbxW3e0STG3z2RH6TObEHxiYiKd/wVtDMHipk86PWWM+9wNCcJV53hK3Lrrr4Wqw1vDwpr3ZpZjYYhuk9IxMiB7FdNRRNUGFpGjygrFiNOO7pv72hqknG2VJDk3pVuhC9hdEUifnANAdDStizoar8jcanvs9TxsnXLGijv/ZHfcVaem4U/GaiVrAzDcGxrq5R5TVIvQR/yM4NqZ",
+            "derivedKey": "yuKRC+R168P7eqAyFneO2oikSi0ksToJTOWYBnxSN2k="
+        }
+    ]
+}
