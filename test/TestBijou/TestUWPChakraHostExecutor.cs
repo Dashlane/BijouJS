@@ -5,7 +5,7 @@ using Bijou;
 using Bijou.Types;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
-namespace Bijou.Test.UWPChakraHost.Executor
+namespace Bijou.Test.UWPChakraHost
 {
     [TestClass]
     public class TestUWPChakraHostExecutor

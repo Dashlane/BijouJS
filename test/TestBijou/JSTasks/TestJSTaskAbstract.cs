@@ -1,23 +1,24 @@
 ﻿using System;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Moq;
-using Bijou.Chakra.Hosting;
 using Bijou.JSTasks;
 using Bijou.Test.UWPChakraHost.Utils;
+using FluentResults;
+using Bijou.Types;
 
 namespace Bijou.Test.UWPChakraHost.JSTasks
 {
     [TestClass]
-    public class TestJSTaskAbstract
+    internal class TestJSTaskAbstract
     {
         private class JsTaskExecute : AbstractJSTask
         {
             public JsTaskExecute(int delay = 0, bool shouldReschedule = false) :
                 base(delay, shouldReschedule) { }
 
-            protected override JavaScriptValue ExecuteImpl()
+            protected override Result<JavaScriptObject> ExecuteImpl()
             {
-                return JavaScriptValue.True;
+                return Results.Ok(JavaScriptBoolean.True).ToResult<JavaScriptObject>((value) => value);
             }
         }
 
