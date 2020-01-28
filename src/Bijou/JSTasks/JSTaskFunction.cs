@@ -15,7 +15,7 @@ namespace Bijou.JSTasks
         private readonly string _functionNativeName;
         private readonly object[] _nativeArguments;
 
-        public JavaScriptFunction Function { get; private set; }
+        public JavaScriptFunction Function { get; private set; } = JavaScriptFunction.InvalidFunction;
 
         public JavaScriptObject[] Arguments { get; private set; }
 
