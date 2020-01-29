@@ -1,5 +1,4 @@
-﻿using Bijou.Chakra.Hosting;
-using Bijou.JSTasks;
+﻿using Bijou.Chakra;
 using Bijou.Test.UWPChakraHost.Utils;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
@@ -25,7 +24,7 @@ namespace Bijou.Test.UWPChakraHost.JSTasks
         {
             var result = RunScript(script);
             Assert.AreEqual(jsTypeExpected, result.ValueType);
-            Assert.AreEqual(valueExpected, result.ToDouble(), 0.00001);
+            Assert.AreEqual(valueExpected, result.ToDouble().Value, 0.00001d);
         }
 
         private void VerifyScript(string script, JavaScriptValueType jsTypeExpected, bool valueExpected)

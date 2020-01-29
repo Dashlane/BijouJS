@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Threading;
 using System.Threading.Tasks;
-using Bijou.Executor;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 namespace Bijou.Test.UWPChakraHost.Executor

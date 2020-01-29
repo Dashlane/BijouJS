@@ -1,5 +1,4 @@
 ﻿using System;
-using Bijou.Types;
 using FluentResults;
 
 namespace Bijou.Chakra
@@ -124,7 +123,7 @@ namespace Bijou.Chakra
         /// </param>
         /// <param name="sourceName">The location the script came from.</param>
         /// <returns>A <c>Function</c> representing the script code.</returns>
-        public static Result<JavaScriptFunction> ParseScript(string script, JavaScriptSourceContext sourceContext, string sourceName)
+        public static Result<JavaScriptValue> ParseScript(string script, JavaScriptSourceContext sourceContext, string sourceName)
         {
             return NativeMethods.JsParseScript(script, sourceContext, sourceName);
         }
@@ -142,7 +141,7 @@ namespace Bijou.Chakra
         /// </param>
         /// <param name="sourceName">The location the script came from.</param>
         /// <returns>A <c>Function</c> representing the script code.</returns>
-        public static Result<JavaScriptFunction> ParseScript(string script, byte[] buffer, JavaScriptSourceContext sourceContext, string sourceName)
+        public static Result<JavaScriptValue> ParseScript(string script, byte[] buffer, JavaScriptSourceContext sourceContext, string sourceName)
         {
             return NativeMethods.JsParseSerializedScript(script, buffer, sourceContext, sourceName);
         }
@@ -155,7 +154,7 @@ namespace Bijou.Chakra
         /// </remarks>
         /// <param name="script">The script to parse.</param>
         /// <returns>A <c>Function</c> representing the script code.</returns>
-        public static Result<JavaScriptFunction> ParseScript(string script)
+        public static Result<JavaScriptValue> ParseScript(string script)
         {
             return ParseScript(script, JavaScriptSourceContext.None, string.Empty);
         }
@@ -169,7 +168,7 @@ namespace Bijou.Chakra
         /// <param name="script">The script to parse.</param>
         /// <param name="buffer">The serialized script.</param>
         /// <returns>A <c>Function</c> representing the script code.</returns>
-        public static Result<JavaScriptFunction> ParseScript(string script, byte[] buffer)
+        public static Result<JavaScriptValue> ParseScript(string script, byte[] buffer)
         {
             return ParseScript(script, buffer, JavaScriptSourceContext.None, string.Empty);
         }
@@ -186,7 +185,7 @@ namespace Bijou.Chakra
         /// </param>
         /// <param name="sourceName">The location the script came from.</param>
         /// <returns>The result of the script, if any.</returns>
-        public static Result<JavaScriptObject> RunScript(string script, JavaScriptSourceContext sourceContext, string sourceName)
+        public static Result<JavaScriptValue> RunScript(string script, JavaScriptSourceContext sourceContext, string sourceName)
         {
             return NativeMethods.JsRunScript(script, sourceContext, sourceName);
         }
@@ -204,7 +203,7 @@ namespace Bijou.Chakra
         /// </param>
         /// <param name="sourceName">The location the script came from.</param>
         /// <returns>The result of the script, if any.</returns>
-        public static Result<JavaScriptObject> RunScript(string script, byte[] buffer, JavaScriptSourceContext sourceContext, string sourceName)
+        public static Result<JavaScriptValue> RunScript(string script, byte[] buffer, JavaScriptSourceContext sourceContext, string sourceName)
         {
             return NativeMethods.JsRunSerializedScript(script, buffer, sourceContext, sourceName);
         }
@@ -217,7 +216,7 @@ namespace Bijou.Chakra
         /// </remarks>
         /// <param name="script">The script to run.</param>
         /// <returns>The result of the script, if any.</returns>
-        public static Result<JavaScriptObject> RunScript(string script)
+        public static Result<JavaScriptValue> RunScript(string script)
         {
             return RunScript(script, JavaScriptSourceContext.None, string.Empty);
         }
@@ -231,7 +230,7 @@ namespace Bijou.Chakra
         /// <param name="script">The source code of the serialized script.</param>
         /// <param name="buffer">The serialized script.</param>
         /// <returns>The result of the script, if any.</returns>
-        public static Result<JavaScriptObject> RunScript(string script, byte[] buffer)
+        public static Result<JavaScriptValue> RunScript(string script, byte[] buffer)
         {
             return RunScript(script, buffer, JavaScriptSourceContext.None, string.Empty);
         }
@@ -277,7 +276,7 @@ namespace Bijou.Chakra
         ///     </para>
         /// </remarks>
         /// <returns>The exception for the runtime of the current context.</returns>
-        public static Result<JavaScriptObject> GetAndClearException()
+        public static Result<JavaScriptValue> GetAndClearException()
         {
             return NativeMethods.JsGetAndClearException();
         }

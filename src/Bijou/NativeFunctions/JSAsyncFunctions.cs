@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using Bijou.Chakra;
 using Bijou.JSTasks;
-using Bijou.Types;
 using FluentResults;
 
 namespace Bijou.NativeFunctions
@@ -30,7 +29,7 @@ namespace Bijou.NativeFunctions
                 {
                     var result = AddScheduledJavaScriptNativeFunction(pushHandler, arguments, callbackData, 0).Value;
 
-                    return result.UnderlyingValue;
+                    return result;
                 }
 
                 Console.Error.WriteLine(
@@ -66,7 +65,7 @@ namespace Bijou.NativeFunctions
                     return ret;
                 }
 
-                return AddScheduledJavaScriptNativeFunction(pushHandler, arguments, callbackData, 10, true).Value.UnderlyingValue;
+                return AddScheduledJavaScriptNativeFunction(pushHandler, arguments, callbackData, 10, true).Value;
             };
         }
 
@@ -102,14 +101,14 @@ namespace Bijou.NativeFunctions
                 }
 
                 // clearTimeout / clearInterval signature is (id)
-                var arg = arguments[1].ToObject();
+                var arg = arguments[1];
                 if (!arg.IsValid)
                 {
                     Console.Error.WriteLine("[ClearScheduledJavaScriptNativeFunction] Invalid argument");
                     return ret;
                 }
 
-                if (!(arg is JavaScriptNumber id))
+                if (arg.ValueType.Value != JavaScriptValueType.Number)
                 {
                     Console.Error.WriteLine(
                         "[ClearScheduledJavaScriptNativeFunction] Invalid argument type, expected Number, received " +
@@ -117,8 +116,7 @@ namespace Bijou.NativeFunctions
                     return ret;
                 }
 
-                var taskId = id.AsInt32();
-                cancelHandler(taskId.Value);
+                cancelHandler(arg.ToInt32().Value);
 
                 return ret;
             };
@@ -144,9 +142,8 @@ namespace Bijou.NativeFunctions
                     return;
                 }
 
-                var globalObject = JavaScriptPrototype.GlobalObject;
-                var task = new JSTaskFunction(new JavaScriptFunction(promise),
-                    new JavaScriptObject[] {globalObject.Value}) {IsPromise = true};
+                var globalObject = JavaScriptValue.GlobalObject.Value;
+                var task = new JSTaskFunction(promise, new[] {globalObject}) {IsPromise = true};
                 pushHandler(task);
             };
         }
@@ -154,7 +151,7 @@ namespace Bijou.NativeFunctions
         /// <summary>
         /// JS Native function for generic async operation (setTimeout / setInterval)
         /// </summary>
-        private static Result<JavaScriptNumber> AddScheduledJavaScriptNativeFunction(
+        private static Result<JavaScriptValue> AddScheduledJavaScriptNativeFunction(
             PushTask pushHandler,
             IReadOnlyList<JavaScriptValue> arguments,
             IntPtr callbackData,
@@ -176,40 +173,40 @@ namespace Bijou.NativeFunctions
                 }
 
                 // arguments[0] is JavaScript this
-                var callerObject = arguments[0].ToObject();
+                var callerObject = arguments[0];
 
                 // setTimeout / setInterval signature is (callback, [after, params...])
-                var callback = new JavaScriptFunction(arguments[1]);
+                var callback = arguments[1];
 
                 var delay = minDelay;
                 if (arguments.Count > 2)
                 {
-                    var afterValue = arguments[2].ToObject();
+                    var afterValue = arguments[2];
                     if (!afterValue.IsValid)
                     {
                         return Results.Fail("[AddScheduledJavaScriptNativeFunction] Invalid delay argument, expected Number, received Invalid");
                     }
 
-                    if (!(afterValue is JavaScriptNumber val))
+                    if (afterValue.ValueType.Value != JavaScriptValueType.Number)
                     {
                         return Results.Fail("[AddScheduledJavaScriptNativeFunction] Invalid delay value type, expected Number, received " + arguments[2]);
                     }
-                    delay = Math.Max((int)val, minDelay);
+                    delay = Math.Max(afterValue.ToInt32().Value, minDelay);
                 }
 
-                var taskArguments = new List<JavaScriptObject> { callerObject };
+                var taskArguments = new List<JavaScriptValue> { callerObject };
                 if (arguments.Count > 3)
                 {
                     for (var i = 3; i < arguments.Count; ++i)
                     {
-                        taskArguments.Add(arguments[i].ToObject());
+                        taskArguments.Add(arguments[i]);
                     }
                 }
 
                 var task = new JSTaskFunction(callback, taskArguments.ToArray(), delay, repeat);
                 var taskId = pushHandler(task);
   
-                return JavaScriptNumber.FromInt32(taskId);
+                return NativeMethods.JsIntToNumber(taskId);
             }
             catch (InvalidOperationException ioe)
             {

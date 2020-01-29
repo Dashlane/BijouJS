@@ -1,5 +1,4 @@
-﻿using Windows.UI.Xaml.Controls;
-using ReactiveUI;
+﻿using ReactiveUI;
 
 namespace Bijou.Example
 {

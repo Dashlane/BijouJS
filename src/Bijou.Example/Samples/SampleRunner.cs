@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Linq;
 using System.Threading.Tasks;
-using Bijou.Types;
 
 namespace Bijou.Example.Samples
 {
@@ -14,16 +13,14 @@ namespace Bijou.Example.Samples
         public static async Task SimpleFunction()
         {
             var engine = new UWPChakraHostExecutor();
-            var result = await engine.RunScriptAsync<JavaScriptNumber>(@"
+            var result = await engine.RunScriptAsync(@"
                 function square() { return 10 * 10; }
                 square();
             ");
 
-            Output.Write($"The square of 10 * 10 is : {(int)result.Value} (Unsafe)");
-
             Output.Write(
                 result.IsSuccess
-                ? $"The square of 10 * 10 is : {result.Value.AsInt32()} (Safe)"
+                ? $"The script has been executed successfully"
                 : $"Something went wrong: {result.Errors.First().Message}");
         }
     }

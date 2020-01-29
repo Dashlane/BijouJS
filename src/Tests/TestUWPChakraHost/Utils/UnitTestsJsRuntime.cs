@@ -1,5 +1,4 @@
 ﻿using System;
-using Bijou.Chakra.Hosting;
 
 namespace Bijou.Test.UWPChakraHost.Utils
 {

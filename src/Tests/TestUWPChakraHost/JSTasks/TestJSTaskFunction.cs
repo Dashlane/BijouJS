@@ -1,5 +1,4 @@
-﻿using Bijou.Chakra.Hosting;
-using Bijou.JSTasks;
+﻿using Bijou.JSTasks;
 using Bijou.Test.UWPChakraHost.Utils;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 

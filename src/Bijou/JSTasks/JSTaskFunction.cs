@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.Linq;
 using Bijou.Chakra;
-using Bijou.Types;
 using FluentResults;
 
 namespace Bijou.JSTasks
@@ -15,17 +14,17 @@ namespace Bijou.JSTasks
         private readonly string _functionNativeName;
         private readonly object[] _nativeArguments;
 
-        public JavaScriptFunction Function { get; private set; } = JavaScriptFunction.InvalidFunction;
+        public JavaScriptValue Function { get; private set; }
 
-        public JavaScriptObject[] Arguments { get; private set; }
+        public JavaScriptValue[] Arguments { get; private set; }
 
         // This must be called when the JavaScriptContext is available (i.e. in the thread which owns it)
         // The first element of arguments must be a reference to the parent object ("this") of the function. Use JavaScriptValue.GlobalObject when calling a global function
         // Note: If function is JavaScriptValue.Invalid, an error is logged at construction and Execute() returns JavaScriptValue.Invalid,
         //       but if any element of arguments is JavaScriptValue.Invalid, no error is logged and Execute() raises JavaScriptUsageException.
         public JSTaskFunction(
-            JavaScriptFunction function, 
-            JavaScriptObject[] arguments,
+            JavaScriptValue function,
+            JavaScriptValue[] arguments,
             int delay = 0, 
             bool repeat = false)
             : base(delay, repeat)
@@ -58,58 +57,40 @@ namespace Bijou.JSTasks
                 return Results.Fail("No native function name provided");
             }
 
-            var result = JavaScriptPrototype.GlobalObject;
+            var result = JavaScriptValue.GlobalObject;
             if (result.IsFailed)
             {
                 return Results.Fail("Failed to get Global Object");
             }
 
-            var propertyId = JavaScriptPropertyId.FromString(_functionNativeName);
-            if (propertyId.IsFailed)
-            {
-                return Results.Fail($"Failed to find property called {_functionNativeName}");
-            }
-
             var globalObject = result.Value;
-            var function = globalObject.GetProperty<JavaScriptFunction>(_functionNativeName);
+            var function = globalObject.GetProperty(_functionNativeName);
             if (function.IsFailed)
             {
                 return Results.Fail($"Failed to find method {_functionNativeName} on Global Object");
             }
 
             var func = function.Value;
-            var args = new List<JavaScriptObject> { globalObject };
+            var args = new List<JavaScriptValue> { globalObject };
             foreach (var parameter in _nativeArguments)
             {
-                var argument = Results.Fail<JavaScriptObject>($"Not supported type: {parameter.GetType().Name}");
+                var argument = Results.Fail<JavaScriptValue>($"Not supported type: {parameter.GetType().Name}");
                 switch (parameter.GetType().Name)
                 {
                     case "Int32":
-                        argument = JavaScriptNumber.FromInt32((int)parameter).ToResult<JavaScriptObject>((value) =>
-                        {
-                            return value;
-                        });
+                        argument = NativeMethods.JsIntToNumber((int)parameter);
                         break;
 
                     case "Double":
-                        argument = JavaScriptNumber.FromDouble((double)parameter).ToResult<JavaScriptObject>((value) =>
-                        {
-                            return value;
-                        });
+                        argument = NativeMethods.JsDoubleToNumber((double)parameter);
                         break;
 
                     case "Boolean":
-                        argument = JavaScriptBoolean.FromBoolean((bool)parameter).ToResult<JavaScriptObject>((value) =>
-                        {
-                            return value;
-                        });
+                        argument = NativeMethods.JsBoolToBoolean((bool)parameter);
                         break;
 
                     case "String":
-                        argument = JavaScriptString.FromString((string)parameter).ToResult<JavaScriptObject>((value) =>
-                        {
-                            return value;
-                        });
+                        argument = NativeMethods.JsPointerToString((string)parameter, new UIntPtr((uint)((string)parameter).Length));
                         break;
                 }
 
@@ -118,13 +99,13 @@ namespace Bijou.JSTasks
                     return Results.Fail(argument.Errors.First());
                 }
 
-                args.Add(argument.Value);
+                args.Add(argument.ToResult<JavaScriptValue>().Value);
             }
 
             return ValidateAndStoreValues(func, args.ToArray());
         }
 
-        private Result ValidateAndStoreValues(JavaScriptFunction function, JavaScriptObject[] arguments)
+        private Result ValidateAndStoreValues(JavaScriptValue function, JavaScriptValue[] arguments)
         {
             if (!JavaScriptContext.IsCurrentValid) 
             {
@@ -152,7 +133,7 @@ namespace Bijou.JSTasks
             return Results.Ok();
         }
 
-        protected override Result<JavaScriptObject> ExecuteImpl()
+        protected override Result<JavaScriptValue> ExecuteImpl()
         {
             if (!Function.IsValid)
             {
@@ -162,8 +143,15 @@ namespace Bijou.JSTasks
                     return Results.Fail(result.Errors.First());
                 }
             }
+            else
+            { 
+                NativeMethods.JsCallFunction(
+                    Function, 
+                    Arguments, 
+                    (ushort)Arguments.Length);
+            }
 
-            return Function.CallFunction<JavaScriptObject>(Arguments); ;
+            return Function.CallFunction(Arguments); ;
         }
 
         protected override void ReleaseJsResources()

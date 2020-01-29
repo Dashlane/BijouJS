@@ -1,8 +1,6 @@
 ﻿using System;
 using System.Threading;
 using System.Threading.Tasks;
-using Bijou;
-using Bijou.Types;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 namespace Bijou.Test.UWPChakraHost.Executor
@@ -32,7 +30,7 @@ namespace Bijou.Test.UWPChakraHost.Executor
                     reply = msg;
                     messageReceived.Set();
                 };
-                var result = await executor.RunScriptAsync<JavaScriptObject>(new Uri(@"ms-appx:///Assets/scripts/test_script_load_async.js"));
+                var result = await executor.RunScriptAsync(new Uri(@"ms-appx:///Assets/scripts/test_script_load_async.js"));
                 Assert.IsTrue(result.IsSuccess, $"{nameof(UWPChakraHostExecutor.RunScriptAsync)} failed");
                 Assert.IsTrue(messageReceived.WaitOne(timeout), $"Timeout waiting for the JS script to finish after {timeout}");
                 Assert.AreEqual("Hello from the other side", reply);
@@ -52,9 +50,9 @@ namespace Bijou.Test.UWPChakraHost.Executor
                     reply = msg;
                     messageReceived.Set();
                 };
-                await executor.RunScriptAsync<JavaScriptObject>(new Uri(@"ms-appx:///Assets/scripts/test_script_load_call_function.js"));
+                await executor.RunScriptAsync(new Uri(@"ms-appx:///Assets/scripts/test_script_load_call_function.js"));
                 const string request = "Hello ♥";
-                var result = await executor.CallFunctionAsync<JavaScriptObject>("echo", request);
+                var result = await executor.CallFunctionAsync("echo", request);
                 Assert.IsTrue(result.IsSuccess, $"{nameof(UWPChakraHostExecutor.RunScriptAsync)} failed");
                 Assert.IsTrue(messageReceived.WaitOne(timeout), $"Timeout waiting for the JS script to finish after {timeout}");
                 Assert.AreEqual(request, reply);
@@ -77,8 +75,8 @@ namespace Bijou.Test.UWPChakraHost.Executor
             using (var executorTwo = new UWPChakraHostExecutor())
             {
                 // This will define a variable 'a' set to 0 and a function 'ping' which increments it, in each executor
-                await executorOne.RunScriptAsync<JavaScriptObject>(script);
-                await executorTwo.RunScriptAsync<JavaScriptObject>(script);
+                await executorOne.RunScriptAsync(script);
+                await executorTwo.RunScriptAsync(script);
 
                 var replyOne = string.Empty;
                 var replyTwo = string.Empty;
@@ -97,8 +95,8 @@ namespace Bijou.Test.UWPChakraHost.Executor
                 };
 
                 // Executors should have isolated contexts, so calling 'ping' on one should not increment 'a' in the other
-                Task.WaitAll(executorOne.CallFunctionAsync<JavaScriptObject>("ping"),
-                    executorTwo.CallFunctionAsync<JavaScriptObject>("ping"));
+                Task.WaitAll(executorOne.CallFunctionAsync("ping"),
+                    executorTwo.CallFunctionAsync("ping"));
                 Assert.IsTrue(messageReceivedOne.WaitOne(timeout), $"Timeout waiting for the JS script 1 to finish after {timeout}");
                 Assert.IsTrue(messageReceivedTwo.WaitOne(timeout), $"Timeout waiting for the JS script 2 to finish after {timeout}");
                 Assert.AreEqual(replyOne, "1");
