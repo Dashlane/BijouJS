@@ -3,8 +3,6 @@ using Moq;
 using System;
 using System.Collections.Generic;
 using System.Runtime.InteropServices;
-using Bijou.Chakra.Hosting;
-using Bijou.Executor;
 using Bijou.NativeFunctions;
 using Bijou.Test.UWPChakraHost.Utils;
 

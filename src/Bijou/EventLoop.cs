@@ -6,7 +6,6 @@ using System.Threading.Tasks;
 using Bijou.Async;
 using Bijou.Chakra;
 using Bijou.JSTasks;
-using Bijou.Types;
 using FluentResults;
 
 namespace Bijou
@@ -125,19 +124,12 @@ namespace Bijou
         /// <typeparam name="TValue">Type of returned value</typeparam>
         /// <param name="task">JS Task to add to the loop</param>
         /// <returns></returns>
-        public Task<Result<TValue>> Push<TValue>(AbstractJSTask task)
-            where TValue : JavaScriptObject
+        public Task<Result> Push(AbstractJSTask task)
         {
             try
             {
-                var completion = new TaskCompletionSource<Result<TValue>>();
-                _pendingTasks.TryEnqueue(new EventLoopTask(
-                    task,
-                    c =>
-                    {
-                        completion.SetResult(c.ToResult(val => val as TValue));
-                    })
-                );
+                var completion = new TaskCompletionSource<Result>();
+                _pendingTasks.TryEnqueue(new EventLoopTask(task, completion.SetResult));
 
                 return completion.Task;
             }
@@ -163,7 +155,7 @@ namespace Bijou
         /// </summary>
         /// <param name="task">JS Task to add to the loop</param>
         /// <returns>Id of the task</returns>
-        public int Push(AbstractJSTask task)
+        public int PushTask(AbstractJSTask task)
         {
             try
             {

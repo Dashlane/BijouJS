@@ -1,6 +1,5 @@
 ﻿using System.Linq;
 using Bijou.Errors;
-using Bijou.Types;
 using FluentResults;
 using JavaScriptError = Bijou.Errors.JavaScriptError;
 
@@ -15,20 +14,14 @@ namespace Bijou.Chakra
                 Results.Fail(MapErrorCode(code));
         }
 
-        public static Result<TValue> ToResult<TValue>(this JavaScriptErrorCode code, JavaScriptValue value)
-            where TValue : JavaScriptObject
+        public static Result<JavaScriptValue> ToResult(this JavaScriptErrorCode code, JavaScriptValue value)
         {
             if (code != JavaScriptErrorCode.NoError)
             {
-                return Results.Fail<TValue>(MapErrorCode(code));
+                return Results.Fail<JavaScriptValue>(MapErrorCode(code));
             }
 
-            if(value.ToObject() is TValue obj)
-            {
-                return Results.Ok(obj);
-            }
-
-            return Results.Fail(MapErrorCode(code));
+            return Results.Ok(value);
         }
 
         public static Result<T> ToResult<T>(this JavaScriptErrorCode code, T value)
@@ -108,7 +101,7 @@ namespace Bijou.Chakra
                             return new JavaScriptFatalError(jsError.Code);
                         }
 
-                        return new JavaScriptScriptError(error, innerError.Value.UnderlyingValue, "Script threw an exception.");
+                        return new JavaScriptScriptError(error, innerError.Value, "Script threw an exception.");
                     }
 
                 case JavaScriptErrorCode.ScriptCompile:
@@ -120,7 +113,7 @@ namespace Bijou.Chakra
                             return new JavaScriptFatalError(jsError.Code);
                         }
 
-                        return new JavaScriptScriptError(error, innerError.Value.UnderlyingValue, "Compile error.");
+                        return new JavaScriptScriptError(error, innerError.Value, "Compile error.");
                     }
 
                 case JavaScriptErrorCode.ScriptTerminated:

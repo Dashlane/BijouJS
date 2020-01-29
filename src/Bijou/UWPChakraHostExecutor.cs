@@ -12,7 +12,6 @@ using System.Threading;
 using System.Threading.Tasks;
 using Windows.Storage;
 using Bijou.Chakra;
-using Bijou.Types;
 
 namespace Bijou
 {
@@ -122,17 +121,17 @@ namespace Bijou
             }
 
             // ES6 Promise callback
-            NativeMethods.JsSetPromiseContinuationCallback(JSAsyncFunctions.PromiseContinuationCallback(_eventLoop.Push), InteropPointer);
+            NativeMethods.JsSetPromiseContinuationCallback(JSAsyncFunctions.PromiseContinuationCallback(_eventLoop.PushTask), InteropPointer);
 
-            var globalObject = JavaScriptPrototype.GlobalObject;
+            var globalObject = JavaScriptValue.GlobalObject;
             if (globalObject.IsFailed)
             {
                 return Results.Fail("Failed to retrieve global object");
             }
 
             // Inject setTimeout and setInterval
-            DefineHostCallback(globalObject.Value, "setTimeout", JSAsyncFunctions.SetTimeoutJavaScriptNativeFunction(_eventLoop.Push), InteropPointer);
-            DefineHostCallback(globalObject.Value, "setInterval", JSAsyncFunctions.SetIntervalJavaScriptNativeFunction(_eventLoop.Push), InteropPointer);
+            DefineHostCallback(globalObject.Value, "setTimeout", JSAsyncFunctions.SetTimeoutJavaScriptNativeFunction(_eventLoop.PushTask), InteropPointer);
+            DefineHostCallback(globalObject.Value, "setInterval", JSAsyncFunctions.SetIntervalJavaScriptNativeFunction(_eventLoop.PushTask), InteropPointer);
             DefineHostCallback(globalObject.Value, "clearTimeout", JSAsyncFunctions.ClearScheduledJavaScriptNativeFunction(_eventLoop.CancelTask), InteropPointer);
             DefineHostCallback(globalObject.Value, "clearInterval", JSAsyncFunctions.ClearScheduledJavaScriptNativeFunction(_eventLoop.CancelTask), InteropPointer);
             DefineHostCallback(globalObject.Value, "sendToHost", JSSendToHost.SendToHostJavaScriptNativeFunction, InteropPointer);
@@ -269,33 +268,30 @@ namespace Bijou
         /// <summary>
         /// Load a script and run it adding it to the event loop.
         /// </summary>
-        public async Task<Result<TValue>> RunScriptAsync<TValue>(Uri scriptUri)
-            where TValue : JavaScriptObject
+        public async Task<Result> RunScriptAsync(Uri scriptUri)
         {
             var script = await LoadScriptAsync(scriptUri);
 
-            return !string.IsNullOrEmpty(script) ? await RunScriptAsync<TValue>(script, scriptUri.AbsolutePath)
-                                                 : await new Task<Result<TValue>>(() => Results.Ok());
+            return !string.IsNullOrEmpty(script) ? await RunScriptAsync(script, scriptUri.AbsolutePath)
+                                                 : await new Task<Result>(Results.Ok);
         }
 
         /// <summary>
         /// Run a script by adding it to the event loop.
         /// </summary>
-        public Task<Result<TValue>> RunScriptAsync<TValue>(string script)
-            where TValue : JavaScriptObject
+        public Task<Result> RunScriptAsync(string script)
         {
-            return RunScriptAsync<TValue>(script, string.Empty);
+            return RunScriptAsync(script, string.Empty);
         }
 
         /// <summary>
         /// Run a script by adding it to the event loop.
         /// </summary>
-        public Task<Result<TValue>> RunScriptAsync<TValue>(string script, string scriptPath)
-            where TValue : JavaScriptObject
+        public Task<Result> RunScriptAsync(string script, string scriptPath)
         {
             CheckDisposed();
 
-            return _eventLoop.Push<TValue>(new JSTaskScript(scriptPath, script, _currentSourceContext));
+            return _eventLoop.Push(new JSTaskScript(scriptPath, script, _currentSourceContext));
         }
 
         /// <summary>
@@ -305,12 +301,11 @@ namespace Bijou
         /// <param name="function"></param>
         /// <param name="arguments"></param>
         /// <returns></returns>
-        public Task<Result<TValue>> CallFunctionAsync<TValue>(string function, params object[] arguments)
-            where TValue : JavaScriptObject
+        public Task<Result> CallFunctionAsync(string function, params object[] arguments)
         {
             CheckDisposed();
 
-            return _eventLoop.Push<TValue>(new JSTaskFunction(function, arguments));
+            return _eventLoop.Push(new JSTaskFunction(function, arguments));
         }
 
         #endregion
@@ -356,9 +351,9 @@ namespace Bijou
         /// <summary>
         /// Inject a callback into JS
         /// </summary>
-        private void DefineHostCallback(JavaScriptPrototype parentObject, string callbackName, JavaScriptNativeFunction callback, IntPtr callbackData)
+        private void DefineHostCallback(JavaScriptValue parentObject, string callbackName, JavaScriptNativeFunction callback, IntPtr callbackData)
         {
-            var function = JavaScriptFunction.CreateFunction(callback, callbackData);
+            var function = NativeMethods.JsCreateFunction(callback, callbackData);
 
             parentObject.SetProperty(callbackName, function.Value, true);
             _nativeFunctions.Add(callback);

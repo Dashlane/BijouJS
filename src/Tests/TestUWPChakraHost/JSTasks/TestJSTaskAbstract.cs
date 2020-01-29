@@ -1,8 +1,7 @@
 ﻿using System;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Moq;
-using Bijou.Chakra.Hosting;
-using Bijou.JSTasks;
+using Bijou.Chakra;
 using Bijou.Test.UWPChakraHost.Utils;
 
 namespace Bijou.Test.UWPChakraHost.JSTasks

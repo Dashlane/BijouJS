@@ -1,6 +1,5 @@
 ﻿using System;
 using Bijou.Chakra;
-using Bijou.Types;
 using FluentResults;
 
 namespace Bijou.JSTasks
@@ -43,7 +42,7 @@ namespace Bijou.JSTasks
             IsCanceled = true;
         }
 
-        public Result<JavaScriptObject> Execute()
+        public Result<JavaScriptValue> Execute()
         {
             if (!JavaScriptContext.IsCurrentValid)
             {
@@ -51,7 +50,7 @@ namespace Bijou.JSTasks
             }
 
             // Skip execution if task is canceled
-            var ret = Results.Ok(JavaScriptObject.Invalid);
+            var ret = Results.Ok(JavaScriptValue.Invalid);
             if (!IsCanceled)
             {
                 ret = ExecuteImpl();
@@ -72,7 +71,7 @@ namespace Bijou.JSTasks
         /// Execute task implementation
         /// </summary>
         /// <returns></returns>
-        protected abstract Result<JavaScriptObject> ExecuteImpl();
+        protected abstract Result<JavaScriptValue> ExecuteImpl();
 
         /// <summary>
         /// Release allocated JS resources

@@ -1,5 +1,4 @@
 ﻿using Bijou.Chakra;
-using Bijou.Types;
 
 namespace Bijou.Errors
 {
@@ -33,9 +32,9 @@ namespace Bijou.Errors
         /// <param name="code">The error code returned.</param>
         /// <param name="error">The JavaScript error object.</param>
         /// <param name="message">The error message.</param>
-        public JavaScriptScriptError(
-            JavaScriptErrorCode code, 
-            JavaScriptValue error, 
+        internal JavaScriptScriptError(
+            JavaScriptErrorCode code,
+            JavaScriptValue error,
             string message)
             : base(code, message)
         {
@@ -57,15 +56,13 @@ namespace Bijou.Errors
                 return $"Failed to found property {propertyName}";
             }
 
-            var messageValue = NativeMethods.JsGetProperty<JavaScriptString>(error, errorMessage.Value);
+            var messageValue = NativeMethods.JsGetProperty(error, errorMessage.Value);
             if (messageValue.IsFailed)
             {
                 return $"Failed to extract property {propertyName}";
             }
 
-            return messageValue.Value.IsValid ?
-                messageValue.Value.AsString().ValueOrDefault : 
-                string.Empty;
+            return messageValue.Value.ToString();
         }
     }
 }

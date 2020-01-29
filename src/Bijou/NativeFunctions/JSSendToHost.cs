@@ -1,6 +1,5 @@
 ﻿using System;
 using Bijou.Chakra;
-using Bijou.Types;
 
 namespace Bijou.NativeFunctions
 {
@@ -33,18 +32,18 @@ namespace Bijou.NativeFunctions
 
             // arguments[0] is JavaScript "this"
             // we skip it
-            var jsMessage = arguments[1].ToObject();
+            var jsMessage = arguments[1];
             if (!jsMessage.IsValid) 
             {
                 return JavaScriptValue.Invalid;
             }
 
-            if (!(jsMessage is JavaScriptString text)) 
+            if (jsMessage.ValueType.Value != JavaScriptValueType.String) 
             {
                 return JavaScriptValue.Invalid;
             }
 
-            executor.OnMessageReceived(text.AsString().Value);
+            executor.OnMessageReceived(jsMessage.ToString());
 
             return JavaScriptValue.Invalid;
         }
