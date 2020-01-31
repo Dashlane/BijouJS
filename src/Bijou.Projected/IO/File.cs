@@ -1,6 +1,6 @@
 ﻿namespace Bijou.Projected.IO
 {
-    public class File
+    public sealed class File
     {
         /// <summary>
         /// True if the File has error, false otherwise.

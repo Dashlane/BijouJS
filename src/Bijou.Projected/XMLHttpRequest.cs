@@ -8,14 +8,6 @@ namespace Bijou.Projected
 {
     public delegate void XHREventHandler();
 
-    public static class RequestType
-    {
-        public const string Get = "GET";
-        public const string Delete = "DELETE";
-        public const string Post = "POST";
-        public const string Patch = "PATCH";
-    }
-
     /// <summary>
     /// Class projected to JS context, implementing Http request feature.
     /// All public methods and members are accessible from JS context.
@@ -100,7 +92,7 @@ namespace Bijou.Projected
 
         private async void SendAsync(string data)
         {
-            if (_httpMethod == RequestType.Get && _uri.OriginalString.StartsWith(MsAppXHeader, StringComparison.InvariantCulture)) {
+            if (_httpMethod == "GET" && _uri.OriginalString.StartsWith(MsAppXHeader, StringComparison.InvariantCulture)) {
                 responseType = "text";
                 responseText = File.ReadAllText(_uri.OriginalString.Substring(MsAppXHeader.Length));
                 readyState = (int)enReadyState.Done;
@@ -129,11 +121,11 @@ namespace Bijou.Projected
 
                 try {
                     switch (_httpMethod) {
-                        case RequestType.Delete:
+                        case "DELETE":
                             responseMessage = await httpClient.DeleteAsync(_uri);
                             break;
-                        case RequestType.Patch:
-                        case RequestType.Post:
+                        case "PATCH":
+                        case "POST":
                             using (var content = new StringContent(data)) {
                                 // At this point, we want to override content headers set by default
                                 // and use the ones from Carbon.
@@ -144,7 +136,7 @@ namespace Bijou.Projected
                                 responseMessage = await httpClient.PostAsync(_uri, content);
                             }
                             break;
-                        case RequestType.Get:
+                        case "GET":
                             responseMessage = await httpClient.GetAsync(_uri);
                             break;
                     }
