@@ -293,7 +293,7 @@ namespace Bijou
         /// <summary>
         /// Run a script by adding it to the event loop.
         /// </summary>
-        public Task<Result> RunScriptAsync(string script, string scriptPath)
+        internal Task<Result> RunScriptAsync(string script, string scriptPath)
         {
             CheckDisposed();
 
@@ -335,7 +335,7 @@ namespace Bijou
         /// </summary>
         /// <param name="script"></param>
         /// <param name="scriptPath"></param>
-        internal void RunScript(string script, string scriptPath = "")
+        private void RunScript(string script, string scriptPath = "")
         {
             if (!JavaScriptContext.IsCurrentValid)
             {

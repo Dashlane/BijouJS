@@ -32,9 +32,13 @@ namespace Bijou.JSTasks
             ValidateAndStoreValues(function, arguments);
         }
 
-        // Convenience constructor to call a global JS function using C# native values instead of references to JS values
-        // You don't need to specify the parent object ("this") it will use the global object
-        // This can be called from any thread
+        /// <summary>
+        /// Convenience constructor to call a global JS function using C# native values instead of references to JS values.
+        /// You don't need to specify the parent object ("this") it will use the global object.
+        /// This can be called from any thread.
+        /// </summary>
+        /// <param name="functionName"></param>
+        /// <param name="arguments"></param>
         public JSTaskFunction(string functionName, params object[] arguments)
         {
             _functionNativeName = functionName;
@@ -49,7 +53,10 @@ namespace Bijou.JSTasks
             }
         }
 
-        // This must be called when the JavaScriptContext is available (i.e. in the thread which owns it)
+        /// <summary>
+        /// This must be called when the JavaScriptContext is available (i.e. in the thread which owns it).
+        /// </summary>
+        /// <returns></returns>
         private Result ProjectNativeParameters()
         {
             if (string.IsNullOrEmpty(_functionNativeName))
@@ -120,7 +127,7 @@ namespace Bijou.JSTasks
                 return Results.Fail("JSTaskFunction invalid function");
             }
 
-            // keep reference since this is unmanaged memory
+            // Keep reference since this is unmanaged memory.
             Function.AddRef();
             foreach (var arg in Arguments)
             {

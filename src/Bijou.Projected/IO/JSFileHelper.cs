@@ -1,7 +1,6 @@
 ﻿using System.Threading.Tasks;
-using Bijou.Projected.IO;
 
-namespace Bijou.Projected
+namespace Bijou.Projected.IO
 {
     /// <summary>
     /// JSFileHelper implements thread-safe filesystem read/write access.

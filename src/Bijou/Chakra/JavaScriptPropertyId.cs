@@ -4,11 +4,11 @@ using FluentResults;
 namespace Bijou.Chakra
 {
     /// <summary>
-    ///     A property identifier.
+    /// A property identifier.
     /// </summary>
     /// <remarks>
-    ///     Property identifiers are used to refer to properties of JavaScript objects instead of using
-    ///     strings.
+    /// Property identifiers are used to refer to properties of JavaScript objects instead of using
+    /// strings.
     /// </remarks>
     internal struct JavaScriptPropertyId : IEquatable<JavaScriptPropertyId>
     {
@@ -18,22 +18,22 @@ namespace Bijou.Chakra
         private readonly IntPtr _id;
 
         /// <summary>
-        ///     Gets an invalid ID.
+        /// Gets an invalid ID.
         /// </summary>
         public static JavaScriptPropertyId Invalid => new JavaScriptPropertyId(IntPtr.Zero);
 
         /// <summary>
-        ///     Gets the name associated with the property ID.
+        /// Gets the name associated with the property ID.
         /// </summary>
         /// <remarks>
-        ///     <para>
-        ///     Requires an active script context.
-        ///     </para>
+        /// <para>
+        /// Requires an active script context.
+        /// </para>
         /// </remarks>
         public Result<string> Name => NativeMethods.JsGetPropertyNameFromId(this);
 
         /// <summary>
-        ///     Initializes a new instance of the <see cref="JavaScriptPropertyId"/> struct. 
+        /// Initializes a new instance of the <see cref="JavaScriptPropertyId"/> struct. 
         /// </summary>
         /// <param name="id">The ID.</param>
         internal JavaScriptPropertyId(IntPtr id)
@@ -42,18 +42,18 @@ namespace Bijou.Chakra
         }
 
         /// <summary>
-        ///     Gets the property ID associated with the name. 
+        /// Gets the property ID associated with the name. 
         /// </summary>
         /// <remarks>
-        ///     <para>
-        ///     Property IDs are specific to a context and cannot be used across contexts.
-        ///     </para>
-        ///     <para>
-        ///     Requires an active script context.
-        ///     </para>
+        /// <para>
+        /// Property IDs are specific to a context and cannot be used across contexts.
+        /// </para>
+        /// <para>
+        /// Requires an active script context.
+        /// </para>
         /// </remarks>
         /// <param name="name">
-        ///     The name of the property ID to get or create. The name may consist of only digits.
+        /// The name of the property ID to get or create. The name may consist of only digits.
         /// </param>
         /// <returns>The property ID in this runtime for the given name.</returns>
         public static Result<JavaScriptPropertyId> FromString(string name)
@@ -62,7 +62,7 @@ namespace Bijou.Chakra
         }
 
         /// <summary>
-        ///     The equality operator for property IDs.
+        /// The equality operator for property IDs.
         /// </summary>
         /// <param name="left">The first property ID to compare.</param>
         /// <param name="right">The second property ID to compare.</param>
@@ -73,7 +73,7 @@ namespace Bijou.Chakra
         }
 
         /// <summary>
-        ///     The inequality operator for property IDs.
+        /// The inequality operator for property IDs.
         /// </summary>
         /// <param name="left">The first property ID to compare.</param>
         /// <param name="right">The second property ID to compare.</param>
@@ -84,7 +84,7 @@ namespace Bijou.Chakra
         }
 
         /// <summary>
-        ///     Checks for equality between property IDs.
+        /// Checks for equality between property IDs.
         /// </summary>
         /// <param name="other">The other property ID to compare.</param>
         /// <returns>Whether the two property IDs are the same.</returns>
@@ -94,7 +94,7 @@ namespace Bijou.Chakra
         }
 
         /// <summary>
-        ///     Checks for equality between property IDs.
+        /// Checks for equality between property IDs.
         /// </summary>
         /// <param name="obj">The other property ID to compare.</param>
         /// <returns>Whether the two property IDs are the same.</returns>
@@ -109,7 +109,7 @@ namespace Bijou.Chakra
         }
 
         /// <summary>
-        ///     The hash code.
+        /// The hash code.
         /// </summary>
         /// <returns>The hash code of the property ID.</returns>
         public override int GetHashCode()
@@ -118,7 +118,7 @@ namespace Bijou.Chakra
         }
 
         /// <summary>
-        ///     Converts the property ID to a string.
+        /// Converts the property ID to a string.
         /// </summary>
         /// <returns>The name of the property ID.</returns>
         public override string ToString()

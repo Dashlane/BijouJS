@@ -31,17 +31,27 @@ namespace Bijou.JSTasks
             Id = Guid.NewGuid();
         }
 
+        /// <summary>
+        /// Resets the scheduled time for execution based on the current clock time.
+        /// </summary>
         public void ResetScheduledTime()
         {
             ScheduledTime = DateTime.UtcNow.AddMilliseconds(ScheduledDelay);
         }
 
+        /// <summary>
+        /// Cancels the task.
+        /// </summary>
         public void Cancel()
         {
             ShouldReschedule = false;
             IsCanceled = true;
         }
 
+        /// <summary>
+        /// Executes the task.
+        /// </summary>
+        /// <returns></returns>
         public Result<JavaScriptValue> Execute()
         {
             if (!JavaScriptContext.IsCurrentValid)
@@ -49,16 +59,15 @@ namespace Bijou.JSTasks
                 return Results.Fail("AbstractJSTask.Execute invalid context");
             }
 
-            // Skip execution if task is canceled
+            // Skip execution if task is canceled.
             var ret = Results.Ok(JavaScriptValue.Invalid);
             if (!IsCanceled)
             {
                 ret = ExecuteImpl();
             }
 
-            // if not rescheduled, release resources
-            // can't be done from class destructor as 
-            // this needs to be called from JS Context thread
+            // If not rescheduled, release resources.
+            // It can't be done from class destructor as this needs to be called from JS Context thread.
             if (!ShouldReschedule) 
             {
                 ReleaseJsResources();

@@ -9,26 +9,20 @@ namespace Bijou.Chakra
     {
         public static Result ToResult(this JavaScriptErrorCode code)
         {
-            return code == JavaScriptErrorCode.NoError ?
-                Results.Ok() : 
-                Results.Fail(MapErrorCode(code));
+            return code == JavaScriptErrorCode.NoError ? Results.Ok()
+                                                       : Results.Fail(MapErrorCode(code));
         }
 
         public static Result<JavaScriptValue> ToResult(this JavaScriptErrorCode code, JavaScriptValue value)
         {
-            if (code != JavaScriptErrorCode.NoError)
-            {
-                return Results.Fail<JavaScriptValue>(MapErrorCode(code));
-            }
-
-            return Results.Ok(value);
+            return code == JavaScriptErrorCode.NoError ? Results.Ok(value)
+                                                       : Results.Fail<JavaScriptValue>(MapErrorCode(code));
         }
 
         public static Result<T> ToResult<T>(this JavaScriptErrorCode code, T value)
         {
-            return code == JavaScriptErrorCode.NoError ? 
-                Results.Ok(value) : 
-                Results.Fail<T>(MapErrorCode(code));
+            return code == JavaScriptErrorCode.NoError ? Results.Ok(value)
+                                                       : Results.Fail<T>(MapErrorCode(code));
         }
 
         private static JavaScriptError MapErrorCode(JavaScriptErrorCode error)

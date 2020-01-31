@@ -1,22 +1,22 @@
 ﻿namespace Bijou.Chakra
 {
     /// <summary>
-    ///     Allocation callback event type.
+    /// Allocation callback event type.
     /// </summary>
     public enum JavaScriptMemoryEventType
     {
         /// <summary>
-        ///     Indicates a request for memory allocation.
+        /// Indicates a request for memory allocation.
         /// </summary>
         Allocate = 0,
 
         /// <summary>
-        ///     Indicates a memory freeing event.
+        /// Indicates a memory freeing event.
         /// </summary>
         Free = 1,
 
         /// <summary>
-        ///     Indicates a failed allocation event.
+        /// Indicates a failed allocation event.
         /// </summary>
         Failure = 2
     }

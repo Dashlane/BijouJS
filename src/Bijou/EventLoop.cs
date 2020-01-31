@@ -236,11 +236,11 @@ namespace Bijou
                 {
                     _scheduledTasks.RemoveAt(0);
 
-                    // Execute the scheduled task
+                    // Execute the scheduled task.
                     var result = task.Task.Execute();
                     task.CompleteTask(result);
 
-                    // Reschedule if needed
+                    // Reschedule if needed.
                     if (task.Task.ShouldReschedule)
                     {
                         task.Task.ResetScheduledTime();
@@ -253,7 +253,7 @@ namespace Bijou
                 }
                 else
                 {
-                    // Wait until next task execution time
+                    // Wait until next task execution time.
                     waitTimeout = timeToNextTask;
                     break;
                 }

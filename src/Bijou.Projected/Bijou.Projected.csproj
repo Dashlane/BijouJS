@@ -126,7 +126,7 @@
     <Compile Include="JSBase64Encoding.cs" />
     <Compile Include="JSConsole.cs" />
     <Compile Include="JSFile.cs" />
-    <Compile Include="JSFileHelper.cs" />
+    <Compile Include="IO\JSFileHelper.cs" />
     <Compile Include="JSFileSystem.cs" />
     <Compile Include="Pbkdf2.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

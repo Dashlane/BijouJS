@@ -4,10 +4,10 @@ using System.Runtime.InteropServices;
 namespace Bijou.Chakra
 {
     /// <summary>
-    ///     A function callback.
+    /// A function callback.
     /// </summary>
     /// <param name="callee">
-    ///     A <c>Function</c> object that represents the function being invoked.
+    /// A <c>Function</c> object that represents the function being invoked.
     /// </param>
     /// <param name="isConstructCall">Indicates whether this is a regular call or a 'new' call.</param>
     /// <param name="arguments">The arguments to the call.</param>

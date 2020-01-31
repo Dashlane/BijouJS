@@ -9,7 +9,13 @@ namespace Bijou.NativeFunctions
         /// JS Native function for sendToHost.
         /// JS function signature is sendToHost(message).
         /// message: string object
-        /// /// </summary>
+        /// </summary>
+        /// <param name="callee"></param>
+        /// <param name="isConstructCall"></param>
+        /// <param name="arguments"></param>
+        /// <param name="argumentCount"></param>
+        /// <param name="callbackData"></param>
+        /// <returns></returns>
         public static JavaScriptValue SendToHostJavaScriptNativeFunction(
             JavaScriptValue callee, 
             bool isConstructCall, 
@@ -23,15 +29,14 @@ namespace Bijou.NativeFunctions
                 return JavaScriptValue.Invalid;
             }
 
-            // function signature is sendToHost(message:string)
-            // expected 2 arguments, as first argument is this
+            // Function signature is sendToHost(message:string).
+            // Expected 2 arguments, as first argument is 'this'.
             if (arguments.Length != 2) 
             {
                 return JavaScriptValue.Invalid;
             }
 
-            // arguments[0] is JavaScript "this"
-            // we skip it
+            // Skip arguments[0] as it is JavaScript 'this'.
             var jsMessage = arguments[1];
             if (!jsMessage.IsValid) 
             {

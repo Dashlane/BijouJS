@@ -13,13 +13,13 @@ namespace Bijou.NativeFunctions
         /// </summary>
         /// <remarks>
         /// Syntax of
-        ///     setTimeout(function, milliseconds, param1, param2, ...)
+        /// setTimeout(function, milliseconds, param1, param2, ...)
         /// Parameter Values
-        ///     function:            Required. The function to be executed
-        ///     milliseconds:        Optional. The number of milliseconds to wait before executing the code. If omitted, the value 0 is used
-        ///     param1, param2, ...:	Optional. Additional parameters to pass to the function
+        /// function:            Required. The function to be executed
+        /// milliseconds:        Optional. The number of milliseconds to wait before executing the code. If omitted, the value 0 is used
+        /// param1, param2, ...:	Optional. Additional parameters to pass to the function
         /// Return Value
-        ///     A Number, representing the ID value of the timer that is set.Use this value with the clearInterval() method to cancel the timer
+        /// A Number, representing the ID value of the timer that is set.Use this value with the clearInterval() method to cancel the timer
         /// </remarks>
         public static JavaScriptNativeFunction SetTimeoutJavaScriptNativeFunction(PushTask pushHandler)
         {
@@ -44,13 +44,13 @@ namespace Bijou.NativeFunctions
         /// </summary>
         /// <remarks>
         /// Syntax of
-        ///     setInterval(function, milliseconds, param1, param2, ...)
+        /// setInterval(function, milliseconds, param1, param2, ...)
         /// Parameter Values
-        ///     function:            Required. The function to be executed
-        ///     milliseconds:        Required. The intervals (in milliseconds) on how often to execute the code. If the value is less than 10, the value 10 is used
-        ///     param1, param2, ...:	Optional. Additional parameters to pass to the function
+        /// function:            Required. The function to be executed
+        /// milliseconds:        Required. The intervals (in milliseconds) on how often to execute the code. If the value is less than 10, the value 10 is used
+        /// param1, param2, ...:	Optional. Additional parameters to pass to the function
         /// Return Value
-        ///     A Number, representing the ID value of the timer that is set.Use this value with the clearInterval() method to cancel the timer
+        /// A Number, representing the ID value of the timer that is set.Use this value with the clearInterval() method to cancel the timer
         /// </remarks>
         public static JavaScriptNativeFunction SetIntervalJavaScriptNativeFunction(PushTask pushHandler)
         {
@@ -74,11 +74,11 @@ namespace Bijou.NativeFunctions
         /// </summary>
         /// <remarks>
         /// Syntax of
-        ///     clearTimeout/clearInterval(id)
+        /// clearTimeout/clearInterval(id)
         /// Parameter Values
-        ///     var:  Required. The ID of the timer returned by the setTimeout/setInterval() method
+        /// var:  Required. The ID of the timer returned by the setTimeout/setInterval() method
         /// Return Value
-        ///     No return value
+        /// No return value
         /// </remarks>
         public static JavaScriptNativeFunction ClearScheduledJavaScriptNativeFunction(CancelTask cancelHandler)
         {
@@ -166,13 +166,12 @@ namespace Bijou.NativeFunctions
                     return Results.Fail("[AddScheduledJavaScriptNativeFunction] Invalid executor");
                 }
 
-                // check arguments
                 if (arguments.Count < 2)
                 {
                     return Results.Fail("[AddScheduledJavaScriptNativeFunction] Invalid argumentCount, expected >= 2, received " + arguments.Count);
                 }
 
-                // arguments[0] is JavaScript this
+                // Arguments[0] is JavaScript 'this'.
                 var callerObject = arguments[0];
 
                 // setTimeout / setInterval signature is (callback, [after, params...])
