@@ -16,7 +16,7 @@ namespace Bijou.Projected.IO
     /// We do not use a thread-safe container as we can't have thread-safety when adding/disposing 
     /// a file's semaphore
     /// </summary>
-    public static class FileSystem
+    internal static class FileSystem
     {
         /// <summary>
         /// Maximum concurrent access requests.
@@ -53,32 +53,44 @@ namespace Bijou.Projected.IO
         {
             bool ret = false;
             // validate argument
-            if (storageFolder == null) {
+            if (storageFolder == null)
+            {
                 throw new ArgumentNullException(nameof(storageFolder));
             }
             // Get file
-            try {
+            try
+            {
                 await LockFileAsync(filePath);
                 await storageFolder.GetFileAsync(filePath);
                 ret = true;
-            } catch (FileNotFoundException) {
+            }
+            catch (FileNotFoundException)
+            {
                 // File does not exists
                 Debug.WriteLine($"ExistsAsync - [FileNotFoundException] path : {filePath}");
-            } catch (UnauthorizedAccessException) {
+            }
+            catch (UnauthorizedAccessException)
+            {
                 // The path cannot be in Uri format
                 Debug.WriteLine($"ExistsAsync - [UnauthorizedAccessException] invalid path : {filePath}");
-            } catch (ArgumentException) {
+            }
+            catch (ArgumentException)
+            {
                 // You don't have permission to access the specified file.
-            } catch (Exception e) {
+            }
+            catch (Exception e)
+            {
                 Debug.WriteLine("[Exist] " + e.Message);
                 throw;
-            } finally {
+            }
+            finally
+            {
                 // release file's semaphore
                 await UnlockFileAsync(filePath);
             }
             return ret;
         }
-        
+
         /// <summary>
         /// Async method to read a file in the UWP app's local folder
         /// </summary>
@@ -98,22 +110,30 @@ namespace Bijou.Projected.IO
         /// <returns></returns>
         public static async Task<File> ReadAsync(StorageFolder storageFolder, string filePath)
         {
-            if (storageFolder == null) {
+            if (storageFolder == null)
+            {
                 throw new ArgumentNullException(nameof(storageFolder));
             }
 
             var ret = new File();
-            try {
+            try
+            {
                 await LockFileAsync(filePath);
                 var readFile = await storageFolder.GetFileAsync(filePath);
                 ret.Content = await FileIO.ReadTextAsync(readFile);
-            } catch (FileNotFoundException ffe) {
+            }
+            catch (FileNotFoundException ffe)
+            {
                 ret.HasError = true;
                 ret.ErrorMessage = ffe.Message;
-            } catch (UnauthorizedAccessException uae) {
+            }
+            catch (UnauthorizedAccessException uae)
+            {
                 ret.HasError = true;
                 ret.ErrorMessage = uae.Message;
-            } finally {
+            }
+            finally
+            {
                 await UnlockFileAsync(filePath);
             }
             return ret;
@@ -140,32 +160,43 @@ namespace Bijou.Projected.IO
         public static async Task<bool> WriteAsync(StorageFolder storageFolder, string filePath, string fileContent)
         {
             bool ret = false;
-            if (filePath == null) {
+            if (filePath == null)
+            {
                 return ret;
             }
 
 
             // validate argument
-            if (storageFolder == null) {
+            if (storageFolder == null)
+            {
                 throw new ArgumentNullException(nameof(storageFolder));
             }
 
-            try {
+            try
+            {
                 await LockFileAsync(filePath);
                 var file = await storageFolder.CreateFileAsync(filePath,
                                 CreationCollisionOption.ReplaceExisting);
                 // Write text
                 await FileIO.WriteTextAsync(file, fileContent);
                 ret = true;
-            } catch (FileNotFoundException) {
+            }
+            catch (FileNotFoundException)
+            {
                 // File does not exists
                 Debug.WriteLine($"WriteAsync - [FileNotFoundException] path : {filePath}");
-            } catch (UnauthorizedAccessException) {
+            }
+            catch (UnauthorizedAccessException)
+            {
                 // You don't have permission to access the specified file.
-            } catch (Exception e) {
+            }
+            catch (Exception e)
+            {
                 Debug.WriteLine("[Write] " + e.Message);
                 throw;
-            } finally {
+            }
+            finally
+            {
                 // release file's semaphore
                 await UnlockFileAsync(filePath);
             }
@@ -194,23 +225,33 @@ namespace Bijou.Projected.IO
             string errorMessage = "";
 
             // validate argument
-            if (storageFolder == null) {
+            if (storageFolder == null)
+            {
                 throw new ArgumentNullException(nameof(storageFolder));
             }
 
-            try {
+            try
+            {
                 await LockFileAsync(filePath);
                 var file = await storageFolder.GetFileAsync(filePath);
                 // Remove file
                 await file.DeleteAsync();
-            } catch (FileNotFoundException) {
+            }
+            catch (FileNotFoundException)
+            {
                 errorMessage = "FileNotFound";
-            } catch (UnauthorizedAccessException) {
+            }
+            catch (UnauthorizedAccessException)
+            {
                 errorMessage = "UnauthorizedAccessException";
-            } catch (Exception e) {
+            }
+            catch (Exception e)
+            {
                 Debug.WriteLine("[Remove] " + e.Message);
                 throw;
-            } finally {
+            }
+            finally
+            {
                 // release file's semaphore
                 await UnlockFileAsync(filePath);
             }
@@ -225,14 +266,18 @@ namespace Bijou.Projected.IO
         {
             SemaphoreSlim semaphore;
             {
-                try {
+                try
+                {
                     await DictionarySemaphore.WaitAsync();
-                    if (!FileSystemSemaphores.ContainsKey(filePath)) {
+                    if (!FileSystemSemaphores.ContainsKey(filePath))
+                    {
                         // initialize a new semaphore with 1 available request and that accepts 1 concurrent request
                         FileSystemSemaphores[filePath] = new SemaphoreSlim(ConcurrentRequestMaxCount, ConcurrentRequestMaxCount);
                     }
                     semaphore = FileSystemSemaphores[filePath];
-                } finally {
+                }
+                finally
+                {
                     DictionarySemaphore.Release();
                 }
             }
@@ -247,26 +292,35 @@ namespace Bijou.Projected.IO
         {
             // get file's semaphore from the dictionary
             SemaphoreSlim semaphore = null;
-            try {
+            try
+            {
                 await DictionarySemaphore.WaitAsync();
-                if (FileSystemSemaphores.ContainsKey(filePath)) {
+                if (FileSystemSemaphores.ContainsKey(filePath))
+                {
                     semaphore = FileSystemSemaphores[filePath];
                 }
-            } finally {
+            }
+            finally
+            {
                 DictionarySemaphore.Release();
             }
 
             // release file's semaphore
-            if (semaphore != null) {
+            if (semaphore != null)
+            {
                 semaphore.Release();
                 // remove it from semaphores dictionary if not needed anymore => if CurrentCount is the max available count
-                try {
+                try
+                {
                     await DictionarySemaphore.WaitAsync();
-                    if (semaphore.CurrentCount == ConcurrentRequestMaxCount) {
+                    if (semaphore.CurrentCount == ConcurrentRequestMaxCount)
+                    {
                         semaphore.Dispose();
                         FileSystemSemaphores.Remove(filePath);
                     }
-                } finally {
+                }
+                finally
+                {
                     DictionarySemaphore.Release();
                 }
             }

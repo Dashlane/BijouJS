@@ -1,17 +1,18 @@
 ﻿using Bijou.Async;
 using Bijou.JSTasks;
 using Bijou.NativeFunctions;
-using Bijou.Projected;
 using FluentResults;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
+using System.Reflection;
 using System.Runtime.InteropServices;
 using System.Threading;
 using System.Threading.Tasks;
 using Windows.Storage;
 using Bijou.Chakra;
+using Bijou.Projected;
 
 namespace Bijou
 {
@@ -80,9 +81,7 @@ namespace Bijou
             _jsTask = AsyncPump.Run(async delegate
             {
                 InitializeJSExecutor();
-#if DEBUG
-                StartDebugging();
-#endif
+
                 await _eventLoop.Run();
             });
         }
@@ -137,14 +136,16 @@ namespace Bijou
             DefineHostCallback(globalObject.Value, "sendToHost", JSSendToHost.SendToHostJavaScriptNativeFunction, InteropPointer);
 
             // Inject XmlHttpRequest projecting the namespace
-            NativeMethods.JsProjectWinRTNamespace("Frameworks.JsExecutor.UWP.Chakra.Native.Projected");
-
+            Project(typeof(XMLHttpRequest).Assembly);
+#if DEBUG
+            StartDebugging();
+#endif
             // Add references
             RunScript(@"const XMLHttpRequest = Bijou.Projected.XMLHttpRequest;
-                        const console = Bijou.Projected.JSConsole;
-                        const atob = Bijou.Projected.JSBase64Encoding.atob;
-                        const btoa = Bijou.Projected.JSBase64Encoding.btoa;
-                        console.log('UWPChakraHostExecutor ready');");
+                              const console = Bijou.Projected.JSConsole;
+                              const atob = Bijou.Projected.JSBase64Encoding.atob;
+                              const btoa = Bijou.Projected.JSBase64Encoding.btoa;
+                              console.log('UWPChakraHostExecutor ready');");
 
             // register to JSConsole 
             JSConsole.ConsoleMessageReady += OnConsoleMessageReady;
@@ -274,6 +275,11 @@ namespace Bijou
 
             return !string.IsNullOrEmpty(script) ? await RunScriptAsync(script, scriptUri.AbsolutePath)
                                                  : await new Task<Result>(Results.Ok);
+        }
+
+        public Result Project(Assembly assembly)
+        {
+            return NativeMethods.JsProjectWinRTNamespace(assembly.GetName().Name);
         }
 
         /// <summary>
