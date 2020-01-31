@@ -220,11 +220,9 @@ namespace Bijou.Chakra
         public static Result JsPreventExtension(JavaScriptValue obj) =>
             NativeMethodsImpl.JsPreventExtension(obj).ToResult();
 
-        public static Result<JavaScriptValue> JsGetProperty(JavaScriptValue obj, JavaScriptPropertyId propertyId)
-        {
-            return NativeMethodsImpl.JsGetProperty(obj, propertyId, out var value)
-                                    .ToResult(value);
-        }
+        public static Result<JavaScriptValue> JsGetProperty(JavaScriptValue obj, JavaScriptPropertyId propertyId) => 
+            NativeMethodsImpl.JsGetProperty(obj, propertyId, out var value).ToResult(value);
+        
 
         public static Result<JavaScriptValue> JsGetOwnPropertyDescriptor(
             JavaScriptValue obj,

@@ -10,15 +10,21 @@ namespace Bijou
 
         public AbstractJSTask Task { get; }
 
-        public EventLoopTask(
-            AbstractJSTask task, 
-            Action<Result> completeHandler = null)
+        /// <summary>
+        /// Constructs a task to be added to the event loop.
+        /// </summary>
+        /// <param name="task">JS task</param>
+        /// <param name="completeHandler">Callback when task is complete</param>
+        public EventLoopTask(AbstractJSTask task, Action<Result> completeHandler = null)
         {
-
             _completeHandler = completeHandler;
             Task = task;
         }
 
+        /// <summary>
+        /// To be called when the task is complete.
+        /// </summary>
+        /// <param name="value">The result of the execution of the task</param>
         public void CompleteTask(Result value)
         {
             _completeHandler?.Invoke(value);
