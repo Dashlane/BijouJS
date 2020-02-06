@@ -421,7 +421,7 @@ namespace Bijou.Chakra
         /// </para>
         /// </remarks>
         /// <returns>The string.</returns>
-        public new string ToString()
+        public string AsString()
         {
             var result = NativeMethods.JsStringToPointer(this);
             if (result.IsFailed)
@@ -432,6 +432,8 @@ namespace Bijou.Chakra
             var (buffer, length) = result.Value;
             return Marshal.PtrToStringUni(buffer, (int)length);
         }
+
+        public override string ToString() => ValueType.ToString();
 
         /// <summary>
         /// Converts the value to <c>Boolean</c> using regular JavaScript semantics.
