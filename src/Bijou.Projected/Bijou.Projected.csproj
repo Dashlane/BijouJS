@@ -4,11 +4,11 @@
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProjectGuid>{76F84589-ED4C-4E34-9A3C-A6604B9BFAEE}</ProjectGuid>
-    <OutputType>Library</OutputType>
+    <ProjectGuid>{24092479-781E-4F69-8FE5-E40E2D2FE8F4}</ProjectGuid>
+    <OutputType>winmdobj</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>Bijou</RootNamespace>
-    <AssemblyName>Bijou</AssemblyName>
+    <RootNamespace>Bijou.Projected</RootNamespace>
+    <AssemblyName>Bijou.Projected</AssemblyName>
     <DefaultLanguage>en-US</DefaultLanguage>
     <TargetPlatformIdentifier>UAP</TargetPlatformIdentifier>
     <TargetPlatformVersion Condition=" '$(TargetPlatformVersion)' == '' ">10.0.18362.0</TargetPlatformVersion>
@@ -18,7 +18,7 @@
     <ProjectTypeGuids>{A5A43C5B-DE2A-4C0C-9213-0A381AF9435A};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
-    <PlatformTarget>x86</PlatformTarget>
+    <PlatformTarget>AnyCPU</PlatformTarget>
     <DebugSymbols>true</DebugSymbols>
     <DebugType>full</DebugType>
     <Optimize>false</Optimize>
@@ -120,75 +120,35 @@
     <RestoreProjectStyle>PackageReference</RestoreProjectStyle>
   </PropertyGroup>
   <ItemGroup>
-    <Compile Include="Async\AsyncPump.cs" />
-    <Compile Include="Async\AsyncQueue.cs" />
-    <Compile Include="Errors\JavaScriptUsageError.cs" />
-    <Compile Include="Chakra\JavaScriptBackgroundWorkItemCallback.cs" />
-    <Compile Include="Chakra\JavaScriptBeforeCollectCallback.cs" />
-    <Compile Include="Chakra\JavaScriptContext.cs" />
-    <Compile Include="Errors\JavaScriptEngineError.cs" />
-    <Compile Include="Chakra\JavaScriptErrorCode.cs" />
-    <Compile Include="Chakra\JavaScriptErrorCodeExtensions.cs" />
-    <Compile Include="Errors\JavaScriptError.cs" />
-    <Compile Include="Errors\JavaScriptFatalError.cs" />
-    <Compile Include="Chakra\JavaScriptMemoryAllocationCallback.cs" />
-    <Compile Include="Chakra\JavaScriptMemoryEventType.cs" />
-    <Compile Include="Chakra\JavaScriptNativeFunction.cs" />
-    <Compile Include="Chakra\JavaScriptObjectBeforeCollectCallback.cs" />
-    <Compile Include="Chakra\JavaScriptObjectFinalizeCallback.cs" />
-    <Compile Include="Chakra\JavaScriptProjectionEnqueueCallback.cs" />
-    <Compile Include="Chakra\JavaScriptPromiseContinuationCallback.cs" />
-    <Compile Include="Chakra\JavaScriptPropertyId.cs" />
-    <Compile Include="Chakra\JavaScriptPropertyIdType.cs" />
-    <Compile Include="Chakra\JavaScriptRuntime.cs" />
-    <Compile Include="Chakra\JavaScriptRuntimeAttributes.cs" />
-    <Compile Include="Errors\JavaScriptScriptError.cs" />
-    <Compile Include="Chakra\JavaScriptSerializedScriptLoadSourceCallback.cs" />
-    <Compile Include="Chakra\JavaScriptSerializedScriptUnloadCallback.cs" />
-    <Compile Include="Chakra\JavaScriptSourceContext.cs" />
-    <Compile Include="Chakra\JavaScriptThreadServiceCallback.cs" />
-    <Compile Include="Chakra\JavaScriptTypedArrayType.cs" />
-    <Compile Include="Chakra\JavaScriptValue.cs" />
-    <Compile Include="Chakra\JavaScriptValueType.cs" />
-    <Compile Include="Chakra\NativeMethodsImpl.cs" />
-    <Compile Include="Chakra\NativeMethods.cs" />
-    <Compile Include="EventLoop.cs" />
-    <Compile Include="EventLoopTask.cs" />
-    <Compile Include="JSTasks\TaskDelegate.cs" />
-    <Compile Include="UWPChakraHostExecutor.cs" />
-    <Compile Include="JSTasks\AbstractJSTask.cs" />
-    <Compile Include="JSTasks\JSTaskFunction.cs" />
-    <Compile Include="JSTasks\JSTaskScript.cs" />
-    <Compile Include="NativeFunctions\JSAsyncFunctions.cs" />
-    <Compile Include="NativeFunctions\JSHelpers.cs" />
-    <Compile Include="NativeFunctions\JSSendToHost.cs" />
+    <Compile Include="Argon2.cs" />
+    <Compile Include="IO\File.cs" />
+    <Compile Include="IO\FileSystem.cs" />
+    <Compile Include="JSBase64Encoding.cs" />
+    <Compile Include="JSConsole.cs" />
+    <Compile Include="JSFile.cs" />
+    <Compile Include="IO\JSFileHelper.cs" />
+    <Compile Include="JSFileSystem.cs" />
+    <Compile Include="Pbkdf2.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <EmbeddedResource Include="Properties\Bijou.rd.xml" />
+    <Compile Include="XMLHttpRequest.cs" />
+    <EmbeddedResource Include="Properties\Bijou.Projected.rd.xml" />
   </ItemGroup>
   <ItemGroup>
-    <PackageReference Include="FluentResults">
-      <Version>1.4.0</Version>
-    </PackageReference>
     <PackageReference Include="Microsoft.NETCore.UniversalWindowsPlatform">
       <Version>6.2.9</Version>
     </PackageReference>
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="Chakra\ReadMe.md" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Bijou.NativeCrypto\Bijou.NativeCrypto.vcxproj">
       <Project>{4a03306d-3a01-4a89-b69d-15b23a898287}</Project>
       <Name>Bijou.NativeCrypto</Name>
     </ProjectReference>
-    <ProjectReference Include="..\Bijou.Projected\Bijou.Projected.csproj">
-      <Project>{24092479-781e-4f69-8fe5-e40e2d2fe8f4}</Project>
-      <Name>Bijou.Projected</Name>
-    </ProjectReference>
   </ItemGroup>
-  <ItemGroup />
   <PropertyGroup Condition=" '$(VisualStudioVersion)' == '' or '$(VisualStudioVersion)' &lt; '14.0' ">
     <VisualStudioVersion>14.0</VisualStudioVersion>
+  </PropertyGroup>
+  <PropertyGroup>
+    <StartupObject />
   </PropertyGroup>
   <Import Project="$(MSBuildExtensionsPath)\Microsoft\WindowsXaml\v$(VisualStudioVersion)\Microsoft.Windows.UI.Xaml.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

@@ -2,44 +2,44 @@
 {
 #pragma warning disable CA1720 // Identifier contains type name
     /// <summary>
-    ///     The type of a typed JavaScript array.
+    /// The type of a typed JavaScript array.
     /// </summary>
     public enum JavaScriptTypedArrayType
     {
         /// <summary>
-        ///     An int8 array.
+        /// An int8 array.
         /// </summary>
         Int8,
         /// <summary>
-        ///     An uint8 array.
+        /// An uint8 array.
         /// </summary>
         Uint8,
         /// <summary>
-        ///     An uint8 clamped array.
+        /// An uint8 clamped array.
         /// </summary>
         Uint8Clamped,
         /// <summary>
-        ///     An int16 array.
+        /// An int16 array.
         /// </summary>
         Int16,
         /// <summary>
-        ///     An uint16 array.
+        /// An uint16 array.
         /// </summary>
         Uint16,
         /// <summary>
-        ///     An int32 array.
+        /// An int32 array.
         /// </summary>
         Int32,
         /// <summary>
-        ///     An uint32 array.
+        /// An uint32 array.
         /// </summary>
         Uint32,
         /// <summary>
-        ///     A float32 array.
+        /// A float32 array.
         /// </summary>
         Float32,
         /// <summary>
-        ///     A float64 array.
+        /// A float64 array.
         /// </summary>
         Float64
     };

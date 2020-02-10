@@ -1,9 +1,8 @@
-﻿// enable script serialization, serialized script should be added as a reference to the caller as long as the script is needed
+﻿// Enable script serialization.
+// Serialized script should be added as a reference to the caller as long as the script is needed.
 //#define USE_SCRIPT_SERIALIZATION
 
-using System;
 using Bijou.Chakra;
-using Bijou.Types;
 using FluentResults;
 
 namespace Bijou.JSTasks
@@ -28,37 +27,34 @@ namespace Bijou.JSTasks
             _currentSourceContext = currentSourceContext;
         }
 
-        protected override Result<JavaScriptObject> ExecuteImpl()
+        protected override Result<JavaScriptValue> ExecuteImpl()
         {
             if (IsCanceled) 
             {
-                return Results.Ok(JavaScriptObject.Invalid);
+                return Results.Ok(JavaScriptValue.Invalid);
             }
 
 #if USE_SCRIPT_SERIALIZATION && !DEBUG
             const ulong DEFAULT_BUFFER_SIZE = 10 * 1024 * 1024;
 
-            // serialize script to improve performance
+            // Serialize script to improve performance.
             if (_serializedScript == null) {
-                // first, use a large buffer (10 MB) to define needed buffer size
-                // using a null buffer triggers an exception
+                // First, use a large buffer (10 MB) to define needed buffer size.
+                // Using a null buffer triggers an exception.
                 _serializedScript = new byte[DEFAULT_BUFFER_SIZE];
                 var bufferSize = JavaScriptContext.SerializeScript(_script, _serializedScript);
-                // resize to minimum needed size
+                
+                // Resize to minimum needed size.
                 if (bufferSize != DEFAULT_BUFFER_SIZE) {
                     _serializedScript = new byte[bufferSize];
                     JavaScriptContext.SerializeScript(_script, _serializedScript);
                 }
             }
 
-            //
             // Run the script.
-            //
             return JavaScriptContext.RunScript(_script, _serializedScript, _currentSourceContext++, _scriptPath);
 #else
-            //
             // Run the script.
-            //
             return JavaScriptContext.RunScript(_script, _currentSourceContext++, _scriptPath);
 #endif
 

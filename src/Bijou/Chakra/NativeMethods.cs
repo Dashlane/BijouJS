@@ -1,6 +1,4 @@
 ﻿using System;
-using System.Linq;
-using Bijou.Types;
 using FluentResults;
 
 namespace Bijou.Chakra
@@ -74,19 +72,19 @@ namespace Bijou.Chakra
         public static Result<uint> JsIdle() =>
             NativeMethodsImpl.JsIdle(out var nextIdleTick).ToResult(nextIdleTick);
 
-        public static Result<JavaScriptFunction> JsParseScript(
+        public static Result<JavaScriptValue> JsParseScript(
             string script,
             JavaScriptSourceContext sourceContext,
             string sourceUrl) => 
             NativeMethodsImpl.JsParseScript(script, sourceContext, sourceUrl, out var value)
-                             .ToResult<JavaScriptFunction>(value);
+                             .ToResult(value);
 
-        public static Result<JavaScriptObject> JsRunScript(
+        public static Result<JavaScriptValue> JsRunScript(
             string script,
             JavaScriptSourceContext sourceContext,
             string sourceUrl) => 
             NativeMethodsImpl.JsRunScript(script, sourceContext, sourceUrl, out var value)
-                             .ToResult<JavaScriptObject>(value);
+                             .ToResult(value);
 
         public static Result<ulong> JsSerializeScript(string script, byte[] buffer, ulong bufferSize)
         {
@@ -94,21 +92,21 @@ namespace Bijou.Chakra
             return NativeMethodsImpl.JsSerializeScript(script, buffer, ref size).ToResult(size);
         }
 
-        public static Result<JavaScriptFunction> JsParseSerializedScript(
+        public static Result<JavaScriptValue> JsParseSerializedScript(
             string script,
             byte[] buffer,
             JavaScriptSourceContext sourceContext,
             string sourceUrl) => 
             NativeMethodsImpl.JsParseSerializedScript(script, buffer, sourceContext, sourceUrl, out var result)
-                             .ToResult<JavaScriptFunction>(result);
+                             .ToResult(result);
 
-        public static Result<JavaScriptObject> JsRunSerializedScript(
+        public static Result<JavaScriptValue> JsRunSerializedScript(
             string script,
             byte[] buffer,
             JavaScriptSourceContext sourceContext,
             string sourceUrl) => 
             NativeMethodsImpl.JsRunSerializedScript(script, buffer, sourceContext, sourceUrl, out var result)
-                             .ToResult<JavaScriptObject>(result);
+                             .ToResult(result);
 
         public static Result<JavaScriptPropertyId> JsGetPropertyIdFromName(string name) => 
             NativeMethodsImpl.JsGetPropertyIdFromName(name, out var propertyId).ToResult(propertyId);
@@ -116,112 +114,125 @@ namespace Bijou.Chakra
         public static Result<string> JsGetPropertyNameFromId(JavaScriptPropertyId propertyId) =>
             NativeMethodsImpl.JsGetPropertyNameFromId(propertyId, out var name).ToResult(name);
 
-        public static Result<JavaScriptObject> JsGetUndefinedValue() =>
+        public static Result<JavaScriptValue> JsGetUndefinedValue() =>
             NativeMethodsImpl.JsGetUndefinedValue(out var undefinedValue)
-                             .ToResult<JavaScriptObject>(undefinedValue);
+                             .ToResult(undefinedValue);
 
-        public static Result<JavaScriptObject> JsGetNullValue() =>
-            NativeMethodsImpl.JsGetNullValue(out var nullValue).ToResult<JavaScriptObject>(nullValue);
+        public static Result<JavaScriptValue> JsGetNullValue() =>
+            NativeMethodsImpl.JsGetNullValue(out var nullValue)
+                             .ToResult(nullValue);
 
-        public static Result<JavaScriptBoolean> JsGetTrueValue() =>
-            NativeMethodsImpl.JsGetTrueValue(out var trueValue).ToResult<JavaScriptBoolean>(trueValue);
+        public static Result<JavaScriptValue> JsGetTrueValue() =>
+            NativeMethodsImpl.JsGetTrueValue(out var trueValue)
+                             .ToResult(trueValue);
 
-        public static Result<JavaScriptBoolean> JsGetFalseValue() =>
-            NativeMethodsImpl.JsGetFalseValue(out var falseValue).ToResult<JavaScriptBoolean>(falseValue);
+        public static Result<JavaScriptValue> JsGetFalseValue() =>
+            NativeMethodsImpl.JsGetFalseValue(out var falseValue)
+                             .ToResult(falseValue);
 
-        public static Result<JavaScriptBoolean> JsBoolToBoolean(bool value) =>
-            NativeMethodsImpl.JsBoolToBoolean(value, out var booleanValue).ToResult<JavaScriptBoolean>(booleanValue);
+        public static Result<JavaScriptValue> JsBoolToBoolean(bool value) =>
+            NativeMethodsImpl.JsBoolToBoolean(value, out var booleanValue)
+                             .ToResult(booleanValue);
 
-        public static Result<bool> JsBooleanToBool(JavaScriptBoolean booleanValue) =>
-            NativeMethodsImpl.JsBooleanToBool(booleanValue.UnderlyingValue, out var boolValue).ToResult(boolValue);
+        public static Result<bool> JsBooleanToBool(JavaScriptValue booleanValue) =>
+            NativeMethodsImpl.JsBooleanToBool(booleanValue, out var boolValue)
+                             .ToResult(boolValue);
 
-        public static Result<JavaScriptBoolean> JsConvertValueToBoolean(JavaScriptObject value) =>
-            NativeMethodsImpl.JsConvertValueToBoolean(value.UnderlyingValue, out var booleanValue)
-                             .ToResult<JavaScriptBoolean>(booleanValue);
+        public static Result<JavaScriptValue> JsConvertValueToBoolean(JavaScriptValue value) =>
+            NativeMethodsImpl.JsConvertValueToBoolean(value, out var booleanValue)
+                             .ToResult(booleanValue);
 
         public static Result<JavaScriptValueType> JsGetValueType(JavaScriptValue value) =>
-            NativeMethodsImpl.JsGetValueType(value, out var type).ToResult(type);
+            NativeMethodsImpl.JsGetValueType(value, out var type)
+                             .ToResult(type);
 
-        public static Result<JavaScriptNumber> JsDoubleToNumber(double doubleValue) =>
-            NativeMethodsImpl.JsDoubleToNumber(doubleValue, out var value).ToResult<JavaScriptNumber>(value);
+        public static Result<JavaScriptValue> JsDoubleToNumber(double doubleValue) =>
+            NativeMethodsImpl.JsDoubleToNumber(doubleValue, out var value)
+                             .ToResult(value);
 
-        public static Result<JavaScriptNumber> JsIntToNumber(int intValue) =>
-            NativeMethodsImpl.JsIntToNumber(intValue, out var value).ToResult<JavaScriptNumber>(value);
+        public static Result<JavaScriptValue> JsIntToNumber(int intValue) =>
+            NativeMethodsImpl.JsIntToNumber(intValue, out var value)
+                             .ToResult(value);
 
-        public static Result<double> JsNumberToDouble(JavaScriptNumber value) =>
-            NativeMethodsImpl.JsNumberToDouble(value.UnderlyingValue, out var doubleValue).ToResult(doubleValue);
+        public static Result<double> JsNumberToDouble(JavaScriptValue value) =>
+            NativeMethodsImpl.JsNumberToDouble(value, out var doubleValue)
+                             .ToResult(doubleValue);
 
-        public static Result<int> JsNumberToInt(JavaScriptNumber value) =>
-            NativeMethodsImpl.JsNumberToInt(value.UnderlyingValue, out var doubleValue).ToResult(doubleValue);
+        public static Result<int> JsNumberToInt(JavaScriptValue value) =>
+            NativeMethodsImpl.JsNumberToInt(value, out var doubleValue)
+                             .ToResult(doubleValue);
 
-        public static Result<JavaScriptNumber> JsConvertValueToNumber(JavaScriptObject value) =>
-            NativeMethodsImpl.JsConvertValueToNumber(value.UnderlyingValue, out var numberValue)
-                             .ToResult<JavaScriptNumber>(numberValue);
+        public static Result<JavaScriptValue> JsConvertValueToNumber(JavaScriptValue value) =>
+            NativeMethodsImpl.JsConvertValueToNumber(value, out var numberValue)
+                             .ToResult(numberValue);
 
-        public static Result<int> JsGetStringLength(JavaScriptString @string) =>
-            NativeMethodsImpl.JsGetStringLength(@string.UnderlyingValue, out var length).ToResult(length);
+        public static Result<int> JsGetStringLength(JavaScriptValue @string) =>
+            NativeMethodsImpl.JsGetStringLength(@string, out var length)
+                             .ToResult(length);
 
-        public static Result<JavaScriptString> JsPointerToString(string value, UIntPtr stringLength) =>
+        public static Result<JavaScriptValue> JsPointerToString(string value, UIntPtr stringLength) =>
             NativeMethodsImpl.JsPointerToString(value, stringLength, out var stringValue)
-                             .ToResult<JavaScriptString>(stringValue);
+                             .ToResult(stringValue);
 
         public static Result<(IntPtr Value, UIntPtr Length)> JsStringToPointer(JavaScriptValue value) =>
             NativeMethodsImpl.JsStringToPointer(value, out var stringValue, out var stringLength).ToResult((stringValue, stringLength));
 
-        public static Result<JavaScriptString> JsConvertValueToString(JavaScriptObject value) =>
-            NativeMethodsImpl.JsConvertValueToString(value.UnderlyingValue, out var stringValue)
-                             .ToResult<JavaScriptString>(stringValue);
+        public static Result<JavaScriptValue> JsConvertValueToString(JavaScriptValue value) =>
+            NativeMethodsImpl.JsConvertValueToString(value, out var stringValue)
+                             .ToResult(stringValue);
 
-        public static Result<JavaScriptObject> JsVariantToValue(ref object var) =>
-            NativeMethodsImpl.JsVariantToValue(ref var, out var value).ToResult<JavaScriptObject>(value);
+        public static Result<JavaScriptValue> JsVariantToValue(ref object var) =>
+            NativeMethodsImpl.JsVariantToValue(ref var, out var value)
+                             .ToResult(value);
 
         public static Result<object> JsValueToVariant(JavaScriptValue obj) =>
             NativeMethodsImpl.JsValueToVariant(obj, out var variant).ToResult(variant);
 
-        public static Result<JavaScriptPrototype> JsGetGlobalObject() =>
-            NativeMethodsImpl.JsGetGlobalObject(out var globalObject).ToResult<JavaScriptPrototype>(globalObject);
+        public static Result<JavaScriptValue> JsGetGlobalObject() =>
+            NativeMethodsImpl.JsGetGlobalObject(out var globalObject)
+                             .ToResult(globalObject);
 
-        public static Result<JavaScriptPrototype> JsCreateObject() =>
-            NativeMethodsImpl.JsCreateObject(out var obj).ToResult<JavaScriptPrototype>(obj);
+        public static Result<JavaScriptValue> JsCreateObject() =>
+            NativeMethodsImpl.JsCreateObject(out var obj)
+                             .ToResult(obj);
 
-        public static Result<JavaScriptObject> JsCreateExternalObject(
+        public static Result<JavaScriptValue> JsCreateExternalObject(
             IntPtr data,
             JavaScriptObjectFinalizeCallback finalizeCallback) =>
             NativeMethodsImpl.JsCreateExternalObject(data, finalizeCallback, out var obj)
-                             .ToResult<JavaScriptObject>(obj);
+                             .ToResult(obj);
 
-        public static Result<JavaScriptObject> JsConvertValueToObject(JavaScriptObject value) =>
-            NativeMethodsImpl.JsConvertValueToObject(value.UnderlyingValue, out var obj)
-                             .ToResult<JavaScriptObject>(obj);
+        public static Result<JavaScriptValue> JsConvertValueToObject(JavaScriptValue value) =>
+            NativeMethodsImpl.JsConvertValueToObject(value, out var obj)
+                             .ToResult(obj);
 
-        public static Result<JavaScriptPrototype> JsGetPrototype(JavaScriptObject obj) =>
-            NativeMethodsImpl.JsGetPrototype(obj.UnderlyingValue, out var prototypeObject).ToResult<JavaScriptPrototype>(prototypeObject);
+        public static Result<JavaScriptValue> JsGetPrototype(JavaScriptValue obj) =>
+            NativeMethodsImpl.JsGetPrototype(obj, out var prototypeObject)
+                             .ToResult(prototypeObject);
 
-        public static Result JsSetPrototype(JavaScriptPrototype obj, JavaScriptPrototype prototypeObject) =>
-            NativeMethodsImpl.JsSetPrototype(obj.UnderlyingValue, prototypeObject.UnderlyingValue).ToResult();
+        public static Result JsSetPrototype(JavaScriptValue obj, JavaScriptValue prototypeObject) =>
+            NativeMethodsImpl.JsSetPrototype(obj, prototypeObject)
+                             .ToResult();
 
         public static Result<bool> JsGetExtensionAllowed(JavaScriptValue obj) =>
             NativeMethodsImpl.JsGetExtensionAllowed(obj, out var value).ToResult(value);
 
-        public static Result JsPreventExtension(JavaScriptObject obj) =>
-            NativeMethodsImpl.JsPreventExtension(obj.UnderlyingValue).ToResult();
+        public static Result JsPreventExtension(JavaScriptValue obj) =>
+            NativeMethodsImpl.JsPreventExtension(obj).ToResult();
 
-        public static Result<TValue> JsGetProperty<TValue>(JavaScriptValue obj, JavaScriptPropertyId propertyId)
-            where TValue : JavaScriptObject
-        {
-            return NativeMethodsImpl.JsGetProperty(obj, propertyId, out var value)
-                                    .ToResult<TValue>(value);
-        }
+        public static Result<JavaScriptValue> JsGetProperty(JavaScriptValue obj, JavaScriptPropertyId propertyId) => 
+            NativeMethodsImpl.JsGetProperty(obj, propertyId, out var value).ToResult(value);
+        
 
-        public static Result<JavaScriptObject> JsGetOwnPropertyDescriptor(
+        public static Result<JavaScriptValue> JsGetOwnPropertyDescriptor(
             JavaScriptValue obj,
             JavaScriptPropertyId propertyId) =>
             NativeMethodsImpl.JsGetOwnPropertyDescriptor(obj, propertyId, out var propertyDescriptor)
-                             .ToResult<JavaScriptObject>(propertyDescriptor);
+                             .ToResult(propertyDescriptor);
 
-        public static Result<JavaScriptObject> JsGetOwnPropertyNames(JavaScriptValue obj) =>
+        public static Result<JavaScriptValue> JsGetOwnPropertyNames(JavaScriptValue obj) =>
             NativeMethodsImpl.JsGetOwnPropertyNames(obj, out var propertyNames)
-                             .ToResult<JavaScriptObject>(propertyNames);
+                             .ToResult(propertyNames);
 
         public static Result JsSetProperty(
             JavaScriptValue obj,
@@ -233,12 +244,12 @@ namespace Bijou.Chakra
         public static Result<bool> JsHasProperty(JavaScriptValue obj, JavaScriptPropertyId propertyId) =>
             NativeMethodsImpl.JsHasProperty(obj, propertyId, out var hasProperty).ToResult(hasProperty);
 
-        public static Result<JavaScriptBoolean> JsDeleteProperty(
+        public static Result<JavaScriptValue> JsDeleteProperty(
             JavaScriptValue obj,
             JavaScriptPropertyId propertyId,
             bool useStrictRules) =>
             NativeMethodsImpl.JsDeleteProperty(obj, propertyId, useStrictRules, out var result)
-                             .ToResult<JavaScriptBoolean>(result);
+                             .ToResult(result);
 
         public static Result<bool> JsDefineProperty(
             JavaScriptValue obj,
@@ -247,29 +258,26 @@ namespace Bijou.Chakra
             NativeMethodsImpl.JsDefineProperty(obj, propertyId, propertyDescriptor, out var result).ToResult(result);
 
         public static Result<bool> JsHasIndexedProperty(
-            JavaScriptObject obj,
-            JavaScriptNumber index) =>
-            NativeMethodsImpl.JsHasIndexedProperty(obj.UnderlyingValue, index.UnderlyingValue, out var result)
+            JavaScriptValue obj,
+            JavaScriptValue index) =>
+            NativeMethodsImpl.JsHasIndexedProperty(obj, index, out var result)
                              .ToResult(result);
 
-        public static Result<TValue> JsGetIndexedProperty<TValue>(
-            JavaScriptObject obj,
-            JavaScriptNumber index)
-            where TValue : JavaScriptObject
-        {
-            return NativeMethodsImpl.JsGetIndexedProperty(obj.UnderlyingValue, index.UnderlyingValue, out var result)
-                                    .ToResult<TValue>(result);
-        }
+        public static Result JsGetIndexedProperty(
+            JavaScriptValue obj,
+            JavaScriptValue index) =>
+            NativeMethodsImpl.JsGetIndexedProperty(obj, index, out var result)
+                             .ToResult(result);
 
         public static Result JsSetIndexedProperty(
-            JavaScriptObject obj,
-            JavaScriptNumber index,
-            JavaScriptObject value) =>
-            NativeMethodsImpl.JsSetIndexedProperty(obj.UnderlyingValue, index.UnderlyingValue, value.UnderlyingValue)
+            JavaScriptValue obj,
+            JavaScriptValue index,
+            JavaScriptValue value) =>
+            NativeMethodsImpl.JsSetIndexedProperty(obj, index, value)
                              .ToResult();
 
-        public static Result JsDeleteIndexedProperty(JavaScriptObject obj, JavaScriptNumber index) =>
-            NativeMethodsImpl.JsDeleteIndexedProperty(obj.UnderlyingValue, index.UnderlyingValue)
+        public static Result JsDeleteIndexedProperty(JavaScriptValue obj, JavaScriptValue index) =>
+            NativeMethodsImpl.JsDeleteIndexedProperty(obj, index)
                              .ToResult();
 
         public static Result<bool> JsEquals(JavaScriptValue obj1, JavaScriptValue obj2) =>
@@ -287,66 +295,60 @@ namespace Bijou.Chakra
         public static Result JsSetExternalData(JavaScriptValue obj, IntPtr externalData) =>
             NativeMethodsImpl.JsSetExternalData(obj, externalData).ToResult();
 
-        public static Result<JavaScriptArray> JsCreateArray(uint length) =>
-            NativeMethodsImpl.JsCreateArray(length, out var result).ToResult<JavaScriptArray>(result);
+        public static Result<JavaScriptValue> JsCreateArray(uint length) =>
+            NativeMethodsImpl.JsCreateArray(length, out var result)
+                             .ToResult(result);
 
-        public static Result<TValue> JsCallFunction<TValue>(
-            JavaScriptFunction function,
-            JavaScriptObject[] arguments,
-            ushort argumentCount)
-            where TValue : JavaScriptObject
-        {
-            var parameters = arguments.Select(c => c.UnderlyingValue).ToArray();
-            return NativeMethodsImpl.JsCallFunction(function.UnderlyingValue, parameters, argumentCount, out var result)
-                                    .ToResult<TValue>(result);
-        }
+        public static Result JsCallFunction(
+            JavaScriptValue function,
+            JavaScriptValue[] arguments,
+            ushort argumentCount) =>
+            NativeMethodsImpl.JsCallFunction(function, arguments, argumentCount, out var result)
+                             .ToResult(result);
 
-        public static Result<JavaScriptObject> JsConstructObject(
-            JavaScriptFunction function,
-            JavaScriptObject[] arguments,
-            ushort argumentCount)
-        {
-            var parameters = arguments.Select(c => c.UnderlyingValue).ToArray();
-            return NativeMethodsImpl.JsConstructObject(function.UnderlyingValue, parameters, argumentCount, out var result)
-                                    .ToResult<JavaScriptObject>(result);
-        }
+        public static Result<JavaScriptValue> JsConstructObject(
+            JavaScriptValue function,
+            JavaScriptValue[] arguments,
+            ushort argumentCount) =>
+            NativeMethodsImpl.JsConstructObject(function, arguments, argumentCount, out var result)
+                             .ToResult(result);
 
-        public static Result<JavaScriptFunction> JsCreateFunction(
+        public static Result<JavaScriptValue> JsCreateFunction(
             JavaScriptNativeFunction nativeFunction,
             IntPtr externalData) =>
             NativeMethodsImpl.JsCreateFunction(nativeFunction, externalData, out var function)
-                             .ToResult<JavaScriptFunction>(function);
+                             .ToResult(function);
 
-        public static Result<JavaScriptError> JsCreateError(JavaScriptString message) =>
-            NativeMethodsImpl.JsCreateError(message.UnderlyingValue, out var error)
-                             .ToResult<JavaScriptError>(error);
+        public static Result<JavaScriptValue> JsCreateError(JavaScriptValue message) =>
+            NativeMethodsImpl.JsCreateError(message, out var error)
+                             .ToResult(error);
 
-        public static Result<JavaScriptRangeError> JsCreateRangeError(JavaScriptString message) =>
-            NativeMethodsImpl.JsCreateRangeError(message.UnderlyingValue, out var error)
-                             .ToResult<JavaScriptRangeError>(error);
+        public static Result<JavaScriptValue> JsCreateRangeError(JavaScriptValue message) =>
+            NativeMethodsImpl.JsCreateRangeError(message, out var error)
+                             .ToResult(error);
 
-        public static Result<JavaScriptReferenceError> JsCreateReferenceError(JavaScriptString message) =>
-            NativeMethodsImpl.JsCreateReferenceError(message.UnderlyingValue, out var error)
-                             .ToResult<JavaScriptReferenceError>(error);
+        public static Result<JavaScriptValue> JsCreateReferenceError(JavaScriptValue message) =>
+            NativeMethodsImpl.JsCreateReferenceError(message, out var error)
+                             .ToResult(error);
 
-        public static Result<JavaScriptSyntaxError> JsCreateSyntaxError(JavaScriptString message) =>
-            NativeMethodsImpl.JsCreateSyntaxError(message.UnderlyingValue, out var error)
-                             .ToResult<JavaScriptSyntaxError>(error);
+        public static Result<JavaScriptValue> JsCreateSyntaxError(JavaScriptValue message) =>
+            NativeMethodsImpl.JsCreateSyntaxError(message, out var error)
+                             .ToResult(error);
 
-        public static Result<JavaScriptTypeError> JsCreateTypeError(JavaScriptString message) =>
-            NativeMethodsImpl.JsCreateTypeError(message.UnderlyingValue, out var error)
-                             .ToResult<JavaScriptTypeError>(error);
+        public static Result<JavaScriptValue> JsCreateTypeError(JavaScriptValue message) =>
+            NativeMethodsImpl.JsCreateTypeError(message, out var error)
+                             .ToResult(error);
 
-        public static Result<JavaScriptUriError> JsCreateURIError(JavaScriptString message) =>
-            NativeMethodsImpl.JsCreateURIError(message.UnderlyingValue, out var error)
-                             .ToResult<JavaScriptUriError>(error);
+        public static Result<JavaScriptValue> JsCreateURIError(JavaScriptValue message) =>
+            NativeMethodsImpl.JsCreateURIError(message, out var error)
+                             .ToResult(error);
 
         public static Result<bool> JsHasException() =>
             NativeMethodsImpl.JsHasException(out var hasException).ToResult(hasException);
 
-        public static Result<JavaScriptObject> JsGetAndClearException() =>
+        public static Result<JavaScriptValue> JsGetAndClearException() =>
             NativeMethodsImpl.JsGetAndClearException(out var exception)
-                             .ToResult<JavaScriptObject>(exception);
+                             .ToResult(exception);
 
         public static Result JsSetException(JavaScriptValue exception) =>
             NativeMethodsImpl.JsSetException(exception).ToResult();

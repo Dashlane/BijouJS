@@ -270,6 +270,5 @@ namespace Bijou.Chakra
 
         [DllImport(ChakraDll, ExactSpelling = true)]
         internal static extern JavaScriptErrorCode JsSetPromiseContinuationCallback(JavaScriptPromiseContinuationCallback promiseContinuationCallback, IntPtr callbackState);
-
     }
 }

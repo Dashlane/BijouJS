@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Threading.Tasks;
 using Windows.Foundation;
+using Bijou.Projected.IO;
 
 namespace Bijou.Projected
 {

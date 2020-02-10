@@ -1,6 +1,5 @@
 ﻿using System;
 using Bijou.Chakra;
-using Bijou.Types;
 using FluentResults;
 
 namespace Bijou.JSTasks
@@ -32,34 +31,43 @@ namespace Bijou.JSTasks
             Id = Guid.NewGuid();
         }
 
+        /// <summary>
+        /// Resets the scheduled time for execution based on the current clock time.
+        /// </summary>
         public void ResetScheduledTime()
         {
             ScheduledTime = DateTime.UtcNow.AddMilliseconds(ScheduledDelay);
         }
 
+        /// <summary>
+        /// Cancels the task.
+        /// </summary>
         public void Cancel()
         {
             ShouldReschedule = false;
             IsCanceled = true;
         }
 
-        public Result<JavaScriptObject> Execute()
+        /// <summary>
+        /// Executes the task.
+        /// </summary>
+        /// <returns></returns>
+        public Result<JavaScriptValue> Execute()
         {
             if (!JavaScriptContext.IsCurrentValid)
             {
                 return Results.Fail("AbstractJSTask.Execute invalid context");
             }
 
-            // Skip execution if task is canceled
-            var ret = Results.Ok(JavaScriptObject.Invalid);
+            // Skip execution if task is canceled.
+            var ret = Results.Ok(JavaScriptValue.Invalid);
             if (!IsCanceled)
             {
                 ret = ExecuteImpl();
             }
 
-            // if not rescheduled, release resources
-            // can't be done from class destructor as 
-            // this needs to be called from JS Context thread
+            // If not rescheduled, release resources.
+            // It can't be done from class destructor as this needs to be called from JS Context thread.
             if (!ShouldReschedule) 
             {
                 ReleaseJsResources();
@@ -72,7 +80,7 @@ namespace Bijou.JSTasks
         /// Execute task implementation
         /// </summary>
         /// <returns></returns>
-        protected abstract Result<JavaScriptObject> ExecuteImpl();
+        protected abstract Result<JavaScriptValue> ExecuteImpl();
 
         /// <summary>
         /// Release allocated JS resources

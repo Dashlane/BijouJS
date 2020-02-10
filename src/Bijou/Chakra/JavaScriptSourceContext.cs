@@ -3,7 +3,7 @@
 namespace Bijou.Chakra
 {
     /// <summary>
-    ///     A cookie that identifies a script for debugging purposes.
+    /// A cookie that identifies a script for debugging purposes.
     /// </summary>
     internal struct JavaScriptSourceContext : IEquatable<JavaScriptSourceContext>
     {
@@ -13,12 +13,12 @@ namespace Bijou.Chakra
         private readonly IntPtr _context;
 
         /// <summary>
-        ///     Gets an empty source context.
+        /// Gets an empty source context.
         /// </summary>
         public static JavaScriptSourceContext None { get; } = new JavaScriptSourceContext(new IntPtr(-1));
 
         /// <summary>
-        ///     Initializes a new instance of the <see cref="JavaScriptSourceContext"/> struct.
+        /// Initializes a new instance of the <see cref="JavaScriptSourceContext"/> struct.
         /// </summary>
         /// <param name="context">The context.</param>
         private JavaScriptSourceContext(IntPtr context)
@@ -27,7 +27,7 @@ namespace Bijou.Chakra
         }
 
         /// <summary>
-        ///     The equality operator for source contexts.
+        /// The equality operator for source contexts.
         /// </summary>
         /// <param name="left">The first source context to compare.</param>
         /// <param name="right">The second source context to compare.</param>
@@ -38,7 +38,7 @@ namespace Bijou.Chakra
         }
 
         /// <summary>
-        ///     The inequality operator for source contexts.
+        /// The inequality operator for source contexts.
         /// </summary>
         /// <param name="left">The first source context to compare.</param>
         /// <param name="right">The second source context to compare.</param>
@@ -49,7 +49,7 @@ namespace Bijou.Chakra
         }
 
         /// <summary>
-        ///     Subtracts an offset from the value of the source context.
+        /// Subtracts an offset from the value of the source context.
         /// </summary>
         /// <param name="context">The source context to subtract the offset from.</param>
         /// <param name="offset">The offset to subtract.</param>
@@ -60,7 +60,7 @@ namespace Bijou.Chakra
         }
 
         /// <summary>
-        ///     Subtracts an offset from the value of the source context.
+        /// Subtracts an offset from the value of the source context.
         /// </summary>
         /// <param name="left">The source context to subtract the offset from.</param>
         /// <param name="right">The offset to subtract.</param>
@@ -71,7 +71,7 @@ namespace Bijou.Chakra
         }
 
         /// <summary>
-        ///     Decrements the value of the source context.
+        /// Decrements the value of the source context.
         /// </summary>
         /// <param name="context">The source context to decrement.</param>
         /// <returns>A new source context that reflects the decrementing of the context.</returns>
@@ -81,7 +81,7 @@ namespace Bijou.Chakra
         }
 
         /// <summary>
-        ///     Decrements the value of the source context.
+        /// Decrements the value of the source context.
         /// </summary>
         /// <param name="left">The source context to decrement.</param>
         /// <returns>A new source context that reflects the decrementing of the context.</returns>
@@ -91,7 +91,7 @@ namespace Bijou.Chakra
         }
 
         /// <summary>
-        ///     Adds an offset from the value of the source context.
+        /// Adds an offset from the value of the source context.
         /// </summary>
         /// <param name="context">The source context to add the offset to.</param>
         /// <param name="offset">The offset to add.</param>
@@ -102,7 +102,7 @@ namespace Bijou.Chakra
         }
 
         /// <summary>
-        ///     Adds an offset from the value of the source context.
+        /// Adds an offset from the value of the source context.
         /// </summary>
         /// <param name="left">The source context to add the offset to.</param>
         /// <param name="right">The offset to add.</param>
@@ -113,7 +113,7 @@ namespace Bijou.Chakra
         }
 
         /// <summary>
-        ///     Increments the value of the source context.
+        /// Increments the value of the source context.
         /// </summary>
         /// <param name="context">The source context to increment.</param>
         /// <returns>A new source context that reflects the incrementing of the context.</returns>
@@ -123,7 +123,7 @@ namespace Bijou.Chakra
         }
 
         /// <summary>
-        ///     Increments the value of the source context.
+        /// Increments the value of the source context.
         /// </summary>
         /// <param name="left">The source context to increment.</param>
         /// <returns>A new source context that reflects the incrementing of the context.</returns>
@@ -133,10 +133,10 @@ namespace Bijou.Chakra
         }
 
         /// <summary>
-        ///     Creates a new source context. 
+        /// Creates a new source context. 
         /// </summary>
         /// <param name="cookie">
-        ///     The cookie for the source context.
+        /// The cookie for the source context.
         /// </param>
         /// <returns>The new source context.</returns>
         public static JavaScriptSourceContext FromIntPtr(IntPtr cookie)
@@ -145,7 +145,7 @@ namespace Bijou.Chakra
         }
 
         /// <summary>
-        ///     Checks for equality between source contexts.
+        /// Checks for equality between source contexts.
         /// </summary>
         /// <param name="other">The other source context to compare.</param>
         /// <returns>Whether the two source contexts are the same.</returns>
@@ -155,7 +155,7 @@ namespace Bijou.Chakra
         }
 
         /// <summary>
-        ///     Checks for equality between source contexts.
+        /// Checks for equality between source contexts.
         /// </summary>
         /// <param name="obj">The other source context to compare.</param>
         /// <returns>Whether the two source contexts are the same.</returns>
@@ -170,7 +170,7 @@ namespace Bijou.Chakra
         }
 
         /// <summary>
-        ///     The hash code.
+        /// The hash code.
         /// </summary>
         /// <returns>The hash code of the source context.</returns>
         public override int GetHashCode()
