@@ -121,6 +121,7 @@
   <ItemGroup>
     <Compile Include="JSTasks\TestJSTaskAbstract.cs" />
     <Compile Include="JSTasks\TestJSTaskFunction.cs" />
+    <Compile Include="JSTasks\TestJSTaskScript.cs" />
     <Compile Include="TestUWPChakraHostExecutor.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="UnitTestApp.xaml.cs">
