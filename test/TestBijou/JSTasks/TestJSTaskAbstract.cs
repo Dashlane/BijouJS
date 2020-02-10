@@ -1,9 +1,10 @@
 ﻿using System;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Moq;
-using Bijou.Chakra.Hosting;
 using Bijou.JSTasks;
 using Bijou.Test.UWPChakraHost.Utils;
+using FluentResults;
+using Bijou.Chakra;
 
 namespace Bijou.Test.UWPChakraHost.JSTasks
 {
@@ -15,7 +16,7 @@ namespace Bijou.Test.UWPChakraHost.JSTasks
             public JsTaskExecute(int delay = 0, bool shouldReschedule = false) :
                 base(delay, shouldReschedule) { }
 
-            protected override JavaScriptValue ExecuteImpl()
+            protected override Result<JavaScriptValue> ExecuteImpl()
             {
                 return JavaScriptValue.True;
             }
@@ -71,11 +72,11 @@ namespace Bijou.Test.UWPChakraHost.JSTasks
             using (new UnitTestJsRuntime())
             {
                 var testTask = new JsTaskExecute();
-                Assert.AreEqual(JavaScriptValue.True, testTask.Execute());
+                Assert.AreEqual(JavaScriptValue.True.Value, testTask.Execute().Value);
 
                 testTask = new JsTaskExecute(30000);
                 testTask.Cancel();
-                Assert.AreNotEqual(JavaScriptValue.True, testTask.Execute());
+                Assert.AreNotEqual(JavaScriptValue.True.Value, testTask.Execute().Value);
             }
         }
     }

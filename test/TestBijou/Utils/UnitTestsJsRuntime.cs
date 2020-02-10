@@ -1,15 +1,40 @@
-﻿using System;
+﻿using Bijou.Chakra;
+using FluentResults;
+using System;
 
 namespace Bijou.Test.UWPChakraHost.Utils
 {
     internal class UnitTestJsRuntime : IDisposable
     {
-        private JavaScriptRuntime _runtime = JavaScriptRuntime.Create();
+        private JavaScriptRuntime _runtime;
         
         internal UnitTestJsRuntime()
         {
-            var context = _runtime.CreateContext();
-            JavaScriptContext.Current = context;
+            var runtime = NativeMethods.JsCreateRuntime(JavaScriptRuntimeAttributes.None, null);
+            if (runtime.IsFailed)
+            {
+                return;
+            }
+
+            _runtime = runtime.Value;
+
+            var context = NativeMethods.JsCreateContext(_runtime);
+            if (context.IsFailed)
+            {
+                return;
+            }
+
+            var contextSetup = NativeMethods.JsSetCurrentContext(context.Value);
+            if (contextSetup.IsFailed)
+            {
+                return;
+            }
+
+            var globalObject = JavaScriptValue.GlobalObject;
+            if (globalObject.IsFailed)
+            {
+                return;
+            }
         }
 
         #region IDisposable
@@ -29,7 +54,7 @@ namespace Bijou.Test.UWPChakraHost.Utils
 
             if (disposing)
             {
-                JavaScriptContext.Current = JavaScriptContext.Invalid;
+                JavaScriptContext.Current = Results.Ok(JavaScriptContext.Invalid);
                 _runtime.Dispose();
             }
 

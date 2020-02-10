@@ -1,6 +1,7 @@
-﻿using Bijou.Chakra.Hosting;
+﻿using Bijou.Chakra;
 using Bijou.JSTasks;
 using Bijou.Test.UWPChakraHost.Utils;
+using FluentResults;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 namespace Bijou.Test.UWPChakraHost.JSTasks
@@ -8,7 +9,7 @@ namespace Bijou.Test.UWPChakraHost.JSTasks
     [TestClass]
     public class TestJSTaskScript
     {
-        private JavaScriptValue RunScript(string script)
+        private Result<JavaScriptValue> RunScript(string script)
         {
             var jsTask = new JSTaskScript(string.Empty, script, JavaScriptSourceContext.None);
             return jsTask.Execute();
@@ -17,29 +18,33 @@ namespace Bijou.Test.UWPChakraHost.JSTasks
         private void VerifyScript(string script, JavaScriptValueType jsTypeExpected, int valueExpected)
         {
             var result = RunScript(script);
-            Assert.AreEqual(jsTypeExpected, result.ValueType);
-            Assert.AreEqual(valueExpected, result.ToInt32());
+            Assert.IsTrue(result.IsSuccess);
+            Assert.AreEqual(jsTypeExpected, result.Value.ValueType.Value);
+            Assert.AreEqual(valueExpected, result.Value.ToInt32().Value);
         }
 
         private void VerifyScript(string script, JavaScriptValueType jsTypeExpected, double valueExpected)
         {
             var result = RunScript(script);
-            Assert.AreEqual(jsTypeExpected, result.ValueType);
-            Assert.AreEqual(valueExpected, result.ToDouble(), 0.00001);
+            Assert.IsTrue(result.IsSuccess);
+            Assert.AreEqual(jsTypeExpected, result.Value.ValueType.Value);
+            Assert.AreEqual(valueExpected, result.Value.ToDouble().Value, 0.00001);
         }
 
         private void VerifyScript(string script, JavaScriptValueType jsTypeExpected, bool valueExpected)
         {
             var result = RunScript(script);
-            Assert.AreEqual(jsTypeExpected, result.ValueType);
-            Assert.AreEqual(valueExpected, result.ToBoolean());
+            Assert.IsTrue(result.IsSuccess);
+            Assert.AreEqual(jsTypeExpected, result.Value.ValueType.Value);
+            Assert.AreEqual(valueExpected, result.Value.ToBoolean().Value);
         }
 
         private void VerifyScript(string script, JavaScriptValueType jsTypeExpected, string valueExpected)
         {
             var result = RunScript(script);
-            Assert.AreEqual(jsTypeExpected, result.ValueType);
-            Assert.AreEqual(valueExpected, result.ToString());
+            Assert.IsTrue(result.IsSuccess);
+            Assert.AreEqual(jsTypeExpected, result.Value.ValueType.Value);
+            Assert.AreEqual(valueExpected, result.Value.AsString());
         }
 
         [TestMethod]

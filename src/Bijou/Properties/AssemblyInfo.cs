@@ -27,3 +27,9 @@ using System.Runtime.InteropServices;
 [assembly: AssemblyVersion("1.0.0.0")]
 [assembly: AssemblyFileVersion("1.0.0.0")]
 [assembly: ComVisible(false)]
+
+// make internal classes visible to the unit test assembly
+[assembly: InternalsVisibleTo("TestBijou")]
+
+// make them visible to the Moq nuget package as well.
+[assembly: InternalsVisibleTo("DynamicProxyGenAssembly2")]

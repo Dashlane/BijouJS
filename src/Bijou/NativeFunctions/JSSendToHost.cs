@@ -48,7 +48,7 @@ namespace Bijou.NativeFunctions
                 return JavaScriptValue.Invalid;
             }
 
-            executor.OnMessageReceived(jsMessage.ToString());
+            executor.OnMessageReceived(jsMessage.AsString());
 
             return JavaScriptValue.Invalid;
         }

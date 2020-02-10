@@ -1,9 +1,10 @@
 ﻿using System;
 using System.Threading;
 using System.Threading.Tasks;
+using Bijou;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
-namespace Bijou.Test.UWPChakraHost.Executor
+namespace Bijou.Test.UWPChakraHost
 {
     [TestClass]
     public class TestUWPChakraHostExecutor
@@ -16,11 +17,9 @@ namespace Bijou.Test.UWPChakraHost.Executor
             var scriptContent = await UWPChakraHostExecutor.LoadScriptAsync(new Uri(filename));
             Assert.AreEqual(expected, scriptContent);
         }
-
-        [DataTestMethod]
-        //[DataRow(@"ms-appx:///Assets/scripts/test_script_load_async.js", "Hello from the other side")]
-        [DataRow(@"ms-appx:///Assets/scripts/test_script_set_timeout.js", "Hello from setTimeout")]
-        public async Task TestLoadAndRunScriptWithMessageAsync(string fileName, string expectedMessage)
+        
+        [TestMethod]
+        public async Task TestLoadAndRunScriptWithMessageAsync()
         {
             var reply = string.Empty;
             var messageReceived = new AutoResetEvent(false);
@@ -32,10 +31,10 @@ namespace Bijou.Test.UWPChakraHost.Executor
                     reply = msg;
                     messageReceived.Set();
                 };
-                var result = await executor.RunScriptAsync(new Uri(fileName));
+                var result = await executor.RunScriptAsync(new Uri(@"ms-appx:///Assets/scripts/test_script_load_async.js"));
                 Assert.IsTrue(result.IsSuccess, $"{nameof(UWPChakraHostExecutor.RunScriptAsync)} failed");
                 Assert.IsTrue(messageReceived.WaitOne(timeout), $"Timeout waiting for the JS script to finish after {timeout}");
-                Assert.AreEqual(expectedMessage, reply);
+                Assert.AreEqual("Hello from the other side", reply);
             }
         }
 
@@ -48,7 +47,7 @@ namespace Bijou.Test.UWPChakraHost.Executor
                 var messageReceived = new AutoResetEvent(false);
                 var timeout = TimeSpan.FromSeconds(5);
                 executor.MessageReady += (sender, msg) =>
-                { 
+                {
                     reply = msg;
                     messageReceived.Set();
                 };
@@ -65,7 +64,7 @@ namespace Bijou.Test.UWPChakraHost.Executor
         public async Task TestSeparateExecutorsAreIsolatedAsync()
         {
             const string script = @"
-                let a = 0;
+                a = 0;
 
                 function ping() {
                     a++;
@@ -84,7 +83,7 @@ namespace Bijou.Test.UWPChakraHost.Executor
                 var replyTwo = string.Empty;
                 var messageReceivedOne = new AutoResetEvent(false);
                 var messageReceivedTwo = new AutoResetEvent(false);
-                var timeout = TimeSpan.FromSeconds(5);
+                var timeout = TimeSpan.FromSeconds(1);
                 executorOne.MessageReady += (sender, msg) =>
                 {
                     replyOne = msg;
@@ -101,8 +100,8 @@ namespace Bijou.Test.UWPChakraHost.Executor
                     executorTwo.CallFunctionAsync("ping"));
                 Assert.IsTrue(messageReceivedOne.WaitOne(timeout), $"Timeout waiting for the JS script 1 to finish after {timeout}");
                 Assert.IsTrue(messageReceivedTwo.WaitOne(timeout), $"Timeout waiting for the JS script 2 to finish after {timeout}");
-                Assert.AreEqual("1", replyOne);
-                Assert.AreEqual("1", replyTwo);
+                Assert.AreEqual(replyOne, "1");
+                Assert.AreEqual(replyTwo, "1");
             }
         }
     }

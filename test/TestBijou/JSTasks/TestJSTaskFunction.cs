@@ -1,6 +1,7 @@
-﻿using Bijou.Chakra.Hosting;
+﻿using Bijou.Chakra;
 using Bijou.JSTasks;
 using Bijou.Test.UWPChakraHost.Utils;
+using FluentResults;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 namespace Bijou.Test.UWPChakraHost.JSTasks
@@ -13,20 +14,20 @@ namespace Bijou.Test.UWPChakraHost.JSTasks
             function funcIdentity(x) { return x; }
             function funcThreeParam(x, y, z) { return (x * y) / z; }
             function concat(a, b) { return a + b;}
-            function isOdd(n) { return n % 2 == 0;}
+            function isOdd(n) { return n % 2 === 0;}
             function square(x) { return x * x;}
             function fib(n) { return n == 0 ? 0 : n + fib(n-1); }
         ";
 
-        private void InjectFunctionsInContext()
+        private Result<JavaScriptValue> InjectFunctionsInContext()
         {
             var jsTask = new JSTaskScript(string.Empty, Functions, JavaScriptSourceContext.None);
-            jsTask.Execute();
+            return jsTask.Execute();
         }
 
-        private JavaScriptValue GetGlobalJsValueByName(string name)
+        private Result<JavaScriptValue> GetGlobalJsValueByName(string name)
         {
-            return JavaScriptValue.GlobalObject.GetProperty(JavaScriptPropertyId.FromString(name));
+            return JavaScriptValue.GlobalObject.Value.GetProperty(name);
         }
 
         [DataTestMethod]
@@ -38,17 +39,17 @@ namespace Bijou.Test.UWPChakraHost.JSTasks
         {
             using (new UnitTestJsRuntime())
             {
-                InjectFunctionsInContext();
                 var args = new JavaScriptValue[argCount + 1];
-                args[0] = JavaScriptValue.GlobalObject;
-                if (argCount >= 1) args[1] = JavaScriptValue.FromString(arg1);
-                if (argCount >= 2) args[2] = JavaScriptValue.FromString(arg2);
-                if (argCount >= 3) args[3] = JavaScriptValue.FromString(arg3);
-                var task = new JSTaskFunction(GetGlobalJsValueByName(funcName), args, delay, repeat);
+                args[0] = JavaScriptValue.GlobalObject.Value;
+                InjectFunctionsInContext();
+                if (argCount >= 1) args[1] = JavaScriptValue.FromString(arg1).Value;
+                if (argCount >= 2) args[2] = JavaScriptValue.FromString(arg2).Value;
+                if (argCount >= 3) args[3] = JavaScriptValue.FromString(arg3).Value;
+                var task = new JSTaskFunction(GetGlobalJsValueByName(funcName).Value, args, delay, repeat);
 
                 var result = task.Execute();
 
-                Assert.AreEqual(expectedResult, result.ConvertToString().ToString()); 
+                Assert.AreEqual(expectedResult, result.Value.ConvertToString().Value.AsString()); 
                 Assert.AreEqual(delay, task.ScheduledDelay);
                 Assert.AreEqual(repeat, task.ShouldReschedule);
             }
@@ -59,32 +60,33 @@ namespace Bijou.Test.UWPChakraHost.JSTasks
         {
             using (new UnitTestJsRuntime())
             {
-                InjectFunctionsInContext();
+                var result = InjectFunctionsInContext();
+                Assert.IsTrue(result.IsSuccess);
 
                 var jsTask = new JSTaskFunction("concat", "Hello, ", "This is Patrick.");
-                var result = jsTask.Execute();
-                Assert.AreEqual(JavaScriptValueType.String, result.ValueType);
-                Assert.AreEqual("Hello, This is Patrick.", result.ToString());
+                result = jsTask.Execute();
+                Assert.AreEqual(JavaScriptValueType.String, result.Value.ValueType.Value);
+                Assert.AreEqual("Hello, This is Patrick.", result.Value.AsString());
 
                 jsTask = new JSTaskFunction("isOdd", 5);
                 result = jsTask.Execute();
-                Assert.AreEqual(JavaScriptValueType.Boolean, result.ValueType);
-                Assert.AreEqual(false, result.ToBoolean());
+                Assert.AreEqual(JavaScriptValueType.Boolean, result.Value.ValueType.Value);
+                Assert.AreEqual(false, result.Value.ToBoolean().Value);
 
                 jsTask = new JSTaskFunction("isOdd", 24);
                 result = jsTask.Execute();
-                Assert.AreEqual(JavaScriptValueType.Boolean, result.ValueType);
-                Assert.AreEqual(true, result.ToBoolean());
+                Assert.AreEqual(JavaScriptValueType.Boolean, result.Value.ValueType.Value);
+                Assert.AreEqual(true, result.Value.ToBoolean().Value);
 
                 jsTask = new JSTaskFunction("square", 2.5);
                 result = jsTask.Execute();
-                Assert.AreEqual(JavaScriptValueType.Number, result.ValueType);
-                Assert.AreEqual(6.25, result.ToDouble());
+                Assert.AreEqual(JavaScriptValueType.Number, result.Value.ValueType.Value);
+                Assert.AreEqual(6.25, result.Value.ToDouble().Value);
 
                 jsTask = new JSTaskFunction("fib", 10);
                 result = jsTask.Execute();
-                Assert.AreEqual(JavaScriptValueType.Number, result.ValueType);
-                Assert.AreEqual(55, result.ToInt32());
+                Assert.AreEqual(JavaScriptValueType.Number, result.Value.ValueType.Value);
+                Assert.AreEqual(55, result.Value.ToInt32().Value);
             }
         }
 
@@ -96,12 +98,12 @@ namespace Bijou.Test.UWPChakraHost.JSTasks
                 var task = new JSTaskFunction(JavaScriptValue.Invalid, 
                     new []
                     {
-                        JavaScriptValue.GlobalObject
+                        JavaScriptValue.GlobalObject.Value
                     });
 
                 var result = task.Execute();
 
-                Assert.AreEqual(JavaScriptValue.Invalid, result);
+                Assert.IsTrue(result.IsFailed, "Result should be failed");
             }
         }
 
@@ -111,17 +113,17 @@ namespace Bijou.Test.UWPChakraHost.JSTasks
             using (new UnitTestJsRuntime())
             {
                 InjectFunctionsInContext();
-                var task = new JSTaskFunction(GetGlobalJsValueByName("funcNoParam"),
+                var func = GetGlobalJsValueByName("funcNoParam");
+                var task = new JSTaskFunction(func.Value,
                     new[]
                     {
-                        JavaScriptValue.GlobalObject,
+                        JavaScriptValue.GlobalObject.Value,
                         JavaScriptValue.Invalid
                     });
 
-                Assert.ThrowsException<JavaScriptUsageException>(() =>
-                {
-                    task.Execute();
-                });
+                var result = task.Execute();
+
+                Assert.IsTrue(result.IsFailed);
             }
         }
 
@@ -131,15 +133,16 @@ namespace Bijou.Test.UWPChakraHost.JSTasks
             using (new UnitTestJsRuntime())
             {
                 InjectFunctionsInContext();
-                var task = new JSTaskFunction(GetGlobalJsValueByName("funcIdentity"),
+                var task = new JSTaskFunction(GetGlobalJsValueByName("funcIdentity").Value,
                     new[]
                     {
-                        JavaScriptValue.GlobalObject
+                        JavaScriptValue.GlobalObject.Value
                     });
 
                 var result = task.Execute();
 
-                Assert.AreEqual(JavaScriptValueType.Undefined, result.ValueType);
+                Assert.IsTrue(result.IsSuccess, "Result should be success");
+                Assert.AreEqual(result.Value.ValueType.Value, JavaScriptValueType.Undefined, "Result value should be invalid");
             }
         }
 
@@ -149,17 +152,17 @@ namespace Bijou.Test.UWPChakraHost.JSTasks
             using (new UnitTestJsRuntime())
             {
                 InjectFunctionsInContext();
-                var task = new JSTaskFunction(GetGlobalJsValueByName("funcIdentity"),
+                var task = new JSTaskFunction(GetGlobalJsValueByName("funcIdentity").Value,
                     new[]
                     {
-                        JavaScriptValue.GlobalObject, JavaScriptValue.FromInt32(10),
-                        JavaScriptValue.FromString("unexpected")
+                        JavaScriptValue.GlobalObject.Value, JavaScriptValue.FromInt32(10).Value,
+                        JavaScriptValue.FromString("unexpected").Value
                     });
 
                 var result = task.Execute();
 
                 // Extra parameters should be ignored, funcIdentity(10) returns 10 so that's what we expect.
-                Assert.AreEqual(10, result.ToInt32());
+                Assert.AreEqual(10, result.Value.ToInt32().Value);
             }
         }
 

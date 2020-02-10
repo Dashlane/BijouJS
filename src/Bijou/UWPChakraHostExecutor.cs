@@ -47,7 +47,6 @@ namespace Bijou
         #region Events
 
         public event EventHandler<string> MessageReady;
-        public event EventHandler<string> JsExecutionFailed;
 
         #endregion
 
