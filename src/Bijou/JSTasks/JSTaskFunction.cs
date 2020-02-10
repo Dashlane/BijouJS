@@ -14,7 +14,7 @@ namespace Bijou.JSTasks
         private readonly string _functionNativeName;
         private readonly object[] _nativeArguments;
 
-        public JavaScriptValue Function { get; private set; }
+        public JavaScriptValue Function { get; private set; } = JavaScriptValue.Invalid;
 
         public JavaScriptValue[] Arguments { get; private set; }
 
@@ -106,7 +106,7 @@ namespace Bijou.JSTasks
                     return Results.Fail(argument.Errors.First());
                 }
 
-                args.Add(argument.ToResult<JavaScriptValue>().Value);
+                args.Add(argument.Value);
             }
 
             return ValidateAndStoreValues(func, args.ToArray());
@@ -150,15 +150,9 @@ namespace Bijou.JSTasks
                     return Results.Fail(result.Errors.First());
                 }
             }
-            else
-            { 
-                NativeMethods.JsCallFunction(
-                    Function, 
-                    Arguments, 
-                    (ushort)Arguments.Length);
-            }
 
-            return Function.CallFunction(Arguments); ;
+            var ret = Function.CallFunction(Arguments);
+            return ret;
         }
 
         protected override void ReleaseJsResources()

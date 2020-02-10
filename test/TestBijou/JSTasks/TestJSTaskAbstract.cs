@@ -4,21 +4,21 @@ using Moq;
 using Bijou.JSTasks;
 using Bijou.Test.UWPChakraHost.Utils;
 using FluentResults;
-using Bijou.Types;
+using Bijou.Chakra;
 
 namespace Bijou.Test.UWPChakraHost.JSTasks
 {
     [TestClass]
-    internal class TestJSTaskAbstract
+    public class TestJSTaskAbstract
     {
         private class JsTaskExecute : AbstractJSTask
         {
             public JsTaskExecute(int delay = 0, bool shouldReschedule = false) :
                 base(delay, shouldReschedule) { }
 
-            protected override Result<JavaScriptObject> ExecuteImpl()
+            protected override Result<JavaScriptValue> ExecuteImpl()
             {
-                return Results.Ok(JavaScriptBoolean.True).ToResult<JavaScriptObject>((value) => value);
+                return JavaScriptValue.True;
             }
         }
 
@@ -72,11 +72,11 @@ namespace Bijou.Test.UWPChakraHost.JSTasks
             using (new UnitTestJsRuntime())
             {
                 var testTask = new JsTaskExecute();
-                Assert.AreEqual(JavaScriptValue.True, testTask.Execute());
+                Assert.AreEqual(JavaScriptValue.True.Value, testTask.Execute().Value);
 
                 testTask = new JsTaskExecute(30000);
                 testTask.Cancel();
-                Assert.AreNotEqual(JavaScriptValue.True, testTask.Execute());
+                Assert.AreNotEqual(JavaScriptValue.True.Value, testTask.Execute().Value);
             }
         }
     }

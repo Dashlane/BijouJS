@@ -4,7 +4,7 @@ using FluentResults;
 
 namespace Bijou.JSTasks
 {
-    public abstract class AbstractJSTask
+    internal abstract class AbstractJSTask
     {
         public DateTime ScheduledTime { get; private set; }
 

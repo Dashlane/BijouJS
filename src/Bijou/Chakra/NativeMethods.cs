@@ -188,9 +188,13 @@ namespace Bijou.Chakra
         public static Result<object> JsValueToVariant(JavaScriptValue obj) =>
             NativeMethodsImpl.JsValueToVariant(obj, out var variant).ToResult(variant);
 
-        public static Result<JavaScriptValue> JsGetGlobalObject() =>
-            NativeMethodsImpl.JsGetGlobalObject(out var globalObject)
-                             .ToResult(globalObject);
+        public static Result<JavaScriptValue> JsGetGlobalObject()
+        {
+            var errorCode = NativeMethodsImpl.JsGetGlobalObject(out var globalObject);
+            return errorCode.ToResult(globalObject);
+        }
+            
+                             
 
         public static Result<JavaScriptValue> JsCreateObject() =>
             NativeMethodsImpl.JsCreateObject(out var obj)
@@ -299,7 +303,7 @@ namespace Bijou.Chakra
             NativeMethodsImpl.JsCreateArray(length, out var result)
                              .ToResult(result);
 
-        public static Result JsCallFunction(
+        public static Result<JavaScriptValue> JsCallFunction(
             JavaScriptValue function,
             JavaScriptValue[] arguments,
             ushort argumentCount) =>
