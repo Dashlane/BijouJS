@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
 using Bijou;
@@ -35,6 +36,50 @@ namespace Bijou.Test.UWPChakraHost
                 Assert.IsTrue(result.IsSuccess, $"{nameof(UWPChakraHostExecutor.RunScriptAsync)} failed");
                 Assert.IsTrue(messageReceived.WaitOne(timeout), $"Timeout waiting for the JS script to finish after {timeout}");
                 Assert.AreEqual("Hello from the other side", reply);
+            }
+        }
+
+        [TestMethod]
+        public async Task TestLoadAndRunScriptWithMessageAsyncAndSetTimeout()
+        {
+            var reply = string.Empty;
+            var messageReceived = new AutoResetEvent(false);
+            var timeout = TimeSpan.FromSeconds(1);
+            using (var executor = new UWPChakraHostExecutor())
+            {
+
+                executor.MessageReady += (sender, msg) =>
+                {
+                    reply = msg;
+                    messageReceived.Set();
+                };
+                var result = await executor.RunScriptAsync(new Uri(@"ms-appx:///Assets/scripts/test_script_set_timeout.js"));
+                Assert.IsTrue(result.IsSuccess, $"{nameof(UWPChakraHostExecutor.RunScriptAsync)} failed");
+                Assert.IsTrue(messageReceived.WaitOne(timeout), $"Timeout waiting for the JS script to finish after {timeout}");
+                Assert.AreEqual("1", reply);
+            }
+        }
+
+        [TestMethod]
+        public async Task TestLoadAndRunScriptWithMessageAsyncAndSetAndClearInterval()
+        {
+            var replies = new List<string>();
+            var messageReceived = new AutoResetEvent(false);
+            var timeout = TimeSpan.FromSeconds(1);
+            using (var executor = new UWPChakraHostExecutor())
+            {
+
+                executor.MessageReady += (sender, msg) =>
+                {
+                    replies.Add(msg);
+                    messageReceived.Set();
+                };
+                var result = await executor.RunScriptAsync(new Uri(@"ms-appx:///Assets/scripts/test_script_set_interval.js"));
+                Assert.IsTrue(result.IsSuccess, $"{nameof(UWPChakraHostExecutor.RunScriptAsync)} failed");
+                Assert.IsTrue(messageReceived.WaitOne(timeout), $"Timeout waiting for the JS script to finish after {timeout}");
+                Assert.AreEqual(1, replies.Count); 
+                Assert.AreEqual("1", replies[0]);
+                Assert.IsFalse(messageReceived.WaitOne(timeout), $"Expcted timeout, received call back after {timeout}");
             }
         }
 

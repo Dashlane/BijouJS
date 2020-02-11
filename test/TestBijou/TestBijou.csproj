@@ -143,6 +143,8 @@
     </AppxManifest>
   </ItemGroup>
   <ItemGroup>
+    <Content Include="Assets\scripts\test_script_set_interval.js" />
+    <Content Include="Assets\scripts\test_script_set_timeout.js" />
     <Content Include="Assets\scripts\test_script_load.js" />
     <Content Include="Assets\scripts\test_script_load_async.js" />
     <Content Include="Assets\scripts\test_script_load_call_function.js" />
