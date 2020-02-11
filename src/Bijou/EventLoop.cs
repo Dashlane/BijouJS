@@ -13,7 +13,7 @@ namespace Bijou
     /// <summary>
     /// This class represents the core of the engine: the event loop that executes promises and tasks.
     /// </summary>
-    internal sealed class EventLoop : IDisposable
+    internal class EventLoop : IDisposable
     {
         /// <summary>
         /// State of the loop.
@@ -183,7 +183,7 @@ namespace Bijou
         /// <summary>
         /// Cancels a JS task and prevents its execution in the event loop.
         /// </summary>
-        public void CancelTask(int taskId)
+        public virtual void CancelTask(int taskId)
         {
             if (!JavaScriptContext.IsCurrentValid)
             {
@@ -325,7 +325,7 @@ namespace Bijou
         /// </summary>
         /// <param name="task"></param>
         /// <returns></returns>
-        internal int AddCancellableTask(AbstractJSTask task)
+        internal virtual int AddCancellableTask(AbstractJSTask task)
         {
             if (!JavaScriptContext.IsCurrentValid)
             {
@@ -342,7 +342,7 @@ namespace Bijou
         /// <summary>
         /// Clears JS task from the task dictionary.
         /// </summary>
-        private void ClearCancellableTask(AbstractJSTask task)
+        internal virtual void ClearCancellableTask(AbstractJSTask task)
         {
             var taskId = task.Id.GetHashCode();
             if (!JavaScriptContext.IsCurrentValid)
@@ -384,7 +384,6 @@ namespace Bijou
 
             throw new ObjectDisposedException(nameof(EventLoop));
         }
-
         #endregion
     }
 }
