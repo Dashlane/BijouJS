@@ -123,6 +123,7 @@
     <Compile Include="JSTasks\TestJSTaskFunction.cs" />
     <Compile Include="JSTasks\TestJSTaskScript.cs" />
     <Compile Include="NativeFunctions\TestJSAsyncFunctions.cs" />
+    <Compile Include="NativeFunctions\TestJSSendToHost.cs" />
     <Compile Include="TestUWPChakraHostExecutor.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="UnitTestApp.xaml.cs">

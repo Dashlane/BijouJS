@@ -3,10 +3,9 @@ using Moq;
 using System;
 using System.Collections.Generic;
 using System.Runtime.InteropServices;
-using Bijou.Chakra.Hosting;
-using Bijou.Executor;
 using Bijou.NativeFunctions;
 using Bijou.Test.UWPChakraHost.Utils;
+using Bijou.Chakra;
 
 namespace Bijou.Test.UWPChakraHost.NativeFunctions
 {
@@ -31,7 +30,7 @@ namespace Bijou.Test.UWPChakraHost.NativeFunctions
                 var receivedMessages = new List<string>();
                 var mockExecutor = CreateMockExecutor(receivedMessages).Object;
                 var gcHandleOnMock = GCHandle.Alloc(mockExecutor);
-                var args = new []{ JavaScriptValue.Invalid, JavaScriptValue.FromString(message) };
+                var args = new []{ JavaScriptValue.Invalid, JavaScriptValue.FromString(message).Value };
 
                 var result = JSSendToHost.SendToHostJavaScriptNativeFunction(JavaScriptValue.Invalid, false, args, (ushort)args.Length, GCHandle.ToIntPtr(gcHandleOnMock));
 
@@ -47,7 +46,7 @@ namespace Bijou.Test.UWPChakraHost.NativeFunctions
             using (new UnitTestJsRuntime())
             {
                 var badCallbackData = (IntPtr) 0;
-                var args = new []{ JavaScriptValue.Invalid, JavaScriptValue.FromString("TestMessage") };
+                var args = new []{ JavaScriptValue.Invalid, JavaScriptValue.FromString("TestMessage").Value };
 
                 var result = JSSendToHost.SendToHostJavaScriptNativeFunction(JavaScriptValue.Invalid, false, args, (ushort)args.Length, badCallbackData);
 
@@ -70,7 +69,7 @@ namespace Bijou.Test.UWPChakraHost.NativeFunctions
                 var args = new JavaScriptValue[argCount];
                 for (var i = 0; i < argCount; i++)
                 {
-                    args[i] = (i == 0 ? JavaScriptValue.Invalid : JavaScriptValue.FromString("TestMessage"));
+                    args[i] = (i == 0 ? JavaScriptValue.Invalid : JavaScriptValue.FromString("TestMessage").Value);
                 }
 
                 var result = JSSendToHost.SendToHostJavaScriptNativeFunction(JavaScriptValue.Invalid, false, args, (ushort)args.Length, GCHandle.ToIntPtr(gcHandleOnMock));
@@ -105,7 +104,7 @@ namespace Bijou.Test.UWPChakraHost.NativeFunctions
                 var receivedMessages = new List<string>();
                 var mockExecutor = CreateMockExecutor(receivedMessages).Object;
                 var gcHandleOnMock = GCHandle.Alloc(mockExecutor);
-                var args = new []{ JavaScriptValue.Invalid, JavaScriptValue.FromInt32(42) };
+                var args = new []{ JavaScriptValue.Invalid, JavaScriptValue.FromInt32(42).Value };
 
                 var result = JSSendToHost.SendToHostJavaScriptNativeFunction(JavaScriptValue.Invalid, false, args, (ushort)args.Length, GCHandle.ToIntPtr(gcHandleOnMock));
 
