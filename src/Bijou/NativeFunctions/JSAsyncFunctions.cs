@@ -27,9 +27,9 @@ namespace Bijou.NativeFunctions
             {
                 if (argumentCount >= 2 && arguments.Length >= 2)
                 {
-                    var result = AddScheduledJavaScriptNativeFunction(pushHandler, arguments, callbackData, 0).Value;
+                    var result = AddScheduledJavaScriptNativeFunction(pushHandler, arguments, callbackData, 0);
 
-                    return result;
+                    return result.IsSuccess ? result.Value : JavaScriptValue.Invalid;
                 }
 
                 Console.Error.WriteLine(
@@ -56,16 +56,16 @@ namespace Bijou.NativeFunctions
         {
             return (callee, isConstructCall, arguments, argumentCount, callbackData) =>
             {
-                var ret = JavaScriptValue.Invalid;
                 if (argumentCount < 3 || arguments.Length < 3)
                 {
                     Console.Error.WriteLine(
                         "[SetIntervalJavaScriptNativeFunction] Invalid argumentCount, expected >= 3, received " +
                         argumentCount);
-                    return ret;
+                    return JavaScriptValue.Invalid;
                 }
 
-                return AddScheduledJavaScriptNativeFunction(pushHandler, arguments, callbackData, 10, true).Value;
+                var result = AddScheduledJavaScriptNativeFunction(pushHandler, arguments, callbackData, 10, true);
+                return result.IsSuccess ? result.Value : JavaScriptValue.Invalid;
             };
         }
 

@@ -122,6 +122,7 @@
     <Compile Include="JSTasks\TestJSTaskAbstract.cs" />
     <Compile Include="JSTasks\TestJSTaskFunction.cs" />
     <Compile Include="JSTasks\TestJSTaskScript.cs" />
+    <Compile Include="NativeFunctions\TestJSAsyncFunctions.cs" />
     <Compile Include="TestUWPChakraHostExecutor.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="UnitTestApp.xaml.cs">
@@ -178,9 +179,7 @@
       <Name>Bijou</Name>
     </ProjectReference>
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="NativeFunctions\" />
-  </ItemGroup>
+  <ItemGroup />
   <PropertyGroup Condition=" '$(VisualStudioVersion)' == '' or '$(VisualStudioVersion)' &lt; '14.0' ">
     <VisualStudioVersion>14.0</VisualStudioVersion>
   </PropertyGroup>

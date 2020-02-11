@@ -128,8 +128,8 @@ namespace Bijou
             }
 
             // Inject setTimeout and setInterval
-            DefineHostCallback(globalObject.Value, "setTimeout", JSAsyncFunctions.SetTimeoutJavaScriptNativeFunction(_eventLoop.PushTask), InteropPointer);
-            DefineHostCallback(globalObject.Value, "setInterval", JSAsyncFunctions.SetIntervalJavaScriptNativeFunction(_eventLoop.PushTask), InteropPointer);
+            DefineHostCallback(globalObject.Value, "setTimeout", JSAsyncFunctions.SetTimeoutJavaScriptNativeFunction(_eventLoop.AddCancellableTask), InteropPointer);
+            DefineHostCallback(globalObject.Value, "setInterval", JSAsyncFunctions.SetIntervalJavaScriptNativeFunction(_eventLoop.AddCancellableTask), InteropPointer);
             DefineHostCallback(globalObject.Value, "clearTimeout", JSAsyncFunctions.ClearScheduledJavaScriptNativeFunction(_eventLoop.CancelTask), InteropPointer);
             DefineHostCallback(globalObject.Value, "clearInterval", JSAsyncFunctions.ClearScheduledJavaScriptNativeFunction(_eventLoop.CancelTask), InteropPointer);
             DefineHostCallback(globalObject.Value, "sendToHost", JSSendToHost.SendToHostJavaScriptNativeFunction, InteropPointer);
