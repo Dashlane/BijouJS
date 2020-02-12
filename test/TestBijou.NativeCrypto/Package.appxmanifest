@@ -5,15 +5,15 @@
   xmlns:uap="http://schemas.microsoft.com/appx/manifest/uap/windows10"
   IgnorableNamespaces="uap mp">
 
-  <Identity Name="394be12f-47cd-440c-85fe-dba9341a8c32"
-            Publisher="CN=droger"
+  <Identity Name="92309a7e-0c53-436f-8fbb-9ba22665aa06"
+            Publisher="CN=pducolin"
             Version="1.0.0.0" />
 
-  <mp:PhoneIdentity PhoneProductId="394be12f-47cd-440c-85fe-dba9341a8c32" PhonePublisherId="00000000-0000-0000-0000-000000000000"/>
+  <mp:PhoneIdentity PhoneProductId="92309a7e-0c53-436f-8fbb-9ba22665aa06" PhonePublisherId="00000000-0000-0000-0000-000000000000"/>
 
   <Properties>
-    <DisplayName>UWPChakraHostTest</DisplayName>
-    <PublisherDisplayName>droger</PublisherDisplayName>
+    <DisplayName>TestBijou.NativeCrypto</DisplayName>
+    <PublisherDisplayName>pducolin</PublisherDisplayName>
     <Logo>Assets\StoreLogo.png</Logo>
   </Properties>
 
@@ -27,12 +27,12 @@
   <Applications>
     <Application Id="vstest.executionengine.universal.App"
         Executable="$targetnametoken$.exe"
-        EntryPoint="UWPChakraHostTest.App">
+        EntryPoint="TestBijou.NativeCrypto.App">
       <uap:VisualElements
-        DisplayName="UWPChakraHostTest"
+        DisplayName="TestBijou.NativeCrypto"
         Square150x150Logo="Assets\Square150x150Logo.png"
         Square44x44Logo="Assets\Square44x44Logo.png"
-        Description="UWPChakraHostTest"
+        Description="TestBijou.NativeCrypto"
         BackgroundColor="transparent">
         <uap:DefaultTile Wide310x150Logo="Assets\Wide310x150Logo.png"/>
         <uap:SplashScreen Image="Assets\SplashScreen.png" />
@@ -41,5 +41,6 @@
   </Applications>
   <Capabilities>
     <Capability Name="internetClientServer" />
+    <Capability Name="privateNetworkClientServer" />
   </Capabilities>
 </Package>

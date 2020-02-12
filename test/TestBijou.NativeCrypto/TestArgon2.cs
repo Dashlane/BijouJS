@@ -1,9 +1,10 @@
 ﻿using System;
 using System.Linq;
+using Bijou.NativeCrypto;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
-using TestUWPChakraNative.Utils;
+using TestBijou.NativeCrypto.Utils;
 
-namespace TestUWPChakraNative.Cpp
+namespace TestBijou.NativeCrypto
 {
     class Argon2Params
     {
@@ -21,7 +22,7 @@ namespace TestUWPChakraNative.Cpp
             var par = ParsePayload(test.payload);
             if (par == null) return;
 
-            var hash = Bijou.NativeCrypto.UWPArgon2Helper.argon2d_hash(par.tCost, par.mCost, par.parallelism,
+            var hash = UWPArgon2Helper.argon2d_hash(par.tCost, par.mCost, par.parallelism,
                 par.hashlength, Convert.FromBase64String(test.key), Convert.FromBase64String(test.salt));
             Assert.AreEqual(par.hashlength, (uint)hash.Length, "Bad hash length for test " + test.description);
             CollectionAssert.AreEqual(Convert.FromBase64String(test.derivedKey), hash, "Wrong hash for test " + test.description);

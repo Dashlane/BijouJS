@@ -2,12 +2,12 @@ using System.Reflection;
 using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
 
-[assembly: AssemblyTitle("Bijou.TestUWPChakraHost")]
-[assembly: AssemblyDescription("Bijou.TestUWPChakraHost")]
+[assembly: AssemblyTitle("TestBijou.NativeCrypto")]
+[assembly: AssemblyDescription("")]
 [assembly: AssemblyConfiguration("")]
-[assembly: AssemblyCompany("Dashlane")]
-[assembly: AssemblyProduct("UWPChakraHostTest")]
-[assembly: AssemblyCopyright("Copyright ©  2019")]
+[assembly: AssemblyCompany("")]
+[assembly: AssemblyProduct("TestBijou.NativeCrypto")]
+[assembly: AssemblyCopyright("Copyright ©  2020")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
 [assembly: AssemblyMetadata("TargetPlatform","UAP")]

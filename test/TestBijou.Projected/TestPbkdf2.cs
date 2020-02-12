@@ -2,15 +2,13 @@
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
-using TestUWPChakraNative.Utils;
+using TestBijou.Projected.Utils;
 
-namespace TestUWPChakraNative.Projected
+namespace TestBijou.Projected
 {
     [TestClass]
-    public class Test_Pbkdf2
+    public class TestPbkdf2
     {
         class Pbkdf2Params
         {
@@ -33,7 +31,7 @@ namespace TestUWPChakraNative.Projected
             var par = ParsePayload(test.payload);
             if (par != null) {
                 Debug.WriteLine($"Executing test with {par.Iterations} iterations, {par.HashMethod} hash method");
-                var hash = Frameworks.JsExecutor.UWP.Chakra.Native.Projected.Pbkdf2.hashPbkdf2(
+                var hash = Bijou.Projected.Pbkdf2.hashPbkdf2(
                     Convert.FromBase64String(test.key),
                     Convert.FromBase64String(test.salt),
                     par.Iterations,

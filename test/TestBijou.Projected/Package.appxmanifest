@@ -5,15 +5,15 @@
   xmlns:uap="http://schemas.microsoft.com/appx/manifest/uap/windows10"
   IgnorableNamespaces="uap mp">
 
-  <Identity Name="2bde5ac9-b2aa-4b6a-a3a4-5464fc0d0df4"
-            Publisher="CN=droger"
+  <Identity Name="db633f8f-ba2b-43a0-a98f-bc0e78a924e0"
+            Publisher="CN=pducolin"
             Version="1.0.0.0" />
 
-  <mp:PhoneIdentity PhoneProductId="2bde5ac9-b2aa-4b6a-a3a4-5464fc0d0df4" PhonePublisherId="00000000-0000-0000-0000-000000000000"/>
+  <mp:PhoneIdentity PhoneProductId="db633f8f-ba2b-43a0-a98f-bc0e78a924e0" PhonePublisherId="00000000-0000-0000-0000-000000000000"/>
 
   <Properties>
-    <DisplayName>TestUWPChakraNative</DisplayName>
-    <PublisherDisplayName>droger</PublisherDisplayName>
+    <DisplayName>TestBijou.Projected</DisplayName>
+    <PublisherDisplayName>pducolin</PublisherDisplayName>
     <Logo>Assets\StoreLogo.png</Logo>
   </Properties>
 
@@ -27,12 +27,12 @@
   <Applications>
     <Application Id="vstest.executionengine.universal.App"
         Executable="$targetnametoken$.exe"
-        EntryPoint="TestUWPChakraNative.App">
+        EntryPoint="TestBijou.Projected.App">
       <uap:VisualElements
-        DisplayName="TestUWPChakraNative"
+        DisplayName="TestBijou.Projected"
         Square150x150Logo="Assets\Square150x150Logo.png"
         Square44x44Logo="Assets\Square44x44Logo.png"
-        Description="TestUWPChakraNative"
+        Description="TestBijou.Projected"
         BackgroundColor="transparent">
         <uap:DefaultTile Wide310x150Logo="Assets\Wide310x150Logo.png"/>
         <uap:SplashScreen Image="Assets\SplashScreen.png" />
