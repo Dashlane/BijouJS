@@ -302,7 +302,6 @@ namespace Bijou
         /// <summary>
         /// Execute a function by adding it to the event loop.
         /// </summary>
-        /// <typeparam name="TValue"></typeparam>
         /// <param name="function"></param>
         /// <param name="arguments"></param>
         /// <returns></returns>
