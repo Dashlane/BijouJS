@@ -1,12 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 using Windows.Storage;
 using Newtonsoft.Json;
 
-namespace TestUWPChakraNative.Utils
+namespace TestBijou.Projected.Utils
 {
     enum enCryptoAlgo
     {
