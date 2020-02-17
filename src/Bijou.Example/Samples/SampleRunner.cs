@@ -12,7 +12,7 @@ namespace Bijou.Example.Samples
 
         public static async Task SimpleFunction()
         {
-            var engine = new UWPChakraHostExecutor();
+            var engine = new BijouExecutor();
             var result = await engine.RunScriptAsync(@"
                 function square() { return 10 * 10; }
                 square();

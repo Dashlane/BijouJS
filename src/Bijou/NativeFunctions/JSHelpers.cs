@@ -5,12 +5,12 @@ namespace Bijou.NativeFunctions
 {
     internal static class JSHelpers
     {
-        internal static UWPChakraHostExecutor ExecutorFromCallbackData(IntPtr callbackData)
+        internal static BijouExecutor ExecutorFromCallbackData(IntPtr callbackData)
         {
             try 
             {
                 var executorHandle = GCHandle.FromIntPtr(callbackData);
-                return (executorHandle.Target as UWPChakraHostExecutor);
+                return (executorHandle.Target as BijouExecutor);
             }
             catch (InvalidOperationException)
             {

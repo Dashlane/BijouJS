@@ -20,14 +20,14 @@ The name is inspired by our favourite [pizzeria in Paris](https://bijou-paris.fr
 * Compile and copy the generated binaries in your project
 * In your project, create a new JS executor
 ```cs 
-var engine = new UWPChakraHostExecutor();
+var engine = new BijouExecutor();
 ```
 
 ### Load and run a script
 Bijou.js can load and execute JS scripts using `RunScriptAsync` method
 
 ```cs 
-var engine = new UWPChakraHostExecutor();
+var engine = new BijouExecutor();
 var result = await engine.RunScriptAsync(@"
                 function square() { return 10 * 10; }
                 square();
@@ -39,7 +39,7 @@ result = await engine.RunScriptAsync(new Uri("path/to/a/script.js"));
 Using `CallFunctionAsync` method it is possible to call functions in the global js object
 
 ```cs 
-var engine = new UWPChakraHostExecutor();
+var engine = new BijouExecutor();
 // First, load a script declaring a global function
 var result = await engine.RunScriptAsync(@"
                 function square() { 
@@ -51,7 +51,7 @@ await engine.CallFunctionAsync("square"));
 ```
 Let's have more fun, let's pass some parameters to a JS function
 ```cs 
-var engine = new UWPChakraHostExecutor();
+var engine = new BijouExecutor();
 // First, load a script declaring a global function
 var result = await engine.RunScriptAsync(@"
                 function multiply(a, b) {
@@ -63,7 +63,7 @@ await engine.CallFunctionAsync("multiply", 3, 2));
 ```
 This let you send data from C# to JS
 ```cs 
-var engine = new UWPChakraHostExecutor();
+var engine = new BijouExecutor();
 // First, load a script declaring a global function
 var result = await engine.RunScriptAsync(@"
                 function sendMessage(message) {
@@ -75,10 +75,10 @@ var result = await engine.RunScriptAsync(@"
 await engine.CallFunctionAsync("sendMessage", "Hello from C#"));
 ```
 ### Sending messages from JS to C#
-Bijou.js implements `sendToHost` API in JS, that lets sending messages from JS to C#. Calls to `sendToHost` trigger a `OnMessageReceived` event in C#. By listening to `OnMessageReceived` on the `UWPChakraHostExecutor` instance, C# code can receives calls from JS.
+Bijou.js implements `sendToHost` API in JS, that lets sending messages from JS to C#. Calls to `sendToHost` trigger a `OnMessageReceived` event in C#. By listening to `OnMessageReceived` on the `BijouExecutor` instance, C# code can receives calls from JS.
 Let's see this in an example  
 ```cs 
-var engine = new UWPChakraHostExecutor();
+var engine = new BijouExecutor();
 var messageReceived = new AutoResetEvent(false);
 var timeout = TimeSpan.FromSeconds(1);
 var reply = String.Empty;

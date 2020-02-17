@@ -19,7 +19,7 @@ namespace Bijou
     /// <summary>
     /// Async JavaScript engine based on Chakra.
     /// </summary>
-    public class UWPChakraHostExecutor : IDisposable
+    public class BijouExecutor : IDisposable
     {
         private bool _isDisposed;
         private JavaScriptRuntime _runtime;
@@ -62,7 +62,7 @@ namespace Bijou
         /// Creates an instance of UWPChakraHostExecutor.
         /// Initializes runtime and context, injects native functions and starts the JS event loop.
         /// </summary>
-        public UWPChakraHostExecutor()
+        public BijouExecutor()
         {
             try
             {
@@ -71,7 +71,7 @@ namespace Bijou
             } 
             catch (ArgumentException e)
             {
-                Debug.WriteLine("UWPChakraHostExecutor: GCHandle.Alloc raised exception: " + e.Message);
+                Debug.WriteLine($"{nameof(BijouExecutor)}: GCHandle.Alloc raised exception: " + e.Message);
                 throw;
             }
 
@@ -88,7 +88,7 @@ namespace Bijou
         /// <summary>
         /// Destroys an instance of UWPChakraHostExecutor.
         /// </summary>
-        ~UWPChakraHostExecutor()
+        ~BijouExecutor()
         {
             Dispose(false);
         }
@@ -143,8 +143,7 @@ namespace Bijou
             RunScript(@"const XMLHttpRequest = Bijou.Projected.XMLHttpRequest;
                               const console = Bijou.Projected.JSConsole;
                               const atob = Bijou.Projected.JSBase64Encoding.atob;
-                              const btoa = Bijou.Projected.JSBase64Encoding.btoa;
-                              console.log('UWPChakraHostExecutor ready');");
+                              const btoa = Bijou.Projected.JSBase64Encoding.btoa;");
 
             // register to JSConsole 
             JSConsole.ConsoleMessageReady += OnConsoleMessageReady;
@@ -245,13 +244,13 @@ namespace Bijou
             }
             catch (FileNotFoundException)
             {
-                Debug.WriteLine($"{nameof(UWPChakraHostExecutor)}: unable to open file {scriptUri}, file does not exist");
+                Debug.WriteLine($"{nameof(BijouExecutor)}: unable to open file {scriptUri}, file does not exist");
                 return string.Empty;
             }
 
             if (file == null || !file.IsAvailable)
             {
-                Debug.WriteLine($"{nameof(UWPChakraHostExecutor)}: unable to open file {scriptUri}, file is not available");
+                Debug.WriteLine($"{nameof(BijouExecutor)}: unable to open file {scriptUri}, file is not available");
                 return string.Empty;
             }
 
@@ -259,7 +258,7 @@ namespace Bijou
 
             if (string.IsNullOrEmpty(script))
             {
-                Debug.WriteLine($"{nameof(UWPChakraHostExecutor)}: file {scriptUri} is empty");
+                Debug.WriteLine($"{nameof(BijouExecutor)}: file {scriptUri} is empty");
             }
 
             return script;
@@ -323,7 +322,7 @@ namespace Bijou
                 return;
             }
 
-            throw new ObjectDisposedException(nameof(UWPChakraHostExecutor));
+            throw new ObjectDisposedException(nameof(BijouExecutor));
         }
 
         #endregion

@@ -155,7 +155,7 @@
     <Compile Include="EventLoop.cs" />
     <Compile Include="EventLoopTask.cs" />
     <Compile Include="JSTasks\TaskDelegate.cs" />
-    <Compile Include="UWPChakraHostExecutor.cs" />
+    <Compile Include="BijouExecutor.cs" />
     <Compile Include="JSTasks\AbstractJSTask.cs" />
     <Compile Include="JSTasks\JSTaskFunction.cs" />
     <Compile Include="JSTasks\JSTaskScript.cs" />
