@@ -14,20 +14,26 @@
 
 The name is inspired by our favourite [pizzeria in Paris](https://bijou-paris.fr/), that literally nourished this project. 
 
-## How to use it 
+## How to use it
+
 ### Add it to your project
-* Clone ths repository and open [Bijou.js's solution file](src/Bijou.sln) in Visual Studio 2019
-* Compile and copy the generated binaries in your project
-* In your project, create a new JS executor
-```cs 
+1. Clone ths repository and open [Bijou.js's solution file](src/Bijou.sln) in Visual Studio 2019.
+2. Compile and copy the generated binaries in your project.
+3. In your project, create a new JS executor.
+
+```cs
 var engine = new BijouExecutor();
 ```
 
 ### Load and run a script
-Bijou.js can load and execute JS scripts using `RunScriptAsync` method
 
-```cs 
+Bijou.js can load and execute JS scripts using `RunScriptAsync` method.
+
+```cs
+// Create the engine.
 var engine = new BijouExecutor();
+
+// Run a script.
 var result = await engine.RunScriptAsync(@"
                 function square() { return 10 * 10; }
                 square();
@@ -36,34 +42,46 @@ result = await engine.RunScriptAsync(new Uri("path/to/a/script.js"));
 ```
 
 ### Call a JS function from C#
-Using `CallFunctionAsync` method it is possible to call functions in the global js object
 
-```cs 
+Using `CallFunctionAsync` method it is possible to call functions in the global JS object.
+
+```cs
+// Create the engine.
 var engine = new BijouExecutor();
-// First, load a script declaring a global function
+
+// First, load a script declaring a global function.
 var result = await engine.RunScriptAsync(@"
                 function square() { 
                     return 10 * 10; 
                 }
             ");
-// Then, call it
+
+// Then, call it.
 await engine.CallFunctionAsync("square"));
 ```
-Let's have more fun, let's pass some parameters to a JS function
-```cs 
+Let's have more fun, let's pass some parameters to a JS function.
+
+```cs
+// Create the engine.
 var engine = new BijouExecutor();
-// First, load a script declaring a global function
+
+// First, load a script declaring a global function.
 var result = await engine.RunScriptAsync(@"
                 function multiply(a, b) {
                     return a * b; 
                 }
             ");
-// Then, call it passing parameters
+
+// Then, call it passing parameters.
 await engine.CallFunctionAsync("multiply", 3, 2));
 ```
-This let you send data from C# to JS
+
+This let you send data from C# to JS.
+
 ```cs 
+// Create the engine.
 var engine = new BijouExecutor();
+
 // First, load a script declaring a global function
 var result = await engine.RunScriptAsync(@"
                 function sendMessage(message) {
@@ -71,23 +89,31 @@ var result = await engine.RunScriptAsync(@"
                     console.log(message); 
                 }
             ");
+
 // Then, call it passing parameters
 await engine.CallFunctionAsync("sendMessage", "Hello from C#"));
 ```
+
 ### Sending messages from JS to C#
-Bijou.js implements `sendToHost` API in JS, that lets sending messages from JS to C#. Calls to `sendToHost` trigger a `OnMessageReceived` event in C#. By listening to `OnMessageReceived` on the `BijouExecutor` instance, C# code can receives calls from JS.
-Let's see this in an example  
-```cs 
+
+Bijou.js implements `sendToHost` API in JS, that lets sending messages from JS to C#. Calls to `sendToHost` trigger a `OnMessageReceived` event in C#. By listening to `OnMessageReceived` on the `UWPChakraHostExecutor` instance, C# code can receives calls from JS.
+
+Let's see this in an example.
+
+```cs
+// Prepare things.
 var engine = new BijouExecutor();
 var messageReceived = new AutoResetEvent(false);
 var timeout = TimeSpan.FromSeconds(1);
 var reply = String.Empty;
-// First, register to the OnMessageReceived event
+
+// First, register to the OnMessageReceived event.
 engine.OnMessageReceived += (sender, msg) => {
                     reply = msg;
                     messageReceived.Set();
                 };
-// Then load a cool JS function 
+
+// Then load a cool JS function.
 var result = await engine.RunScriptAsync(@"
                 function coolJSFunction(message) {
                     // do something with the message
@@ -96,17 +122,26 @@ var result = await engine.RunScriptAsync(@"
                     sendToHost(reply) 
                 }
             ");
-// Now call it passing parameters
+
+// Now call it passing parameters.
 await engine.CallFunctionAsync("coolJSFunction", "Hello"));
-// Finally, wait for the reply
+
+// Finally, wait for the reply.
 messageReceived.WaitOne(timeout);
 Debug.WriteLine(reply);
 ```
-### Bijou.JS JavaScript API
-Bijou.JS is based on [Chakra](https://en.wikipedia.org/wiki/Chakra_(JavaScript_engine)), and therefor is ES6 compatible. 
-On top of that it implements common non-ES6 JavaScript APIs, here's a complete list
-*  Timers (`setTimeout`, `setInterval`, `clearTimeout`, `clearInterval`)
-* XmlHttpRequest
-* console
 
-It also provide a custom FileSystem API and encryption APIs
+### Bijou.js JavaScript API
+
+Bijou.js is based on [Chakra](https://en.wikipedia.org/wiki/Chakra_(JavaScript_engine)), and therefore is ES6-compatible.
+
+On top of that, it implements common non-ES6 JavaScript APIs. Here's a complete list:
+* Timers
+  * `setTimeout`
+  * `setInterval`
+  * `clearTimeout`
+  * `clearInterval`
+* `XmlHttpRequest`
+* `console`
+
+It also provides a custom FileSystem API and encryption APIs written in C++.
