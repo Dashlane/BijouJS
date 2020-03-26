@@ -35,7 +35,7 @@ namespace Bijou.Test.UWPChakraHost.NativeFunctions
             {
                 var addedCancellableTasks = new List<AbstractJSTask>();
                 var mockEventLoop = CreateMockEventLoop(addedCancellableTasks).Object;
-                var mockExecutor = new Mock<UWPChakraHostExecutor>(MockBehavior.Strict);
+                var mockExecutor = new Mock<BijouExecutor>(MockBehavior.Strict);
                 var gcHandleOnMock = GCHandle.Alloc(mockExecutor.Object);
                 var dummyFunctionRef = CreateDummyFunc();
                 var argsList = new List<JavaScriptValue>();
@@ -107,7 +107,7 @@ namespace Bijou.Test.UWPChakraHost.NativeFunctions
             {
                 var addedCancellableTasks = new List<AbstractJSTask>();
                 var mockEventLoop = CreateMockEventLoop(addedCancellableTasks).Object;
-                var mockExecutor = new Mock<UWPChakraHostExecutor>(MockBehavior.Strict);
+                var mockExecutor = new Mock<BijouExecutor>(MockBehavior.Strict);
                 var gcHandleOnMock = GCHandle.Alloc(mockExecutor.Object);
                 var args = new []{ JavaScriptValue.GlobalObject.Value };
 
@@ -124,7 +124,7 @@ namespace Bijou.Test.UWPChakraHost.NativeFunctions
             {
                 var addedCancellableTasks = new List<AbstractJSTask>();
                 var mockEventLoop = CreateMockEventLoop(addedCancellableTasks).Object;
-                var mockExecutor = new Mock<UWPChakraHostExecutor>(MockBehavior.Strict);
+                var mockExecutor = new Mock<BijouExecutor>(MockBehavior.Strict);
                 var gcHandleOnMock = GCHandle.Alloc(mockExecutor.Object);
                 var args = new []{ JavaScriptValue.GlobalObject.Value, CreateDummyFunc().Value, JavaScriptValue.FromString("invalid delay").Value };
 
@@ -166,7 +166,7 @@ namespace Bijou.Test.UWPChakraHost.NativeFunctions
             {
                 var addedCancellableTasks = new List<AbstractJSTask>();
                 var mockEventLoop = CreateMockEventLoop(addedCancellableTasks).Object;
-                var mockExecutor = new Mock<UWPChakraHostExecutor>(MockBehavior.Strict);
+                var mockExecutor = new Mock<BijouExecutor>(MockBehavior.Strict);
                 var gcHandleOnMock = GCHandle.Alloc(mockExecutor.Object);
                 var args = new []{ JavaScriptValue.GlobalObject.Value };
 
@@ -183,7 +183,7 @@ namespace Bijou.Test.UWPChakraHost.NativeFunctions
             {
                 var addedCancellableTasks = new List<AbstractJSTask>();
                 var mockEventLopop = CreateMockEventLoop(addedCancellableTasks).Object;
-                var mockExecutor = new Mock<UWPChakraHostExecutor>(MockBehavior.Strict);
+                var mockExecutor = new Mock<BijouExecutor>(MockBehavior.Strict);
                 var gcHandleOnMock = GCHandle.Alloc(mockExecutor.Object);
                 var args = new []{ JavaScriptValue.GlobalObject.Value, CreateDummyFunc().Value };
 
@@ -200,7 +200,7 @@ namespace Bijou.Test.UWPChakraHost.NativeFunctions
             {
                 var addedCancellableTasks = new List<AbstractJSTask>();
                 var mockEventLoop = CreateMockEventLoop(addedCancellableTasks).Object;
-                var mockExecutor = new Mock<UWPChakraHostExecutor>(MockBehavior.Strict);
+                var mockExecutor = new Mock<BijouExecutor>(MockBehavior.Strict);
                 var gcHandleOnMock = GCHandle.Alloc(mockExecutor.Object);
                 var args = new []{ JavaScriptValue.GlobalObject.Value, CreateDummyFunc().Value, JavaScriptValue.FromString("invalid delay").Value };
 
@@ -230,7 +230,7 @@ namespace Bijou.Test.UWPChakraHost.NativeFunctions
                     canceledId = i; 
                     cancelCount++; 
                 }).Object;
-                var mockExecutor = new Mock<UWPChakraHostExecutor>(MockBehavior.Strict);
+                var mockExecutor = new Mock<BijouExecutor>(MockBehavior.Strict);
                 var gcHandleOnMock = GCHandle.Alloc(mockExecutor.Object);
                 var args = new []{ JavaScriptValue.GlobalObject.Value, JavaScriptValue.FromInt32(123).Value };
 
@@ -264,7 +264,7 @@ namespace Bijou.Test.UWPChakraHost.NativeFunctions
             {
                 var cancelCount = 0;
                 var mockEventLoop = CreateMockEventLoopForClearScheduled(i => cancelCount++ ).Object;
-                var mockExecutor = new Mock<UWPChakraHostExecutor>(MockBehavior.Strict);
+                var mockExecutor = new Mock<BijouExecutor>(MockBehavior.Strict);
                 var gcHandleOnMock = GCHandle.Alloc(mockExecutor);
                 var args = new []{ JavaScriptValue.GlobalObject.Value };
 
@@ -282,7 +282,7 @@ namespace Bijou.Test.UWPChakraHost.NativeFunctions
             {
                 var cancelCount = 0;
                 var mockEventLoop = CreateMockEventLoopForClearScheduled(i => cancelCount++).Object;
-                var mockExecutor = new Mock<UWPChakraHostExecutor>(MockBehavior.Strict);
+                var mockExecutor = new Mock<BijouExecutor>(MockBehavior.Strict);
                 var gcHandleOnMock = GCHandle.Alloc(mockExecutor);
                 var args = new []{ JavaScriptValue.GlobalObject.Value, JavaScriptValue.FromString("this should be a number").Value };
 

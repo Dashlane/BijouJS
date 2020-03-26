@@ -12,9 +12,9 @@ namespace Bijou.Test.UWPChakraHost.NativeFunctions
     [TestClass]
     public class TestJSSendToHost
     {
-        private Mock<UWPChakraHostExecutor> CreateMockExecutor(ICollection<string> receivedMessages)
+        private Mock<BijouExecutor> CreateMockExecutor(ICollection<string> receivedMessages)
         {
-            var mock = new Mock<UWPChakraHostExecutor>(MockBehavior.Strict);
+            var mock = new Mock<BijouExecutor>(MockBehavior.Strict);
             mock.Setup(executor => executor.OnMessageReceived(It.IsAny<string>()))
                 .Callback<string>(receivedMessages.Add);
             return mock;

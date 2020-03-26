@@ -17,13 +17,12 @@ The name is inspired by our favourite [pizzeria in Paris](https://bijou-paris.fr
 ## How to use it
 
 ### Add it to your project
-
 1. Clone ths repository and open [Bijou.js's solution file](src/Bijou.sln) in Visual Studio 2019.
 2. Compile and copy the generated binaries in your project.
 3. In your project, create a new JS executor.
 
 ```cs
-var engine = new UWPChakraHostExecutor();
+var engine = new BijouExecutor();
 ```
 
 ### Load and run a script
@@ -32,7 +31,7 @@ Bijou.js can load and execute JS scripts using `RunScriptAsync` method.
 
 ```cs
 // Create the engine.
-var engine = new UWPChakraHostExecutor();
+var engine = new BijouExecutor();
 
 // Run a script.
 var result = await engine.RunScriptAsync(@"
@@ -48,7 +47,7 @@ Using `CallFunctionAsync` method it is possible to call functions in the global 
 
 ```cs
 // Create the engine.
-var engine = new UWPChakraHostExecutor();
+var engine = new BijouExecutor();
 
 // First, load a script declaring a global function.
 var result = await engine.RunScriptAsync(@"
@@ -60,12 +59,11 @@ var result = await engine.RunScriptAsync(@"
 // Then, call it.
 await engine.CallFunctionAsync("square"));
 ```
-
 Let's have more fun, let's pass some parameters to a JS function.
 
 ```cs
 // Create the engine.
-var engine = new UWPChakraHostExecutor();
+var engine = new BijouExecutor();
 
 // First, load a script declaring a global function.
 var result = await engine.RunScriptAsync(@"
@@ -82,7 +80,7 @@ This let you send data from C# to JS.
 
 ```cs 
 // Create the engine.
-var engine = new UWPChakraHostExecutor();
+var engine = new BijouExecutor();
 
 // First, load a script declaring a global function
 var result = await engine.RunScriptAsync(@"
@@ -104,7 +102,7 @@ Let's see this in an example.
 
 ```cs
 // Prepare things.
-var engine = new UWPChakraHostExecutor();
+var engine = new BijouExecutor();
 var messageReceived = new AutoResetEvent(false);
 var timeout = TimeSpan.FromSeconds(1);
 var reply = String.Empty;
